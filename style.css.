@@ -1,0 +1,63 @@
+
+/* PALETA DE CORES */
+:root {
+    --leaflit green: #5D7B3D;
+    --sunset petal: #E4568B;
+    --golden pollen: #F6C94D;
+    --evening sky: #A7C7E4;
+    --rosebud blush: #F29BB9;
+    --tomato jam: #C42B34;
+    --branco: #FFFFFF;
+}
+
+/* CONFIGURAÇÕES GERAIS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--leaflit green);
+    color: var(--rosebud blush);
+}
+
+/* CABEÇALHO */
+header {
+    background-color: var(--tomato jam);
+    color: var(--branco);
+    padding: 30px;
+    text-align: left;
+}
+
+/* CONTEÚDO PRINCIPAL */
+main {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--golden pollen);
+    border-radius: 15px;
+}
+
+/* TÍTULOS */
+h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+h2 {
+    color: var(--sunset petal);
+    margin-bottom: 15px;
+}
+
+/* BOTÃO */
+button {
+    background-color: var(--evening sky);
+    color: var(--branco);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+}
