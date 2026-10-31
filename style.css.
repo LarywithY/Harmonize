@@ -113,3 +113,118 @@ button:hover {
         font-size: 15px;
     }
 }
+
+/* BOTÃO EM FORMATO DE LINK */
+
+.botao {
+    display: inline-block;
+    background-color: var(--amarelo);
+    color: #30352D;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 25px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.botao:hover {
+    background-color: var(--rosa);
+    color: var(--branco);
+    transform: translateY(-2px);
+}
+
+/* PÁGINA DE EXPERIÊNCIA */
+
+.experiencia {
+    max-width: 850px;
+    margin: 55px auto;
+    padding: 0 8%;
+}
+
+.etapa {
+    color: var(--rosa);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.experiencia h2 {
+    color: var(--verde);
+    font-size: 42px;
+    margin: 15px 0;
+}
+
+.experiencia > p {
+    margin-bottom: 30px;
+}
+
+.grupo {
+    background-color: #F8F8F5;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.grupo h3 {
+    color: var(--verde);
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.grupo label {
+    display: block;
+    margin-bottom: 13px;
+    cursor: pointer;
+}
+
+.grupo input[type="checkbox"] {
+    accent-color: var(--verde);
+    margin-right: 9px;
+    width: 16px;
+    height: 16px;
+}
+
+.campo {
+    margin: 15px 0 20px;
+}
+
+.campo input,
+.grupo select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #D8D8D0;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    background-color: var(--branco);
+}
+
+.campo label {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.aviso {
+    font-size: 13px;
+    color: #666;
+    margin-top: 25px;
+}
+
+@media (max-width: 600px) {
+    .experiencia {
+        margin: 40px auto;
+        padding: 0 6%;
+    }
+
+    .experiencia h2 {
+        font-size: 34px;
+    }
+
+    .grupo {
+        padding: 20px;
+    }
+}
