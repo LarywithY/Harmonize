@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sua experiência | Harmony Heineken</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Harmony Heineken</h1>
+        <p>Uma experiência feita para você.</p>
+    </header>
+
+    <main class="experiencia">
+
+        <span class="etapa">ETAPA 01 — PERSONALIZE SUA EXPERIÊNCIA</span>
+
+        <h2>Queremos conhecer suas necessidades!</h2>
+
+        <p>
+            Selecione as opções que representam suas necessidades
+            ou escolhas alimentares. Você pode marcar mais de uma.
+        </p>
+
+        <form id="formulario">
+
+            <section class="grupo">
+                <h3>Quais são suas restrições ou escolhas alimentares?</h3>
+
+                <label>
+                    <input type="checkbox" name="restricoes" value="Doença celíaca">
+                    Doença celíaca
+                </label>
+
+                <label>
+                    <input type="checkbox" name="restricoes" value="Sensibilidade ao glúten">
+                    Sensibilidade ou restrição ao glúten
+                </label>
+
+                <label>
+                    <input type="checkbox" name="restricoes" value="Intolerância à lactose">
+                    Intolerância à lactose
+                </label>
+
+                <label>
+                    <input type="checkbox" name="restricoes" value="Alergia alimentar">
+                    Alergia alimentar
+                </label>
+
+                <div class="campo">
+                    <label for="alergia">Se marcou alergia, qual alimento?</label>
+                    <input type="text" id="alergia" name="alergia"
+                        placeholder="Ex.: amendoim, leite, ovo...">
+                </div>
+
+                <label>
+                    <input type="checkbox" name="restricoes" value="Diabetes tipo 1">
+                    Diabetes tipo 1
+                </label>
+
+                <label>
+                    <input type="checkbox" name="restricoes" value="Vegetariano">
+                    Alimentação vegetariana
+                </label>
+
+                <label>
+                    <input type="checkbox" name="restricoes" value="Vegano">
+                    Alimentação vegana
+                </label>
+
+                <label>
+                    <input type="checkbox" name="restricoes" value="Outra necessidade">
+                    Outra necessidade alimentar
+                </label>
+
+                <div class="campo">
+                    <label for="outra">Quer especificar outra necessidade?</label>
+                    <input type="text" id="outra" name="outra"
+                        placeholder="Conte para nós...">
+                </div>
+            </section>
+
+            <section class="grupo">
+                <h3>Que tipo de refeição você procura?</h3>
+
+                <select id="refeicao" required>
+                    <option value="">Selecione uma opção</option>
+                    <option value="Café da manhã">Café da manhã</option>
+                    <option value="Entrada">Entrada</option>
+                    <option value="Prato principal">Prato principal</option>
+                    <option value="Lanche">Lanche</option>
+                    <option value="Sobremesa">Sobremesa</option>
+                </select>
+            </section>
+
+            <button type="submit" class="botao">
+                Encontrar minhas receitas
+            </button>
+
+        </form>
+
+        <p class="aviso">
+            Suas escolhas ajudam a personalizar as sugestões.
+            As receitas ainda deverão ter seus ingredientes,
+            alergênicos e riscos de contaminação cruzada verificados.
+        </p>
+
+    </main>
+
+    <script>
+        const formulario = document.getElementById("formulario");
+
+        formulario.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const selecionadas = document.querySelectorAll(
+                'input[name="restricoes"]:checked'
+            );
+
+            const restricoes = Array.from(selecionadas)
+                .map(opcao => opcao.value);
+
+            const alergia = document.getElementById("alergia").value;
+            const outra = document.getElementById("outra").value;
+            const refeicao = document.getElementById("refeicao").value;
+
+            const dados = {
+                restricoes: restricoes,
+                alergia: alergia,
+                outra: outra,
+                refeicao: refeicao
+            };
+
+            const parametros = new URLSearchParams({
+                dados: JSON.stringify(dados)
+            });
+
+            window.location.href = "resultado.html?" + parametros.toString();
+        });
+    </script>
+
+</body>
+</html>
