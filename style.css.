@@ -28,7 +28,7 @@ header {
     background-color: var(--tomato jam);
     color: var(--branco);
     padding: 30px;
-    text-align: left;
+    text-align: center;
 }
 
 /* CONTEÚDO PRINCIPAL */
