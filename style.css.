@@ -20,7 +20,7 @@
 body {
     font-family: Arial, sans-serif;
     background-color: var(--leaflit-green);
-    color: var(--rosebud blush);
+    color: var(--rosebud-blush);
 }
 
 /* CABEÇALHO */
