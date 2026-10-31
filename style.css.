@@ -1,12 +1,12 @@
 
 /* PALETA DE CORES */
 :root {
-    --leaflit green: #5D7B3D;
-    --sunset petal: #E4568B;
-    --golden pollen: #F6C94D;
-    --evening sky: #A7C7E4;
-    --rosebud blush: #F29BB9;
-    --tomato jam: #C42B34;
+    --leaflit-green: #5D7B3D;
+    --sunset-petal: #E4568B;
+    --golden-pollen: #F6C94D;
+    --evening-sky: #A7C7E4;
+    --rosebud-blush: #F29BB9;
+    --tomato-jam: #C42B34;
     --branco: #FFFFFF;
 }
 
@@ -19,13 +19,13 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: var(--leaflit green);
+    background-color: var(--leaflit-green);
     color: var(--rosebud blush);
 }
 
 /* CABEÇALHO */
 header {
-    background-color: var(--tomato jam);
+    background-color: var(--tomato-jam);
     color: var(--branco);
     padding: 30px;
     text-align: center;
@@ -36,7 +36,7 @@ main {
     max-width: 900px;
     margin: 40px auto;
     padding: 30px;
-    background-color: var(--golden pollen);
+    background-color: var(--golden-pollen);
     border-radius: 15px;
 }
 
@@ -47,13 +47,13 @@ h1 {
 }
 
 h2 {
-    color: var(--sunset petal);
+    color: var(--sunset-petal);
     margin-bottom: 15px;
 }
 
 /* BOTÃO */
 button {
-    background-color: var(--evening sky);
+    background-color: var(--evening-sky);
     color: var(--branco);
     border: none;
     padding: 12px 25px;
