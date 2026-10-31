@@ -228,3 +228,7 @@ button:hover {
         padding: 20px;
     }
 }
+
+body {
+    background-color: #F29BB9 !important;
+}
