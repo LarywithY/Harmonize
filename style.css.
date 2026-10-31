@@ -1,5 +1,4 @@
 
-/* PALETA DE CORES */
 :root {
     --verde: #5D7B3D;
     --rosa: #E4568B;
@@ -8,9 +7,13 @@
     --rosa-claro: #F29BB9;
     --vermelho: #C42B34;
     --branco: #FFFFFF;
+
+    --texto: #30352D;
+    --fundo: #FFFFFF;
 }
 
 /* CONFIGURAÇÕES GERAIS */
+
 * {
     margin: 0;
     padding: 0;
@@ -18,46 +21,95 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: var(--verde);
-    color: var(--rosa-claro);
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--fundo);
+    color: var(--texto);
+    line-height: 1.7;
+}
+
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+    line-height: 1.2;
 }
 
 /* CABEÇALHO */
+
 header {
-    background-color: var(--vermelho);
+    background-color: var(--verde);
     color: var(--branco);
-    padding: 30px;
-    text-align: center;
+    padding: 28px 8%;
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+header p {
+    font-size: 14px;
+    opacity: 0.95;
 }
 
 /* CONTEÚDO PRINCIPAL */
+
 main {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: var(--amarelo);
-    border-radius: 15px;
+    max-width: 1100px;
+    margin: 70px auto;
+    padding: 0 8%;
 }
 
-/* TÍTULOS */
-h1 {
-    font-size: 32px;
-    margin-bottom: 15px;
+main h2 {
+    color: var(--verde);
+    font-size: clamp(36px, 5vw, 54px);
+    max-width: 700px;
+    margin-bottom: 22px;
 }
 
-h2 {
-    color: var(--rosa);
-    margin-bottom: 15px;
+main p {
+    font-size: 17px;
+    max-width: 580px;
+    margin-bottom: 30px;
 }
 
 /* BOTÃO */
+
 button {
-    background-color: var(--azul);
-    color: var(--branco);
+    background-color: var(--amarelo);
+    color: #30352D;
     border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
+    border-radius: 10px;
+    padding: 15px 25px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
-    margin-top: 20px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: var(--rosa);
+    color: var(--branco);
+    transform: translateY(-2px);
+}
+
+/* ADAPTAÇÃO PARA CELULAR */
+
+@media (max-width: 600px) {
+    header {
+        padding: 24px 6%;
+    }
+
+    main {
+        margin: 50px auto;
+        padding: 0 6%;
+    }
+
+    main h2 {
+        font-size: 36px;
+    }
+
+    main p {
+        font-size: 15px;
+    }
 }
