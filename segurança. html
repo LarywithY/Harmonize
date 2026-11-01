@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#173D2B">
+  <title>Segurança alimentar | Harmonize+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css?v=20">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./index.html">
+      <img src="./logo.svg" alt="">
+      <span>Harmonize<span class="plus">+</span></span>
+    </a>
+    <nav>
+      <a href="./sobre.html">Sobre</a>
+      <a href="./seguranca.html" aria-current="page">Segurança alimentar</a>
+      <a href="./experiencia.html">Começar →</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <span class="eyebrow">INFORMAÇÃO E RESPONSABILIDADE</span>
+    <h1>Segurança alimentar importa.</h1>
+    <p class="lead">
+      Uma experiência inclusiva também precisa ser uma experiência responsável.
+    </p>
+
+    <section class="content-section">
+      <h2>Alergia não é intolerância</h2>
+      <p>
+        A alergia alimentar envolve uma resposta do sistema imunológico e pode
+        provocar reações graves. A intolerância alimentar geralmente envolve
+        dificuldades na digestão ou processamento de determinados componentes.
+      </p>
+      <p>
+        Por isso, as duas situações não devem ser tratadas como equivalentes.
+        Pessoas com alergias precisam verificar ingredientes, rótulos e
+        possíveis contatos cruzados durante o preparo.
+      </p>
+    </section>
+
+    <section class="content-section">
+      <h2>Doença celíaca e glúten</h2>
+      <p>
+        A doença celíaca exige cuidados específicos com a ingestão de glúten.
+        Não basta retirar um ingrediente da receita: é necessário avaliar
+        produtos utilizados, utensílios, superfícies e risco de contaminação
+        cruzada.
+      </p>
+      <p>
+        Uma receita só deve ser apresentada como verificada para essa condição
+        quando os critérios de ingredientes e preparo tiverem sido avaliados.
+      </p>
+    </section>
+
+    <section class="content-section">
+      <h2>Diabetes tipo 1</h2>
+      <p>
+        A quantidade de carboidratos por porção pode ser uma informação útil
+        para a pessoa. O Harmonize+ não deve classificar alimentos como
+        proibidos ou permitidos de forma genérica, nem substituir o
+        acompanhamento individualizado.
+      </p>
+    </section>
+
+    <section class="content-section">
+      <h2>Vegetarianismo e veganismo</h2>
+      <p>
+        A alimentação vegetariana pode incluir alguns alimentos de origem
+        animal, como ovos e laticínios, conforme a escolha da pessoa.
+        A alimentação vegana exclui ingredientes e produtos de origem animal.
+        Por isso, as duas categorias precisam de critérios distintos.
+      </p>
+    </section>
+
+    <section class="content-section">
+      <h2>Bebidas e harmonizações</h2>
+      <p>
+        As sugestões de harmonização podem incluir bebidas alcoólicas e
+        alternativas sem álcool. A presença de uma opção sem álcool não
+        significa automaticamente que ela seja adequada a todas as
+        necessidades alimentares: seus ingredientes também precisam ser
+        conferidos.
+      </p>
+    </section>
+
+    <section class="notice">
+      <h2>Importante</h2>
+      <p>
+        As informações do Harmonize+ têm finalidade educativa e informativa.
+        Não substituem orientação de profissionais de saúde ou nutricionistas.
+        A compatibilidade exibida não garante ausência de risco. Sempre
+        confira rótulos, ingredientes, fornecedores e condições reais de
+        preparo. Em caso de alergia ou doença celíaca, não utilize uma
+        sugestão sem a confirmação adequada de segurança.
+      </p>
+    </section>
+
+    <a class="button" href="./experiencia.html">Voltar à busca de receitas →</a>
+  </main>
+
+  <footer>
+    <a class="brand" href="./index.html">
+      <img src="./logo.svg" alt="">
+      <span>Harmonize<span class="plus">+</span></span>
+    </a>
+    <span>Sabor, inclusão e harmonia.</span>
+  </footer>
+</body>
+</html>
