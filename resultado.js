@@ -1,22 +1,25 @@
 
-/* HARMONIZE+ — FILTRO E EXIBIÇÃO DE RECEITAS */
+/* HARMONIZE+ — FILTRO DE RECEITAS */
 
 document.addEventListener("DOMContentLoaded", () => {
   const parametros = new URLSearchParams(window.location.search);
+  let dados = {};
 
-  const restricoes = (parametros.get("restricoes") || "")
-    .split("|")
-    .filter(Boolean);
+  try {
+    dados = JSON.parse(parametros.get("dados") || "{}");
+  } catch {
+    dados = {};
+  }
 
-  const categoria = parametros.get("refeicao") || "";
-  const detalhes = parametros.get("detalhes") || "";
+  const restricoes = Array.isArray(dados.restricoes) ? dados.restricoes : [];
+  const categoria = dados.refeicao || "";
+  const alergia = String(dados.alergia || "").trim();
+  const outra = String(dados.outra || "").trim();
 
-  const catalogo = Array.isArray(window.receitas)
-    ? window.receitas
-    : [];
-
+  const catalogo = Array.isArray(window.receitas) ? window.receitas : [];
   const resultados = document.getElementById("recipe-results");
   const vazio = document.getElementById("empty");
+  const loading = document.getElementById("loading");
   const resumo = document.getElementById("summary");
   const resumoRestricoes = document.getElementById("restrictions");
 
@@ -28,17 +31,17 @@ document.addEventListener("DOMContentLoaded", () => {
     sobremesa: "Sobremesa"
   };
 
-  resumo.textContent =
-    "Categoria selecionada: " +
-    (nomesCategorias[categoria] || "não informada") +
-    ". Encontramos até três opções para sua busca.";
+  resumo.textContent = "Categoria selecionada: " +
+    (nomesCategorias[categoria] || "não informada") + ".";
 
-  if (restricoes.length || detalhes.trim()) {
-    resumoRestricoes.textContent =
-      "Preferências informadas: " +
-      (restricoes.join(", ") || "nenhuma seleção") +
-      (detalhes.trim() ? ". Observações: " + detalhes : "");
-  }
+  const preferencias = [...restricoes];
+
+  if (alergia) preferencias.push("Alergia informada: " + alergia);
+  if (outra) preferencias.push("Outra necessidade: " + outra);
+
+  resumoRestricoes.textContent = preferencias.length
+    ? "Preferências informadas: " + preferencias.join(", ")
+    : "Nenhuma restrição ou preferência adicional informada.";
 
   function normalizar(texto) {
     return String(texto || "")
@@ -48,127 +51,106 @@ document.addEventListener("DOMContentLoaded", () => {
       .trim();
   }
 
-  /*
-    Identifica alguns alergênicos comuns mencionados
-    no campo de observações. Se não conseguir identificar
-    o termo, não libera receitas para essa busca.
-  */
-  const gruposAlergenicos = {
-    leite: ["leite", "lactose", "queijo", "iogurte", "manteiga"],
-    ovo: ["ovo", "ovos"],
-    trigo: ["trigo", "farinha de trigo"],
-    amendoim: ["amendoim"],
-    soja: ["soja"],
-    castanhas: ["castanha", "castanhas", "nozes", "amendoa", "avelã", "avelas"],
-    peixe: ["peixe", "peixes"],
-    crustaceos: ["camarao", "lagosta", "caranguejo"],
-    gergelim: ["gergelim"],
-    mostarda: ["mostarda"]
-  };
-
-  function identificarAlergenicos(texto) {
-    const busca = normalizar(texto);
-    const encontrados = [];
-
-    Object.entries(gruposAlergenicos).forEach(([grupo, termos]) => {
-      if (termos.some(termo => busca.includes(normalizar(termo)))) {
-        encontrados.push(grupo);
-      }
-    });
-
-    return encontrados;
-  }
-
-  const possuiAlergia = restricoes.includes("Alergia alimentar");
-  const alergiasIdentificadas = identificarAlergenicos(detalhes);
-
   function receitaAprovada(receita) {
     const v = receita.verificacao || {};
 
     return (
       v.status === "aprovada" &&
-      v.ingredientesConferidos === true
+      v.ingredientesConferidos === true &&
+      v.alergenicosConferidos === true
     );
   }
 
   function compativel(receita) {
     const v = receita.verificacao || {};
     const tags = receita.restricoesCompativeis || [];
-    const alergiasDaReceita = (receita.alergenicos || [])
-      .map(normalizar);
 
     if (!receitaAprovada(receita)) return false;
     if (receita.categoria !== categoria) return false;
 
-    /* Restrições que exigem verificação específica */
-    if (
-      restricoes.includes("Doença celíaca ou sem glúten") &&
-      (
+    if (restricoes.includes("Doença celíaca")) {
+      if (
         v.semGlutenVerificado !== true ||
         v.contaminacaoCruzadaAvaliada !== true ||
-        !tags.includes("Doença celíaca ou sem glúten")
-      )
-    ) return false;
+        !tags.includes("Doença celíaca")
+      ) return false;
+    }
 
-    if (
-      restricoes.includes("Sem lactose") &&
-      (
+    if (restricoes.includes("Sensibilidade ao glúten")) {
+      if (
+        v.semGlutenVerificado !== true ||
+        !tags.includes("Sensibilidade ao glúten")
+      ) return false;
+    }
+
+    if (restricoes.includes("Intolerância à lactose")) {
+      if (
         v.semLactoseVerificado !== true ||
-        !tags.includes("Sem lactose")
-      )
-    ) return false;
+        !tags.includes("Intolerância à lactose")
+      ) return false;
+    }
 
-    if (
-      restricoes.includes("Vegetariana") &&
-      !tags.includes("Vegetariana")
-    ) return false;
+    if (restricoes.includes("Vegetariana") && !tags.includes("Vegetariana")) {
+      return false;
+    }
 
-    if (
-      restricoes.includes("Vegana") &&
-      !tags.includes("Vegana")
-    ) return false;
+    if (restricoes.includes("Vegana") && !tags.includes("Vegana")) {
+      return false;
+    }
 
-    /*
-      Uma necessidade não especificada não pode ser
-      interpretada automaticamente pelo sistema.
-    */
-    if (restricoes.includes("Outra necessidade")) return false;
-
-    /*
-      Alergia: exige descrição identificável, conferência
-      de alergênicos e avaliação de contaminação cruzada.
-    */
-    if (possuiAlergia) {
-      if (!detalhes.trim()) return false;
-      if (alergiasIdentificadas.length === 0) return false;
-      if (v.alergenicosConferidos !== true) return false;
-      if (v.contaminacaoCruzadaAvaliada !== true) return false;
-
-      const conflito = alergiasIdentificadas.some(alergia =>
-        alergiasDaReceita.includes(alergia)
-      );
-
-      if (conflito) return false;
+    if (restricoes.includes("Outra necessidade")) {
+      return false;
     }
 
     /*
-      Diabetes tipo 1: não exclui alimentos por açúcar.
-      Exige informação de carboidratos por porção.
+      Não fazemos correspondência automática de alergias.
+      A equipe precisa verificar individualmente o alérgeno,
+      ingredientes, rótulos e risco de contaminação cruzada.
     */
-    if (
-      restricoes.includes("Diabetes tipo 1") &&
-      (
+    if (restricoes.includes("Alergia alimentar")) {
+      if (!alergia) return false;
+      if (v.alergenicosConferidos !== true) return false;
+      if (v.contaminacaoCruzadaAvaliada !== true) return false;
+      if (v.alergiasVerificadas !== true) return false;
+
+      const alergiasCadastradas = (receita.alergenicos || [])
+        .map(normalizar);
+
+      const alergiasInformadas = alergia
+        .split(/[,;]+/)
+        .map(normalizar)
+        .filter(Boolean);
+
+      if (!alergiasInformadas.length) return false;
+
+      const conflito = alergiasInformadas.some(item =>
+        alergiasCadastradas.some(alergeno =>
+          alergeno === item || alergeno.includes(item) || item.includes(alergeno)
+        )
+      );
+
+      if (conflito) return false;
+
+      /*
+        A ausência de conflito na lista não é prova de segurança.
+        A equipe deve cadastrar alergiasVerificadas apenas após
+        uma avaliação individual e documentada.
+      */
+    }
+
+    /*
+      Não excluímos alimentos de forma genérica para diabetes tipo 1.
+      Exigimos informação numérica de carboidratos por porção.
+    */
+    if (restricoes.includes("Diabetes tipo 1")) {
+      if (
         typeof receita.carboidratosPorPorcao !== "number" ||
         !Number.isFinite(receita.carboidratosPorPorcao)
-      )
-    ) return false;
+      ) return false;
+    }
 
     return true;
   }
-
-  const encontrados = catalogo
-    .filter(compativel)
-    .slice(0, 3);
 
   function criarElemento(tag, classe, texto) {
     const elemento = document.createElement(tag);
@@ -180,131 +162,115 @@ document.addEventListener("DOMContentLoaded", () => {
   function criarCartao(receita) {
     const cartao = criarElemento("article", "recipe-card");
 
-    const foto = document.createElement("img");
-    foto.className = "recipe-card-image";
-    foto.alt = "Fotografia de " + receita.nome;
-    foto.loading = "lazy";
-
     if (receita.imagem) {
+      const foto = document.createElement("img");
+      foto.className = "recipe-card-image";
       foto.src = receita.imagem;
-    } else {
-      foto.classList.add("image-missing");
-      foto.alt = "Fotografia não cadastrada";
+      foto.alt = "Fotografia de " + receita.nome;
+      foto.loading = "lazy";
+      foto.onerror = () => {
+        foto.remove();
+      };
+      cartao.appendChild(foto);
     }
 
     const conteudo = criarElemento("div", "recipe-card-content");
 
-    conteudo.appendChild(
-      criarElemento("span", "recipe-category",
-        nomesCategorias[receita.categoria] || receita.categoria)
-    );
+    conteudo.appendChild(criarElemento(
+      "span",
+      "recipe-category",
+      nomesCategorias[receita.categoria] || receita.categoria
+    ));
 
-    conteudo.appendChild(
-      criarElemento("h2", "", receita.nome)
-    );
+    conteudo.appendChild(criarElemento("h2", "", receita.nome));
+    conteudo.appendChild(criarElemento("p", "recipe-description", receita.descricao || ""));
 
-    conteudo.appendChild(
-      criarElemento("p", "recipe-description", receita.descricao)
-    );
-
-    const meta = criarElemento("p", "recipe-meta",
+    conteudo.appendChild(criarElemento(
+      "p",
+      "recipe-meta",
       (receita.tempo || "Tempo não informado") +
       " • " +
       (receita.rendimento || "Rendimento não informado")
-    );
-    conteudo.appendChild(meta);
+    ));
 
-    const detalhesReceita = document.createElement("details");
-    detalhesReceita.className = "recipe-details";
+    const detalhes = document.createElement("details");
+    detalhes.className = "recipe-details";
 
     const abrir = document.createElement("summary");
     abrir.textContent = "Ver receita completa";
-    detalhesReceita.appendChild(abrir);
+    detalhes.appendChild(abrir);
 
     const corpo = criarElemento("div", "recipe-full-details");
 
     corpo.appendChild(criarElemento("h3", "", "Ingredientes"));
-    const listaIngredientes = document.createElement("ul");
+    const ingredientes = document.createElement("ul");
 
     (receita.ingredientes || []).forEach(item => {
-      listaIngredientes.appendChild(
-        criarElemento("li", "", item)
-      );
+      ingredientes.appendChild(criarElemento("li", "", item));
     });
 
-    corpo.appendChild(listaIngredientes);
-
+    corpo.appendChild(ingredientes);
     corpo.appendChild(criarElemento("h3", "", "Modo de preparo"));
-    const listaPreparo = document.createElement("ol");
+
+    const preparo = document.createElement("ol");
 
     (receita.preparo || []).forEach(etapa => {
-      listaPreparo.appendChild(
-        criarElemento("li", "", etapa)
-      );
+      preparo.appendChild(criarElemento("li", "", etapa));
     });
 
-    corpo.appendChild(listaPreparo);
+    corpo.appendChild(preparo);
 
     if (typeof receita.carboidratosPorPorcao === "number") {
-      corpo.appendChild(
-        criarElemento(
-          "p",
-          "recipe-meta",
-          "Carboidratos: " +
-          receita.carboidratosPorPorcao +
-          " g por porção."
-        )
-      );
+      corpo.appendChild(criarElemento(
+        "p",
+        "recipe-meta",
+        "Carboidratos: " + receita.carboidratosPorPorcao + " g por porção."
+      ));
     }
 
     if (receita.harmonizacao) {
       corpo.appendChild(criarElemento("h3", "", "Harmonização"));
 
       if (receita.harmonizacao.bebida) {
-        corpo.appendChild(
-          criarElemento("p", "", receita.harmonizacao.bebida)
-        );
+        corpo.appendChild(criarElemento("p", "", receita.harmonizacao.bebida));
       }
 
       if (receita.harmonizacao.alternativaSemAlcool) {
-        corpo.appendChild(
-          criarElemento(
-            "p",
-            "",
-            "Alternativa sem álcool: " +
-            receita.harmonizacao.alternativaSemAlcool
-          )
-        );
+        corpo.appendChild(criarElemento(
+          "p",
+          "",
+          "Alternativa sem álcool: " + receita.harmonizacao.alternativaSemAlcool
+        ));
       }
     }
 
-    detalhesReceita.appendChild(corpo);
-    conteudo.appendChild(detalhesReceita);
-
-    cartao.appendChild(foto);
+    detalhes.appendChild(corpo);
+    conteudo.appendChild(detalhes);
     cartao.appendChild(conteudo);
 
     return cartao;
   }
 
+  const encontrados = catalogo.filter(compativel).slice(0, 3);
+
   encontrados.forEach(receita => {
     resultados.appendChild(criarCartao(receita));
   });
 
+  loading.hidden = true;
   vazio.hidden = encontrados.length > 0;
 
-  if (possuiAlergia && alergiasIdentificadas.length === 0) {
-    vazio.querySelector("h2").textContent =
-      "Precisamos identificar a alergia";
+  if (restricoes.includes("Alergia alimentar")) {
+    vazio.querySelector("h2").textContent = "Sua busca exige uma verificação específica";
     vazio.querySelector("p").textContent =
-      "Informe o nome do alimento ou ingrediente ao qual você tem alergia. " +
-      "Se não conseguirmos identificar a informação, não exibiremos receitas como compatíveis.";
+      "Não encontramos opções que atendam aos critérios de verificação necessários para a alergia informada. Não considere uma receita segura sem confirmação individual dos ingredientes e do preparo.";
+  } else if (restricoes.includes("Outra necessidade")) {
+    vazio.querySelector("h2").textContent = "Precisamos avaliar sua necessidade";
+    vazio.querySelector("p").textContent =
+      "Essa necessidade ainda não pode ser interpretada automaticamente. Nossa equipe precisa avaliar os critérios antes de recomendar receitas.";
   } else if (encontrados.length === 0) {
-    vazio.querySelector("h2").textContent =
-      "Estamos preparando novas opções!";
+    vazio.querySelector("h2").textContent = "Não encontramos opções neste momento";
     vazio.querySelector("p").textContent =
-      "Ainda não encontramos receitas cadastradas e verificadas que atendam " +
-      "a todos os critérios selecionados. Você pode alterar suas escolhas " +
-      "ou voltar em outro momento.";
+      "Ainda não há receitas cadastradas e verificadas para todos os critérios selecionados. Você pode alterar suas preferências ou voltar em outro momento.";
   }
 });
