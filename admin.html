@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel administrativo | Harmonize+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #F5F1E8;
+      color: #173D2B;
+      font-family: "DM Sans", sans-serif;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 6%;
+      background: #173D2B;
+      color: white;
+    }
+    header strong { font: 700 25px "Playfair Display", serif; }
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 16px;
+      background: #FFB000;
+      color: #173D2B;
+      font: 700 14px "DM Sans", sans-serif;
+      cursor: pointer;
+    }
+    main { width: min(900px, 90%); margin: 48px auto; }
+    h1 { font: 700 36px "Playfair Display", serif; }
+    .painel {
+      margin-top: 24px;
+      padding: 26px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px #173D2B12;
+    }
+    .status { color: #637267; line-height: 1.6; }
+    .etiqueta {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 20px;
+      background: #e8f1e8;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    #erro { color: #b42318; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Harmonize+</strong>
+    <button id="sair">Sair</button>
+  </header>
+
+  <main>
+    <h1>Painel administrativo</h1>
+    <p class="status">Gerenciamento interno de receitas e equipe.</p>
+
+    <section class="painel">
+      <h2 id="boasVindas">Verificando acesso...</h2>
+      <p id="papel" class="etiqueta"></p>
+      <p id="mensagem" class="status">
+        Estamos verificando suas permissões.
+      </p>
+      <p id="erro"></p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
