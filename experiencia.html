@@ -1,103 +1,184 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#173D2B">
-<title>Sua experiência | Harmonize+</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./style.css?v=9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#173D2B">
+  <title>Sua experiência | Harmonize+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css?v=20">
 </head>
 <body>
+  <header class="site-header">
+    <a class="brand" href="./index.html">
+      <img src="./logo.svg" alt="">
+      <span>Harmonize<span class="plus">+</span></span>
+    </a>
+    <nav>
+      <a href="./sobre.html">Sobre</a>
+      <a href="./seguranca.html">Segurança alimentar</a>
+    </nav>
+  </header>
 
-<header class="site-header">
-<a class="brand" href="./index.html">
-<img src="./logo.svg" alt="">
-<span>Harmonize<span class="plus">+</span></span>
-</a>
-<a href="./index.html">⌂ Início</a>
-</header>
+  <main class="page form-page">
+    <span class="eyebrow">ETAPA 01 — PERSONALIZE SUA EXPERIÊNCIA</span>
+    <h1>Queremos conhecer suas necessidades.</h1>
+    <p class="lead">
+      Conte um pouco sobre suas preferências e necessidades alimentares.
+      Você pode selecionar mais de uma opção.
+    </p>
 
-<main class="page">
-<div class="page-heading">
-<small class="eyebrow">SUA EXPERIÊNCIA COMEÇA AQUI</small>
-<h1>Vamos descobrir novos sabores?</h1>
-<p>Conte um pouco sobre suas necessidades alimentares para encontrarmos ideias que combinem com você.</p>
-</div>
+    <form id="formulario" novalidate>
+      <section class="form-group">
+        <h2>Quais são suas necessidades alimentares?</h2>
+        <p class="helper">Selecione todas as opções que se aplicam.</p>
 
-<form id="form">
+        <label class="option">
+          <input type="checkbox" name="restricoes" value="Doença celíaca">
+          <span>Doença celíaca</span>
+        </label>
 
-<section class="panel">
-<h2>1. Você possui alguma restrição ou preferência alimentar?</h2>
-<p>Selecione uma ou mais opções.</p>
-<div class="choices">
+        <label class="option">
+          <input type="checkbox" name="restricoes" value="Sensibilidade ao glúten">
+          <span>Sensibilidade ou restrição ao glúten</span>
+        </label>
 
-<label><input type="checkbox" name="restricoes" value="Doença celíaca ou sem glúten"> Doença celíaca ou alimentação sem glúten</label>
+        <label class="option">
+          <input type="checkbox" name="restricoes" value="Intolerância à lactose">
+          <span>Intolerância à lactose</span>
+        </label>
 
-<label><input type="checkbox" name="restricoes" value="Sem lactose"> Intolerância à lactose ou alimentação sem lactose</label>
+        <label class="option">
+          <input type="checkbox" name="restricoes" value="Alergia alimentar" id="checkAlergia">
+          <span>Alergia alimentar</span>
+        </label>
 
-<label><input type="checkbox" name="restricoes" value="Diabetes tipo 1"> Diabetes tipo 1</label>
+        <div class="field conditional" id="campoAlergia" hidden>
+          <label for="alergia">A qual alimento ou ingrediente?</label>
+          <input id="alergia" type="text" placeholder="Ex.: amendoim, leite, ovo...">
+          <small>Informe todos os alimentos envolvidos, separados por vírgula.</small>
+        </div>
 
-<label><input type="checkbox" name="restricoes" value="Vegetariana"> Alimentação vegetariana</label>
+        <label class="option">
+          <input type="checkbox" name="restricoes" value="Diabetes tipo 1">
+          <span>Diabetes tipo 1</span>
+        </label>
 
-<label><input type="checkbox" name="restricoes" value="Vegana"> Alimentação vegana</label>
+        <label class="option">
+          <input type="checkbox" name="restricoes" value="Vegetariana">
+          <span>Alimentação vegetariana</span>
+        </label>
 
-<label><input type="checkbox" name="restricoes" value="Alergia alimentar"> Possuo alguma alergia alimentar</label>
+        <label class="option">
+          <input type="checkbox" name="restricoes" value="Vegana">
+          <span>Alimentação vegana</span>
+        </label>
 
-<label><input type="checkbox" name="restricoes" value="Outra necessidade"> Outra necessidade alimentar</label>
+        <label class="option">
+          <input type="checkbox" name="restricoes" value="Outra necessidade" id="checkOutra">
+          <span>Outra necessidade alimentar</span>
+        </label>
 
-</div>
-</section>
+        <div class="field conditional" id="campoOutra" hidden>
+          <label for="outra">Conte qual é sua necessidade</label>
+          <textarea id="outra" rows="3" placeholder="Descreva sua necessidade alimentar..."></textarea>
+        </div>
+      </section>
 
-<section class="panel">
-<h2>2. Deseja informar alguma alergia ou outra necessidade?</h2>
-<p>Especifique os alimentos ou ingredientes que precisam ser evitados.</p>
-<textarea id="detalhes" rows="4" placeholder="Ex.: alergia a amendoim, castanhas..."></textarea>
-</section>
+      <section class="form-group">
+        <h2>Que tipo de refeição você procura?</h2>
+        <label for="refeicao">Categoria da refeição</label>
+        <select id="refeicao" required>
+          <option value="">Selecione uma opção</option>
+          <option value="cafe">Café da manhã</option>
+          <option value="entrada">Entrada</option>
+          <option value="principal">Prato principal</option>
+          <option value="lanche">Lanche</option>
+          <option value="sobremesa">Sobremesa</option>
+        </select>
+      </section>
 
-<section class="panel">
-<h2>3. Qual refeição você deseja preparar?</h2>
-<p>Escolha uma categoria.</p>
+      <p id="erroFormulario" class="form-error" role="alert" aria-live="polite"></p>
 
-<div class="meal-choices">
-<label><input type="radio" name="refeicao" value="cafe" required> Café da manhã</label>
-<label><input type="radio" name="refeicao" value="entrada"> Entrada</label>
-<label><input type="radio" name="refeicao" value="principal"> Prato principal</label>
-<label><input type="radio" name="refeicao" value="lanche"> Lanche</label>
-<label><input type="radio" name="refeicao" value="sobremesa"> Sobremesa</label>
-</div>
-</section>
+      <button type="submit" class="button">Encontrar minhas receitas →</button>
+    </form>
 
-<button class="button wide" type="submit">Encontrar receitas →</button>
-</form>
+    <p class="disclaimer">
+      As informações são utilizadas para personalizar a busca.
+      A seleção de uma receita não representa garantia de segurança alimentar.
+    </p>
+  </main>
 
-<p class="notice">
-<b>Importante:</b> as sugestões são informativas. Em caso de alergias ou doença celíaca, confira rótulos, composição e risco de contaminação cruzada. A seleção de preferências não certifica a segurança de uma receita.
-</p>
+  <footer>
+    <a class="brand" href="./index.html">
+      <img src="./logo.svg" alt="">
+      <span>Harmonize<span class="plus">+</span></span>
+    </a>
+    <span>Sabor, inclusão e harmonia.</span>
+  </footer>
 
-</main>
+  <script>
+    const formulario = document.getElementById("formulario");
+    const checkAlergia = document.getElementById("checkAlergia");
+    const checkOutra = document.getElementById("checkOutra");
+    const campoAlergia = document.getElementById("campoAlergia");
+    const campoOutra = document.getElementById("campoOutra");
+    const erro = document.getElementById("erroFormulario");
 
-<script>
-document.getElementById('form').addEventListener('submit',e=>{
-e.preventDefault();
+    checkAlergia.addEventListener("change", () => {
+      campoAlergia.hidden = !checkAlergia.checked;
+    });
 
-const r=[...document.querySelectorAll('[name=restricoes]:checked')].map(x=>x.value);
-const m=document.querySelector('[name=refeicao]:checked');
+    checkOutra.addEventListener("change", () => {
+      campoOutra.hidden = !checkOutra.checked;
+    });
 
-if(!m)return;
+    formulario.addEventListener("submit", (event) => {
+      event.preventDefault();
+      erro.textContent = "";
 
-const q=new URLSearchParams({
-restricoes:r.join('|'),
-refeicao:m.value,
-detalhes:document.getElementById('detalhes').value
-});
+      const restricoes = Array.from(
+        document.querySelectorAll('input[name="restricoes"]:checked')
+      ).map(item => item.value);
 
-location.href='./resultado.html?'+q.toString();
-});
-</script>
+      const alergia = document.getElementById("alergia").value.trim();
+      const outra = document.getElementById("outra").value.trim();
+      const refeicao = document.getElementById("refeicao").value;
 
+      if (!refeicao) {
+        erro.textContent = "Selecione o tipo de refeição que deseja encontrar.";
+        document.getElementById("refeicao").focus();
+        return;
+      }
+
+      if (checkAlergia.checked && !alergia) {
+        erro.textContent = "Informe qual alimento ou ingrediente causa sua alergia.";
+        document.getElementById("alergia").focus();
+        return;
+      }
+
+      if (checkOutra.checked && !outra) {
+        erro.textContent = "Descreva sua outra necessidade alimentar.";
+        document.getElementById("outra").focus();
+        return;
+      }
+
+      const dados = {
+        restricoes,
+        alergia,
+        outra,
+        refeicao
+      };
+
+      const parametros = new URLSearchParams({
+        dados: JSON.stringify(dados)
+      });
+
+      window.location.href = "./resultado.html?" + parametros.toString();
+    });
+  </script>
 </body>
 </html>
