@@ -5,26 +5,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel administrativo | Harmonize+</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       background: #F5F1E8;
       color: #173D2B;
       font-family: "DM Sans", sans-serif;
     }
+
     header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      align-items: center;
       padding: 20px 6%;
       background: #173D2B;
       color: white;
+      gap: 15px;
     }
-    header strong { font: 700 25px "Playfair Display", serif; }
+
+    header strong {
+      font: 700 25px "Playfair Display", serif;
+    }
+
     button {
       border: 0;
       border-radius: 9px;
@@ -34,16 +42,37 @@
       font: 700 14px "DM Sans", sans-serif;
       cursor: pointer;
     }
-    main { width: min(900px, 90%); margin: 48px auto; }
-    h1 { font: 700 36px "Playfair Display", serif; }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    main {
+      width: min(1100px, 92%);
+      margin: 38px auto;
+    }
+
+    h1, h2 {
+      font-family: "Playfair Display", serif;
+    }
+
+    h1 { font-size: 36px; }
+    h2 { font-size: 25px; }
+
+    .status {
+      color: #637267;
+      line-height: 1.6;
+    }
+
     .painel {
-      margin-top: 24px;
+      margin: 24px 0;
       padding: 26px;
       background: white;
       border-radius: 18px;
       box-shadow: 0 8px 30px #173D2B12;
     }
-    .status { color: #637267; line-height: 1.6; }
+
     .etiqueta {
       display: inline-block;
       padding: 6px 11px;
@@ -52,9 +81,128 @@
       font-size: 13px;
       font-weight: 700;
     }
-    #erro { color: #b42318; }
+
+    .grade {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .campo.completo {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d5ddd5;
+      border-radius: 9px;
+      font: inherit;
+      color: #173D2B;
+      background: white;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid #FFB000;
+      border-color: #173D2B;
+    }
+
+    .acoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .botao-secundario {
+      background: #e8f1e8;
+    }
+
+    .botao-perigo {
+      background: #fce8e6;
+      color: #b42318;
+    }
+
+    .receita {
+      padding: 20px 0;
+      border-bottom: 1px solid #e4e8e2;
+    }
+
+    .receita:last-child {
+      border-bottom: 0;
+    }
+
+    .receita h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+    }
+
+    .receita p {
+      color: #637267;
+      line-height: 1.5;
+    }
+
+    .status-receita {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #e8f1e8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .mensagem {
+      margin-top: 15px;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .mensagem.erro { color: #b42318; }
+    .mensagem.sucesso { color: #176b39; }
+
+    .filtros {
+      margin: 15px 0;
+    }
+
+    .aviso {
+      padding: 13px;
+      background: #fff6df;
+      border-radius: 10px;
+      color: #705000;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .oculto { display: none; }
+
+    @media (max-width: 650px) {
+      header { padding: 16px 5%; }
+      main { margin: 25px auto; }
+      h1 { font-size: 29px; }
+      .painel { padding: 19px; }
+      .grade { grid-template-columns: 1fr; }
+      .campo.completo { grid-column: auto; }
+    }
   </style>
 </head>
+
 <body>
   <header>
     <strong>Harmonize+</strong>
@@ -71,8 +219,141 @@
       <p id="mensagem" class="status">
         Estamos verificando suas permissões.
       </p>
-      <p id="erro"></p>
+      <p id="erro" class="mensagem"></p>
     </section>
+
+    <section id="areaCadastro" class="painel oculto">
+      <h2 id="tituloFormulario">Cadastrar receita</h2>
+      <p class="status">
+        Preencha as informações da receita para adicioná-la ao sistema.
+      </p>
+
+      <form id="formReceita">
+        <div class="grade">
+
+          <div class="campo completo">
+            <label for="nome">Nome da receita *</label>
+            <input id="nome" required maxlength="150">
+          </div>
+
+          <div class="campo">
+            <label for="categoria">Categoria *</label>
+            <select id="categoria" required>
+              <option value="">Selecione</option>
+              <option value="Entrada">Entrada</option>
+              <option value="Prato principal">Prato principal</option>
+              <option value="Sobremesa">Sobremesa</option>
+              <option value="Petisco">Petisco</option>
+              <option value="Lanche">Lanche</option>
+              <option value="Bebida">Bebida</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="imagem">URL da imagem</label>
+            <input id="imagem" type="url" placeholder="https://...">
+          </div>
+
+          <div class="campo">
+            <label for="tempo">Tempo de preparo (minutos)</label>
+            <input id="tempo" type="number" min="0">
+          </div>
+
+          <div class="campo">
+            <label for="rendimento">Rendimento (porções)</label>
+            <input id="rendimento" type="number" min="1">
+          </div>
+
+          <div class="campo completo">
+            <label for="descricao">Descrição *</label>
+            <textarea id="descricao" required></textarea>
+          </div>
+
+          <div class="campo completo">
+            <label for="ingredientes">Ingredientes *</label>
+            <textarea id="ingredientes" required placeholder="Digite um ingrediente por linha."></textarea>
+          </div>
+
+          <div class="campo completo">
+            <label for="preparo">Modo de preparo *</label>
+            <textarea id="preparo" required placeholder="Digite uma etapa por linha."></textarea>
+          </div>
+
+          <div class="campo completo">
+            <label for="alergenicos">Alergênicos</label>
+            <input id="alergenicos" placeholder="Ex.: leite, ovos, amendoim. Separe por vírgulas.">
+          </div>
+
+          <div class="campo completo">
+            <label for="restricoes">Características alimentares</label>
+            <input id="restricoes" placeholder="Ex.: vegetariana, vegana, sem glúten. Separe por vírgulas.">
+          </div>
+
+          <div class="campo">
+            <label for="carboidratos">Carboidratos por porção (g)</label>
+            <input id="carboidratos" type="number" min="0" step="0.01" placeholder="Somente valor verificado">
+          </div>
+
+          <div class="campo">
+            <label for="bebida">Harmonização com bebida</label>
+            <input id="bebida" placeholder="Ex.: cerveja, vinho...">
+          </div>
+
+          <div class="campo completo">
+            <label for="semAlcool">Harmonização sem álcool</label>
+            <input id="semAlcool" placeholder="Ex.: água com gás e limão">
+          </div>
+
+          <div class="campo completo">
+            <label for="statusReceita">Situação da receita</label>
+            <select id="statusReceita">
+              <option value="draft">Salvar como rascunho</option>
+              <option value="review">Enviar para revisão</option>
+            </select>
+          </div>
+
+        </div>
+
+        <p class="aviso">
+          Importante: informe alergênicos e características alimentares
+          somente após conferência. A ausência de um ingrediente na lista
+          não garante ausência de contaminação cruzada.
+        </p>
+
+        <div class="acoes">
+          <button id="salvarReceita" type="submit">Salvar receita</button>
+          <button id="cancelarEdicao" type="button" class="botao-secundario oculto">
+            Cancelar edição
+          </button>
+        </div>
+
+        <p id="mensagemFormulario" class="mensagem"></p>
+      </form>
+    </section>
+
+    <section id="areaReceitas" class="painel oculto">
+      <h2>Receitas cadastradas</h2>
+
+      <div class="filtros">
+        <label for="filtroStatus">Filtrar por situação</label>
+        <select id="filtroStatus">
+          <option value="todas">Todas as receitas</option>
+          <option value="draft">Rascunhos</option>
+          <option value="review">Em revisão</option>
+          <option value="approved">Aprovadas</option>
+          <option value="published">Publicadas</option>
+          <option value="rejected">Rejeitadas</option>
+        </select>
+      </div>
+
+      <div id="listaReceitas">
+        <p class="status">Carregando receitas...</p>
+      </div>
+
+      <p id="mensagemLista" class="mensagem"></p>
+    </section>
+
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
