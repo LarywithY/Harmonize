@@ -40,6 +40,40 @@ const nomesStatus = {
   rejected: "Rejeitada"
 };
 
+const nomesVerificacao = {
+  pendente: "Pendente",
+  em_verificacao: "Em verificação",
+  aprovada: "Verificação aprovada",
+  reprovada: "Verificação reprovada"
+};
+
+const camposVerificacao = [
+  {
+    coluna: "ingredients_verified",
+    texto: "Ingredientes conferidos"
+  },
+  {
+    coluna: "allergens_verified",
+    texto: "Alergênicos conferidos"
+  },
+  {
+    coluna: "cross_contamination_assessed",
+    texto: "Contaminação cruzada avaliada"
+  },
+  {
+    coluna: "gluten_free_verified",
+    texto: "Ausência de glúten verificada"
+  },
+  {
+    coluna: "dairy_free_verified",
+    texto: "Ausência de lactose verificada"
+  },
+  {
+    coluna: "allergies_verified",
+    texto: "Alergias alimentares verificadas"
+  }
+];
+
 function mostrarMensagem(elemento, texto, tipo = "") {
   elemento.textContent = texto;
   elemento.className = "mensagem " + tipo;
@@ -179,6 +213,188 @@ function montarDadosReceita() {
   };
 }
 
+// ==========================================
+// VERIFICAÇÃO DE SEGURANÇA ALIMENTAR
+// ==========================================
+
+function criarPainelVerificacao(receita) {
+  const painel = criarElemento(
+    "section",
+    undefined,
+    "painel-verificacao"
+  );
+
+  const titulo = criarElemento(
+    "h4",
+    "Verificação de segurança alimentar"
+  );
+
+  const explicacao = criarElemento(
+    "p",
+    "Marque somente os critérios que foram efetivamente conferidos."
+  );
+
+  painel.append(titulo, explicacao);
+
+  const statusAtual =
+    receita.verification_status || "pendente";
+
+  const textoStatus = criarElemento(
+    "p",
+    "Status atual: " +
+      (nomesVerificacao[statusAtual] || statusAtual)
+  );
+
+  painel.appendChild(textoStatus);
+
+  const controles = {};
+
+  camposVerificacao.forEach(campo => {
+    const linha = criarElemento(
+      "label",
+      undefined,
+      "campo-verificacao"
+    );
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = receita[campo.coluna] === true;
+
+    linha.appendChild(checkbox);
+    linha.appendChild(
+      document.createTextNode(" " + campo.texto)
+    );
+
+    controles[campo.coluna] = checkbox;
+
+    painel.appendChild(linha);
+  });
+
+  const labelStatus = criarElemento(
+    "label",
+    "Status da verificação"
+  );
+
+  const seletor = document.createElement("select");
+
+  [
+    ["pendente", "Pendente"],
+    ["em_verificacao", "Em verificação"],
+    ["aprovada", "Verificação aprovada"],
+    ["reprovada", "Verificação reprovada"]
+  ].forEach(([valor, texto]) => {
+    const opcao = document.createElement("option");
+    opcao.value = valor;
+    opcao.textContent = texto;
+    seletor.appendChild(opcao);
+  });
+
+  seletor.value = nomesVerificacao[statusAtual]
+    ? statusAtual
+    : "pendente";
+
+  labelStatus.appendChild(seletor);
+  painel.appendChild(labelStatus);
+
+  const botao = criarElemento(
+    "button",
+    "Salvar verificações",
+    "botao-secundario"
+  );
+
+  botao.type = "button";
+
+  botao.addEventListener("click", async () => {
+    const dados = {};
+
+    camposVerificacao.forEach(campo => {
+      dados[campo.coluna] =
+        controles[campo.coluna].checked;
+    });
+
+    const statusEscolhido = seletor.value;
+
+    // Uma aprovação de segurança exige os três
+    // critérios básicos de conferência.
+    if (
+      statusEscolhido === "aprovada" &&
+      (
+        !dados.ingredients_verified ||
+        !dados.allergens_verified ||
+        !dados.cross_contamination_assessed
+      )
+    ) {
+      mostrarMensagem(
+        mensagemLista,
+        "Para aprovar a verificação, confira ingredientes, alergênicos e contaminação cruzada.",
+        "erro"
+      );
+
+      return;
+    }
+
+    const confirmar = window.confirm(
+      "Deseja salvar as verificações desta receita?"
+    );
+
+    if (!confirmar) return;
+
+    botao.disabled = true;
+    botao.textContent = "Salvando...";
+
+    try {
+      const { error: erroVerificacao } = await client.rpc(
+        "update_recipe_verification",
+        {
+          p_recipe_id: receita.id,
+          p_verification_status: statusEscolhido,
+          p_ingredients_verified: dados.ingredients_verified,
+          p_allergens_verified: dados.allergens_verified,
+          p_cross_contamination_assessed:
+            dados.cross_contamination_assessed,
+          p_gluten_free_verified: dados.gluten_free_verified,
+          p_dairy_free_verified: dados.dairy_free_verified,
+          p_allergies_verified: dados.allergies_verified
+        }
+      );
+
+      if (erroVerificacao) throw erroVerificacao;
+
+      mostrarMensagem(
+        mensagemLista,
+        "Verificações alimentares salvas com sucesso!",
+        "sucesso"
+      );
+
+      await carregarReceitas();
+
+    } catch (problema) {
+      console.error(
+        "Erro ao salvar verificações:",
+        problema
+      );
+
+      mostrarMensagem(
+        mensagemLista,
+        problema.message ||
+          "Não foi possível salvar as verificações.",
+        "erro"
+      );
+
+      botao.disabled = false;
+      botao.textContent = "Salvar verificações";
+    }
+  });
+
+  painel.appendChild(botao);
+
+  return painel;
+}
+
+// ==========================================
+// CARREGAMENTO DAS RECEITAS
+// ==========================================
+
 async function carregarReceitas() {
   listaReceitas.replaceChildren(
     criarElemento("p", "Carregando receitas...", "status")
@@ -218,6 +434,7 @@ async function carregarReceitas() {
       const card = criarElemento("article", undefined, "receita");
 
       const titulo = criarElemento("h3", receita.name);
+
       const descricao = criarElemento(
         "p",
         receita.description || "Sem descrição."
@@ -304,6 +521,16 @@ async function carregarReceitas() {
         card.appendChild(acoes);
       }
 
+      // Administradora e revisora podem conferir
+      // a segurança alimentar de qualquer receita.
+      if (
+        ["admin", "reviewer"].includes(membroAtual.role)
+      ) {
+        card.appendChild(
+          criarPainelVerificacao(receita)
+        );
+      }
+
       listaReceitas.appendChild(card);
     });
 
@@ -320,10 +547,16 @@ async function carregarReceitas() {
   }
 }
 
+// ==========================================
+// CADASTRO E EDIÇÃO
+// ==========================================
+
 async function salvarReceita(event) {
   event.preventDefault();
 
   if (!formReceita.reportValidity()) return;
+
+  const estavaEditando = Boolean(receitaEditando);
 
   botaoSalvar.disabled = true;
   botaoSalvar.textContent = "Salvando...";
@@ -332,7 +565,7 @@ async function salvarReceita(event) {
     const dados = montarDadosReceita();
     const statusEscolhido = valor("statusReceita");
 
-    if (receitaEditando) {
+    if (estavaEditando) {
       const { error: erroAtualizacao } = await client
         .from("recipes")
         .update({
@@ -342,12 +575,6 @@ async function salvarReceita(event) {
         .eq("id", receitaEditando);
 
       if (erroAtualizacao) throw erroAtualizacao;
-
-      mostrarMensagem(
-        mensagemFormulario,
-        "Receita atualizada com sucesso!",
-        "sucesso"
-      );
 
     } else {
       const { error: erroInsercao } = await client
@@ -359,15 +586,18 @@ async function salvarReceita(event) {
         });
 
       if (erroInsercao) throw erroInsercao;
-
-      mostrarMensagem(
-        mensagemFormulario,
-        "Receita cadastrada com sucesso!",
-        "sucesso"
-      );
     }
 
     limparFormulario();
+
+    mostrarMensagem(
+      mensagemFormulario,
+      estavaEditando
+        ? "Receita atualizada com sucesso!"
+        : "Receita cadastrada com sucesso!",
+      "sucesso"
+    );
+
     await carregarReceitas();
 
   } catch (problema) {
@@ -387,10 +617,14 @@ async function salvarReceita(event) {
   }
 }
 
+// ==========================================
+// REVISÃO EDITORIAL
+// ==========================================
+
 async function revisarReceita(id, decisao) {
   const confirmacao = decisao === "approved"
-    ? "Deseja aprovar esta receita?"
-    : "Deseja rejeitar esta receita?";
+    ? "Deseja aprovar esta receita editorialmente?"
+    : "Deseja rejeitar esta receita editorialmente?";
 
   if (!window.confirm(confirmacao)) return;
 
@@ -408,7 +642,7 @@ async function revisarReceita(id, decisao) {
     mostrarMensagem(
       mensagemLista,
       decisao === "approved"
-        ? "Receita aprovada com sucesso!"
+        ? "Receita aprovada editorialmente!"
         : "Receita rejeitada.",
       "sucesso"
     );
@@ -425,6 +659,10 @@ async function revisarReceita(id, decisao) {
     );
   }
 }
+
+// ==========================================
+// PUBLICAÇÃO
+// ==========================================
 
 async function publicarReceita(id) {
   if (membroAtual.role !== "admin") return;
@@ -460,13 +698,19 @@ async function publicarReceita(id) {
   }
 }
 
+// ==========================================
+// INICIALIZAÇÃO DO PAINEL
+// ==========================================
+
 async function iniciarPainel() {
   try {
     boasVindas.textContent = "Conectando ao sistema...";
     mensagem.textContent = "Verificando seu acesso ao Harmonize+.";
 
     if (!client) {
-      throw new Error("A conexão com o Supabase não foi inicializada.");
+      throw new Error(
+        "A conexão com o Supabase não foi inicializada."
+      );
     }
 
     const { data: dadosLogin, error: erroLogin } =
@@ -478,7 +722,9 @@ async function iniciarPainel() {
 
     if (!usuarioAtual) {
       boasVindas.textContent = "Você não está conectado";
-      mensagem.textContent = "Entre com seu e-mail e senha para acessar.";
+      mensagem.textContent =
+        "Entre com seu e-mail e senha para acessar.";
+
       erro.innerHTML = '<a href="login.html">Ir para o login</a>';
       return;
     }
@@ -521,11 +767,17 @@ async function iniciarPainel() {
   } catch (problema) {
     console.error("Erro ao iniciar painel:", problema);
 
-    boasVindas.textContent = "Não foi possível carregar o painel";
+    boasVindas.textContent =
+      "Não foi possível carregar o painel";
+
     mensagem.textContent =
       problema.message || "Ocorreu um erro inesperado.";
   }
 }
+
+// ==========================================
+// EVENTOS
+// ==========================================
 
 formReceita.addEventListener("submit", salvarReceita);
 
