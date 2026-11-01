@@ -6,136 +6,72 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#173D2B">
 <title>Receitas | Harmonize+</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./style.css?v=9">
+
+<link rel="stylesheet" href="./style.css?v=11">
+<script src="./receitas.js" defer></script>
+<script src="./resultado.js" defer></script>
 </head>
+
 <body>
 
 <header class="site-header">
-<a class="brand" href="./index.html">
-<img src="./logo.svg" alt="">
-<span>Harmonize<span class="plus">+</span></span>
-</a>
-<a href="./experiencia.html">↻ Alterar preferências</a>
+  <a class="brand" href="./index.html">
+    <img src="./logo.svg" alt="">
+    <span>Harmonize<span class="plus">+</span></span>
+  </a>
+  <a href="./experiencia.html">↻ Alterar preferências</a>
 </header>
 
 <main class="page">
 
-<div class="page-heading">
-<small class="eyebrow">SABORES PARA DESCOBRIR</small>
-<h1>Encontramos ideias para você!</h1>
-<p id="summary">Confira as sugestões para sua refeição.</p>
-<p id="restrictions" class="restriction-summary"></p>
-</div>
+  <div class="page-heading">
+    <small class="eyebrow">SABORES PARA DESCOBRIR</small>
+    <h1>Suas receitas</h1>
+    <p id="summary">Estamos procurando opções para sua seleção.</p>
+    <p id="restrictions" class="restriction-summary"></p>
+  </div>
 
-<section class="recipes">
+  <section id="recipe-results" class="recipes" aria-live="polite"></section>
 
-<article class="recipe" data-meal="cafe">
-<div class="photo cafe"><span>Café da manhã</span></div>
-<div>
-<h2>Panquecas de banana e aveia</h2>
-<p>Uma opção prática preparada com banana, ovos e aveia. Verifique a adequação da aveia se houver restrição ao glúten.</p>
-<p><b>Harmonização possível:</b> bebida de perfil leve, após conferir a composição.</p>
-</div>
-</article>
+  <section id="empty" class="notice" hidden>
+    <h2>Estamos preparando novas opções!</h2>
+    <p>
+      Ainda não encontramos receitas cadastradas e verificadas que atendam
+      a todos os critérios selecionados. Você pode alterar suas escolhas
+      ou voltar em outro momento.
+    </p>
+    <a class="button" href="./experiencia.html">Alterar preferências</a>
+  </section>
 
-<article class="recipe" data-meal="entrada">
-<div class="photo entrada"><span>Entrada</span></div>
-<div>
-<h2>Bruschetta de tomate e manjericão</h2>
-<p>Tomate fresco, manjericão e azeite sobre uma base de pão. A base deve ser adequada às necessidades alimentares.</p>
-<p><b>Harmonização possível:</b> bebida de perfil leve, conforme ingredientes e preferência.</p>
-</div>
-</article>
+  <section class="notice">
+    <h2>Sobre a segurança alimentar</h2>
+    <p>
+      As receitas exibidas passam por critérios de verificação cadastrados
+      pela equipe do Harmonize+. Mesmo assim, confira os rótulos e as
+      condições reais de preparo. Em caso de alergias ou doença celíaca,
+      é indispensável avaliar também a contaminação cruzada.
+    </p>
+    <p>
+      Para diabetes tipo 1, as informações de carboidratos são referências
+      por porção e não substituem orientação individualizada.
+    </p>
+  </section>
 
-<article class="recipe" data-meal="principal">
-<div class="photo principal"><span>Prato principal</span></div>
-<div>
-<h2>Risoto de cogumelos</h2>
-<p>Arroz, cogumelos e temperos frescos. Confira o caldo, queijos e demais ingredientes utilizados.</p>
-<p><b>Harmonização possível:</b> bebida de sabor equilibrado, incluindo alternativa sem álcool.</p>
-</div>
-</article>
-
-<article class="recipe" data-meal="lanche">
-<div class="photo lanche"><span>Lanche</span></div>
-<div>
-<h2>Sanduíche de legumes grelhados</h2>
-<p>Legumes grelhados, folhas e molho de sua preferência. Escolha o pão e o molho conforme as necessidades alimentares.</p>
-<p><b>Harmonização possível:</b> bebida leve ou alternativa sem álcool, após conferir a composição.</p>
-</div>
-</article>
-
-<article class="recipe" data-meal="sobremesa">
-<div class="photo sobremesa"><span>Sobremesa</span></div>
-<div>
-<h2>Mousse de chocolate</h2>
-<p>Uma sobremesa cremosa de chocolate. Confira a composição do chocolate e dos demais ingredientes para identificar alergênicos.</p>
-<p><b>Harmonização possível:</b> bebida de perfil maltado ou opção sem álcool, considerando a composição.</p>
-</div>
-</article>
-
-</section>
-
-<p id="empty" class="notice" hidden>Não há sugestão cadastrada para essa categoria.</p>
-
-<section class="notice">
-<h2>Uma experiência que respeita suas escolhas</h2>
-<p>Esta versão apresenta receitas demonstrativas e não valida ingredientes nem filtra receitas por alergênicos. Produtos sem álcool também podem conter glúten. Para diabetes tipo 1, a alimentação deve considerar orientações individualizadas e contagem de carboidratos, não uma proibição genérica de açúcar.</p>
-</section>
-
-<a class="button" href="./experiencia.html">Fazer uma nova busca →</a>
+  <a class="button" href="./experiencia.html">Fazer nova busca →</a>
 
 </main>
 
 <footer>
-<a class="brand" href="./index.html">
-<img src="./logo.svg" alt="">
-<span>Harmonize<span class="plus">+</span></span>
-</a>
-<span>Sabor, inclusão e harmonia.</span>
+  <a class="brand" href="./index.html">
+    <img src="./logo.svg" alt="">
+    <span>Harmonize<span class="plus">+</span></span>
+  </a>
+  <span>Sabor, inclusão e harmonia.</span>
 </footer>
-
-<script>
-const q=new URLSearchParams(location.search);
-const meal=q.get('refeicao');
-
-const names={
-cafe:'Café da manhã',
-entrada:'Entrada',
-principal:'Prato principal',
-lanche:'Lanche',
-sobremesa:'Sobremesa'
-};
-
-document.getElementById('summary').textContent=
-'Categoria selecionada: '+(names[meal]||'não informada')+'.';
-
-const r=q.get('restricoes')||'';
-const d=q.get('detalhes')||'';
-
-if(r||d){
-document.getElementById('restrictions').textContent=
-'Preferências informadas: '+
-(r.split('|').filter(Boolean).join(', ')||'nenhuma seleção')+
-(d?'. Observações: '+d:'')+
-'. Estas informações ainda não filtram nem certificam a segurança das receitas.';
-}
-
-let count=0;
-
-document.querySelectorAll('.recipe').forEach(card=>{
-const show=card.dataset.meal===meal;
-card.hidden=!show;
-if(show)count++;
-});
-
-if(!count){
-document.getElementById('empty').hidden=false;
-}
-</script>
 
 </body>
 </html>
