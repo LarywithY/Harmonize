@@ -5,10 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Entrar | Harmonize+</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -19,6 +22,7 @@
       color: #173D2B;
       font-family: "DM Sans", sans-serif;
     }
+
     .login {
       width: 100%;
       max-width: 420px;
@@ -27,16 +31,20 @@
       border-radius: 22px;
       box-shadow: 0 12px 40px #173D2B18;
     }
+
     h1 {
       margin: 0 0 8px;
       font: 700 34px "Playfair Display", serif;
     }
+
     p { color: #637267; line-height: 1.6; }
+
     label {
       display: block;
       margin: 20px 0 7px;
       font-weight: 600;
     }
+
     input {
       width: 100%;
       padding: 14px;
@@ -44,10 +52,12 @@
       border-radius: 10px;
       font: inherit;
     }
+
     input:focus {
       outline: 2px solid #FFB000;
       border-color: #173D2B;
     }
+
     button {
       width: 100%;
       margin-top: 24px;
@@ -59,58 +69,121 @@
       font: 700 16px "DM Sans", sans-serif;
       cursor: pointer;
     }
-    button:disabled { opacity: .6; cursor: wait; }
-    #mensagem { min-height: 24px; font-size: 14px; }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    #mensagem {
+      min-height: 24px;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    #mensagem.erro { color: #b42318; }
+    #mensagem.sucesso { color: #176b39; }
+
     a { color: #173D2B; }
   </style>
 </head>
+
 <body>
   <main class="login">
     <h1>Harmonize+</h1>
-    <p>Área exclusiva da equipe. Entre com seu e-mail e senha cadastrados.</p>
+
+    <p>
+      Área exclusiva da equipe.
+      Entre com seu e-mail e senha cadastrados.
+    </p>
 
     <form id="formLogin">
       <label for="email">E-mail</label>
-      <input id="email" type="email" autocomplete="username" required>
+      <input
+        id="email"
+        type="email"
+        autocomplete="username"
+        required
+      >
 
       <label for="senha">Senha</label>
-      <input id="senha" type="password" autocomplete="current-password" required>
+      <input
+        id="senha"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
 
-      <button id="entrar" type="submit">Entrar no painel</button>
-      <p id="mensagem" role="status"></p>
+      <button id="entrar" type="submit">
+        Entrar no painel
+      </button>
+
+      <p id="mensagem" role="status" aria-live="polite"></p>
     </form>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
+
   <script>
     const form = document.getElementById("formLogin");
     const mensagem = document.getElementById("mensagem");
     const botao = document.getElementById("entrar");
-    const supabase = window.harmonizeSupabase;
+    const client = window.harmonizeSupabase;
 
-    form.addEventListener("submit", async (event) => {
+    function mostrarMensagem(texto, tipo = "erro") {
+      mensagem.textContent = texto;
+      mensagem.className = tipo;
+    }
+
+    form.addEventListener("submit", async function(event) {
       event.preventDefault();
-      mensagem.textContent = "";
+
+      if (!client) {
+        mostrarMensagem(
+          "Não foi possível conectar ao sistema. Confira o carregamento do Supabase."
+        );
+        return;
+      }
+
       botao.disabled = true;
       botao.textContent = "Verificando...";
+      mostrarMensagem("Conferindo seus dados...", "sucesso");
 
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("senha").value;
 
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+      try {
+        const { data, error } = await client.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
 
-      if (error) {
-        mensagem.textContent = "Não foi possível entrar. Confira seu e-mail e senha.";
+        if (error) {
+          throw error;
+        }
+
+        if (!data.user) {
+          throw new Error("O sistema não conseguiu confirmar seu usuário.");
+        }
+
+        mostrarMensagem(
+          "Login realizado! Abrindo o painel...",
+          "sucesso"
+        );
+
+        window.location.href = "admin.html";
+
+      } catch (problema) {
+        console.error("Erro no login:", problema);
+
+        mostrarMensagem(
+          problema.message || "Não foi possível realizar o login."
+        );
+
         botao.disabled = false;
         botao.textContent = "Entrar no painel";
-        return;
       }
-
-      window.location.href = "admin.html";
     });
   </script>
 </body>
