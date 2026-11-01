@@ -1,7 +1,7 @@
 
-/* HARMONIZE+ — FILTRO DE RECEITAS */
+/* HARMONIZE+ — BUSCA E FILTRO DE RECEITAS NO SUPABASE */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   const parametros = new URLSearchParams(window.location.search);
   let dados = {};
@@ -16,13 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     ? dados.restricoes
     : [];
 
-  const categoria = dados.refeicao || "";
+  const categoria = String(dados.refeicao || "").toLowerCase();
   const alergia = String(dados.alergia || "").trim();
   const outra = String(dados.outra || "").trim();
-
-  const catalogo = Array.isArray(window.receitas)
-    ? window.receitas
-    : [];
 
   const resultados = document.getElementById("recipe-results");
   const vazio = document.getElementById("empty");
@@ -60,8 +56,53 @@ document.addEventListener("DOMContentLoaded", () => {
       .trim();
   }
 
+  function converterReceita(item) {
+    return {
+      nome: item.name || "",
+      categoria: normalizar(item.category),
+      imagem: item.image_url || "",
+      descricao: item.description || "",
+      tempo: item.prep_minutes != null
+        ? item.prep_minutes + " minutos"
+        : "",
+      rendimento: item.servings != null
+        ? item.servings + " porções"
+        : "",
+      ingredientes: Array.isArray(item.ingredients)
+        ? item.ingredients
+        : [],
+      preparo: Array.isArray(item.steps)
+        ? item.steps
+        : [],
+      alergenicos: Array.isArray(item.allergens)
+        ? item.allergens
+        : [],
+      restricoesCompativeis: Array.isArray(item.dietary_tags)
+        ? item.dietary_tags
+        : [],
+      carboidratosPorPorcao: item.carbs_g != null
+        ? Number(item.carbs_g)
+        : null,
+      harmonizacao: {
+        bebida: item.harmonization_drink || "",
+        alternativaSemAlcool:
+          item.harmonization_non_alcoholic || ""
+      },
+      verificacao: {
+        status: item.verification_status,
+        ingredientesConferidos: item.ingredients_verified,
+        alergenicosConferidos: item.allergens_verified,
+        contaminacaoCruzadaAvaliada:
+          item.cross_contamination_assessed,
+        semGlutenVerificado: item.gluten_free_verified,
+        semLactoseVerificado: item.dairy_free_verified,
+        alergiasVerificadas: item.allergies_verified
+      }
+    };
+  }
+
   function receitaAprovada(receita) {
-    const v = receita.verificacao || {};
+    const v = receita.verificacao;
 
     return (
       v.status === "aprovada" &&
@@ -71,8 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function compativel(receita) {
-    const v = receita.verificacao || {};
-    const tags = receita.restricoesCompativeis || [];
+    const v = receita.verificacao;
+    const tags = receita.restricoesCompativeis.map(normalizar);
+    const possuiTag = (tag) => tags.includes(normalizar(tag));
 
     if (!receitaAprovada(receita)) return false;
     if (receita.categoria !== categoria) return false;
@@ -81,29 +123,29 @@ document.addEventListener("DOMContentLoaded", () => {
       if (
         v.semGlutenVerificado !== true ||
         v.contaminacaoCruzadaAvaliada !== true ||
-        !tags.includes("Doença celíaca")
+        !possuiTag("Doença celíaca")
       ) return false;
     }
 
     if (restricoes.includes("Sensibilidade ao glúten")) {
       if (
         v.semGlutenVerificado !== true ||
-        !tags.includes("Sensibilidade ao glúten")
+        !possuiTag("Sensibilidade ao glúten")
       ) return false;
     }
 
     if (restricoes.includes("Intolerância à lactose")) {
       if (
         v.semLactoseVerificado !== true ||
-        !tags.includes("Intolerância à lactose")
+        !possuiTag("Intolerância à lactose")
       ) return false;
     }
 
-    if (restricoes.includes("Vegetariana") && !tags.includes("Vegetariana")) {
+    if (restricoes.includes("Vegetariana") && !possuiTag("Vegetariana")) {
       return false;
     }
 
-    if (restricoes.includes("Vegana") && !tags.includes("Vegana")) {
+    if (restricoes.includes("Vegana") && !possuiTag("Vegana")) {
       return false;
     }
 
@@ -117,8 +159,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (v.contaminacaoCruzadaAvaliada !== true) return false;
       if (v.alergiasVerificadas !== true) return false;
 
-      const alergiasCadastradas = (receita.alergenicos || [])
-        .map(normalizar);
+      const alergiasCadastradas =
+        receita.alergenicos.map(normalizar);
 
       const alergiasInformadas = alergia
         .split(/[,;]+/)
@@ -166,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
       foto.src = receita.imagem;
       foto.alt = "Fotografia de " + receita.nome;
       foto.loading = "lazy";
-
       foto.onerror = () => foto.remove();
 
       cartao.appendChild(foto);
@@ -185,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
     conteudo.appendChild(criarElemento(
       "p",
       "recipe-description",
-      receita.descricao || ""
+      receita.descricao
     ));
 
     conteudo.appendChild(criarElemento(
@@ -209,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const ingredientes = document.createElement("ul");
 
-    (receita.ingredientes || []).forEach(item => {
+    receita.ingredientes.forEach(item => {
       ingredientes.appendChild(criarElemento("li", "", item));
     });
 
@@ -219,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const preparo = document.createElement("ol");
 
-    (receita.preparo || []).forEach(etapa => {
+    receita.preparo.forEach(etapa => {
       preparo.appendChild(criarElemento("li", "", etapa));
     });
 
@@ -235,7 +276,10 @@ document.addEventListener("DOMContentLoaded", () => {
       ));
     }
 
-    if (receita.harmonizacao) {
+    if (
+      receita.harmonizacao.bebida ||
+      receita.harmonizacao.alternativaSemAlcool
+    ) {
       corpo.appendChild(criarElemento("h3", "", "Harmonização"));
 
       if (receita.harmonizacao.bebida) {
@@ -263,35 +307,67 @@ document.addEventListener("DOMContentLoaded", () => {
     return cartao;
   }
 
-  const encontrados = catalogo.filter(compativel).slice(0, 3);
+  function mostrarMensagem(titulo, mensagem) {
+    vazio.hidden = false;
+    vazio.querySelector("h2").textContent = titulo;
+    vazio.querySelector("p").textContent = mensagem;
+  }
 
-  encontrados.forEach(receita => {
-    resultados.appendChild(criarCartao(receita));
-  });
+  try {
+    const client = window.harmonizeSupabase;
 
-  loading.hidden = true;
-  vazio.hidden = encontrados.length > 0;
+    if (!client) {
+      throw new Error("Conexão com o Supabase não encontrada.");
+    }
 
-  if (restricoes.includes("Alergia alimentar")) {
-    vazio.querySelector("h2").textContent =
-      "Sua busca exige uma verificação específica";
+    const { data, error } = await client
+      .from("recipes")
+      .select("*")
+      .eq("status", "published");
 
-    vazio.querySelector("p").textContent =
-      "Não encontramos opções que atendam aos critérios de verificação necessários para a alergia informada. Não considere uma receita segura sem confirmação individual dos ingredientes e do preparo.";
+    if (error) throw error;
 
-  } else if (restricoes.includes("Outra necessidade")) {
-    vazio.querySelector("h2").textContent =
-      "Precisamos avaliar sua necessidade";
+    const catalogo = (data || []).map(converterReceita);
 
-    vazio.querySelector("p").textContent =
-      "Essa necessidade ainda não pode ser interpretada automaticamente. Nossa equipe precisa avaliar os critérios antes de recomendar receitas.";
+    const encontrados = catalogo
+      .filter(compativel)
+      .slice(0, 3);
 
-  } else if (encontrados.length === 0) {
-    vazio.querySelector("h2").textContent =
-      "Não encontramos opções neste momento";
+    encontrados.forEach(receita => {
+      resultados.appendChild(criarCartao(receita));
+    });
 
-    vazio.querySelector("p").textContent =
-      "Ainda não há receitas cadastradas e verificadas para todos os critérios selecionados. Você pode alterar suas preferências ou voltar em outro momento.";
+    loading.hidden = true;
+    vazio.hidden = encontrados.length > 0;
+
+    if (restricoes.includes("Alergia alimentar")) {
+      mostrarMensagem(
+        "Sua busca exige uma verificação específica",
+        "Não encontramos opções que atendam aos critérios de verificação necessários para a alergia informada. Não considere uma receita segura sem confirmação individual dos ingredientes e do preparo."
+      );
+
+    } else if (restricoes.includes("Outra necessidade")) {
+      mostrarMensagem(
+        "Precisamos avaliar sua necessidade",
+        "Essa necessidade ainda não pode ser interpretada automaticamente. Nossa equipe precisa avaliar os critérios antes de recomendar receitas."
+      );
+
+    } else if (encontrados.length === 0) {
+      mostrarMensagem(
+        "Não encontramos opções neste momento",
+        "Ainda não há receitas publicadas, verificadas e compatíveis com todos os critérios selecionados. Você pode alterar suas preferências ou voltar em outro momento."
+      );
+    }
+
+  } catch (erro) {
+    console.error("Erro ao buscar receitas:", erro);
+
+    loading.hidden = true;
+
+    mostrarMensagem(
+      "Não foi possível carregar as receitas",
+      "Ocorreu um problema ao consultar o banco de dados. Tente novamente mais tarde."
+    );
   }
 
 });
