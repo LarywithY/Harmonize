@@ -1,18 +1,23 @@
 
-:root {
-    --verde: #5D7B3D;
-    --rosa: #E4568B;
-    --amarelo: #F6C94D;
-    --azul: #A7C7E4;
-    --rosa-claro: #F29BB9;
-    --vermelho: #C42B34;
-    --branco: #FFFFFF;
+/* =====================================
+   HARMONY HEINEKEN
+   IDENTIDADE VISUAL
+===================================== */
 
-    --texto: #30352D;
-    --fundo: #FFFFFF;
+:root {
+    --verde: #173D2B;
+    --vermelho: #E31B36;
+    --off-white: #F5F1E8;
+    --dourado: #FFB000;
+
+    --branco: #FFFFFF;
+    --texto: #26352C;
+    --cinza: #70776F;
 }
 
-/* CONFIGURAÇÕES GERAIS */
+/* =====================================
+   CONFIGURAÇÕES GERAIS
+===================================== */
 
 * {
     margin: 0;
@@ -20,371 +25,499 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'DM Sans', sans-serif;
-    background-color: var(--fundo);
+    background-color: var(--off-white);
     color: var(--texto);
     line-height: 1.7;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     font-family: 'Playfair Display', serif;
+    color: var(--verde);
     line-height: 1.2;
 }
 
-/* CABEÇALHO */
-
-header {
-    background-color: var(--verde);
-    color: var(--branco);
-    padding: 28px 8%;
-}
-
-header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-header p {
-    font-size: 14px;
-    opacity: 0.95;
-}
-
-/* CONTEÚDO PRINCIPAL */
-
-main {
-    max-width: 1100px;
-    margin: 70px auto;
-    padding: 0 8%;
-}
-
-main h2 {
-    color: var(--verde);
-    font-size: clamp(36px, 5vw, 54px);
-    max-width: 700px;
-    margin-bottom: 22px;
-}
-
-main p {
-    font-size: 17px;
-    max-width: 580px;
-    margin-bottom: 30px;
-}
-
-/* BOTÃO */
-
-button {
-    background-color: var(--amarelo);
-    color: #30352D;
-    border: none;
-    border-radius: 10px;
-    padding: 15px 25px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background-color: var(--rosa);
-    color: var(--branco);
-    transform: translateY(-2px);
-}
-
-/* ADAPTAÇÃO PARA CELULAR */
-
-@media (max-width: 600px) {
-    header {
-        padding: 24px 6%;
-    }
-
-    main {
-        margin: 50px auto;
-        padding: 0 6%;
-    }
-
-    main h2 {
-        font-size: 36px;
-    }
-
-    main p {
-        font-size: 15px;
-    }
-}
-
-/* BOTÃO EM FORMATO DE LINK */
-
-.botao {
-    display: inline-block;
-    background-color: var(--amarelo);
-    color: #30352D;
-    border: none;
-    border-radius: 10px;
-    padding: 15px 25px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
+a {
     text-decoration: none;
-    cursor: pointer;
-    transition: 0.3s;
 }
 
-.botao:hover {
-    background-color: var(--rosa);
-    color: var(--branco);
-    transform: translateY(-2px);
+button,
+input,
+textarea {
+    font: inherit;
 }
 
-/* PÁGINA DE EXPERIÊNCIA */
-
-.experiencia {
-    max-width: 850px;
-    margin: 55px auto;
-    padding: 0 8%;
-}
-
-.etapa {
-    color: var(--rosa);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-}
-
-.experiencia h2 {
-    color: var(--verde);
-    font-size: 42px;
-    margin: 15px 0;
-}
-
-.experiencia > p {
-    margin-bottom: 30px;
-}
-
-.grupo {
-    background-color: #F8F8F5;
-    border-radius: 16px;
-    padding: 25px;
-    margin-bottom: 25px;
-}
-
-.grupo h3 {
-    color: var(--verde);
-    font-size: 23px;
-    margin-bottom: 20px;
-}
-
-.grupo label {
-    display: block;
-    margin-bottom: 13px;
-    cursor: pointer;
-}
-
-.grupo input[type="checkbox"] {
-    accent-color: var(--verde);
-    margin-right: 9px;
-    width: 16px;
-    height: 16px;
-}
-
-.campo {
-    margin: 15px 0 20px;
-}
-
-.campo input,
-.grupo select {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #D8D8D0;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    background-color: var(--branco);
-}
-
-.campo label {
-    font-weight: 600;
-    margin-bottom: 8px;
-}
-
-.aviso {
-    font-size: 13px;
-    color: #666;
-    margin-top: 25px;
-}
-
-@media (max-width: 600px) {
-    .experiencia {
-        margin: 40px auto;
-        padding: 0 6%;
-    }
-
-    .experiencia h2 {
-        font-size: 34px;
-    }
-
-    .grupo {
-        padding: 20px;
-    }
-}
-
-body {
-    background-color: #F29BB9 !important;
-}
-
-
-/* =================================
-   PRIMEIRA TELA - APRESENTAÇÃO
-================================= */
+/* =====================================
+   PRIMEIRA TELA - HOME
+===================================== */
 
 .hero {
     min-height: 100vh;
     background-color: var(--verde);
-    color: var(--branco);
+    color: var(--off-white);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
     text-align: center;
-    padding: 60px 8%;
-    position: relative;
+    padding: 40px 20px;
 }
 
 .hero-conteudo {
-    max-width: 1000px;
-    width: 100%;
+    max-width: 850px;
 }
 
 .hero-subtitulo {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
+    color: var(--dourado);
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 4px;
     margin-bottom: 25px;
-    color: var(--amarelo);
 }
 
 .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(65px, 12vw, 130px);
-    line-height: 0.95;
-    font-weight: 700;
-    margin-bottom: 35px;
-    color: var(--branco);
+    color: var(--off-white);
+    font-size: clamp(55px, 10vw, 110px);
+    line-height: 1.05;
+    margin-bottom: 25px;
 }
 
 .hero h2 {
+    color: var(--off-white);
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(22px, 4vw, 38px);
-    font-weight: 500;
-    color: var(--rosa-claro);
+    font-size: clamp(18px, 3vw, 27px);
+    font-weight: 400;
 }
 
 .indicador-rolagem {
-    position: absolute;
-    bottom: 30px;
-    left: 0;
-    right: 0;
-
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 8px;
+
+    margin-top: 80px;
 
     font-size: 13px;
-    color: var(--branco);
-    gap: 5px;
+    color: var(--off-white);
 }
 
 .seta {
-    font-size: 27px;
-    color: var(--amarelo);
+    color: var(--dourado);
+    font-size: 30px;
+    animation: movimento 1.5s infinite;
 }
 
+@keyframes movimento {
+    0%, 100% {
+        transform: translateY(0);
+    }
 
-/* =================================
-   SEGUNDA TELA - APRESENTAÇÃO
-================================= */
+    50% {
+        transform: translateY(8px);
+    }
+}
+
+/* =====================================
+   APRESENTAÇÃO DO PROJETO
+===================================== */
 
 .apresentacao {
-    min-height: 100vh;
-    background-color: var(--branco);
+    min-height: 85vh;
+    background-color: var(--off-white);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    padding: 90px 8%;
+    padding: 100px 25px;
 }
 
 .apresentacao-conteudo {
-    max-width: 760px;
-    width: 100%;
+    max-width: 750px;
+    text-align: center;
 }
 
 .etiqueta {
-    color: var(--rosa);
+    display: inline-block;
+    color: var(--vermelho);
+
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 2px;
+
+    margin-bottom: 22px;
 }
 
 .apresentacao h2 {
-    color: var(--verde);
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(36px, 5vw, 55px);
-    margin: 22px 0;
+    font-size: clamp(32px, 5vw, 48px);
+    margin-bottom: 25px;
 }
 
 .apresentacao p {
-    color: var(--texto);
-    font-size: 17px;
-    line-height: 1.8;
     margin-bottom: 18px;
-    max-width: 680px;
+    font-size: 16px;
 }
 
-.apresentacao .botao {
-    margin-top: 20px;
+/* =====================================
+   BOTÕES
+===================================== */
+
+.botao {
+    display: inline-block;
+
+    background-color: var(--vermelho);
+    color: var(--branco);
+
+    border: none;
+    border-radius: 6px;
+
+    padding: 15px 30px;
+    margin-top: 25px;
+
+    font-weight: 700;
+    cursor: pointer;
+
+    transition: 0.3s ease;
 }
 
+.botao:hover {
+    background-color: var(--dourado);
+    color: var(--verde);
+    transform: translateY(-2px);
+}
 
-/* =================================
-   RESPONSIVIDADE
-================================= */
+/* =====================================
+   CABEÇALHO DAS PÁGINAS INTERNAS
+===================================== */
+
+.cabecalho {
+    width: 100%;
+    background-color: var(--verde);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 7%;
+}
+
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 23px;
+    font-weight: 700;
+    color: var(--off-white);
+}
+
+.link-voltar {
+    color: var(--dourado);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.link-voltar:hover {
+    color: var(--branco);
+}
+
+/* =====================================
+   PÁGINA DE EXPERIÊNCIA
+===================================== */
+
+.pagina-experiencia {
+    padding: 60px 20px 90px;
+}
+
+.experiencia {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.experiencia > h1 {
+    font-size: clamp(35px, 6vw, 52px);
+    margin-bottom: 18px;
+}
+
+.texto-introducao {
+    color: var(--cinza);
+    margin-bottom: 35px;
+}
+
+.grupo {
+    background-color: var(--branco);
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+
+    border: 1px solid rgba(23, 61, 43, 0.10);
+}
+
+.grupo h2 {
+    font-size: 23px;
+    margin-bottom: 10px;
+}
+
+.descricao-grupo {
+    color: var(--cinza);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.opcao {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 0;
+    border-bottom: 1px solid #EAE7DF;
+
+    cursor: pointer;
+}
+
+.opcao:last-child {
+    border-bottom: none;
+}
+
+.opcao input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--vermelho);
+    flex-shrink: 0;
+}
+
+.opcao span {
+    font-size: 15px;
+}
+
+textarea {
+    width: 100%;
+    padding: 15px;
+
+    border: 1px solid #D8D8D0;
+    border-radius: 8px;
+
+    background-color: var(--off-white);
+    color: var(--texto);
+
+    resize: vertical;
+}
+
+textarea:focus {
+    outline: 2px solid var(--dourado);
+    border-color: var(--verde);
+}
+
+.experiencia button {
+    font-size: 16px;
+}
+
+.aviso,
+.aviso-institucional {
+    color: var(--cinza);
+    font-size: 12px;
+    margin-top: 25px;
+}
+
+.aviso-institucional {
+    margin-top: 35px;
+}
+
+/* =====================================
+   PÁGINA DE RESULTADOS
+===================================== */
+
+.pagina-resultados {
+    max-width: 1100px;
+    margin: 0 auto;
+
+    padding: 65px 25px 90px;
+}
+
+.resultados-intro {
+    max-width: 750px;
+    margin-bottom: 40px;
+}
+
+.resultados-intro h1 {
+    font-size: clamp(35px, 6vw, 52px);
+    margin-bottom: 18px;
+}
+
+.resultados-intro p {
+    color: var(--cinza);
+}
+
+.lista-receitas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.cartao-receita {
+    overflow: hidden;
+    background-color: var(--branco);
+    border-radius: 12px;
+
+    border: 1px solid rgba(23, 61, 43, 0.10);
+
+    transition: transform 0.3s ease;
+}
+
+.cartao-receita:hover {
+    transform: translateY(-5px);
+}
+
+.cartao-receita[hidden] {
+    display: none;
+}
+
+.receita-imagem {
+    min-height: 170px;
+
+    display: flex;
+    align-items: flex-end;
+
+    padding: 18px;
+
+    background-color: var(--verde);
+}
+
+.receita-imagem span {
+    background-color: var(--dourado);
+    color: var(--verde);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.imagem-cafe {
+    background: linear-gradient(135deg, #D9A15B, #F5D8A8);
+}
+
+.imagem-entrada {
+    background: linear-gradient(135deg, #B83A35, #E9A36A);
+}
+
+.imagem-principal {
+    background: linear-gradient(135deg, #566E43, #A7A76A);
+}
+
+.imagem-lanche {
+    background: linear-gradient(135deg, #C77D3D, #E7C58A);
+}
+
+.imagem-sobremesa {
+    background: linear-gradient(135deg, #59352D, #B77A64);
+}
+
+.receita-conteudo {
+    padding: 23px;
+}
+
+.receita-conteudo h2 {
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+
+.receita-conteudo p {
+    font-size: 14px;
+    color: var(--cinza);
+    margin-bottom: 15px;
+}
+
+.harmonizacao strong {
+    color: var(--verde);
+}
+
+.mensagem-vazia {
+    background-color: var(--branco);
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 25px;
+}
+
+.aviso-resultados {
+    background-color: #E9E3D5;
+    padding: 30px;
+    border-radius: 12px;
+    margin-top: 45px;
+}
+
+.aviso-resultados h2 {
+    font-size: 25px;
+    margin-bottom: 12px;
+}
+
+.aviso-resultados p {
+    font-size: 14px;
+}
+
+/* =====================================
+   RESPONSIVIDADE - CELULAR
+===================================== */
 
 @media (max-width: 600px) {
 
     .hero {
-        padding: 40px 6%;
+        min-height: 90vh;
     }
 
     .hero-subtitulo {
-        font-size: 11px;
+        font-size: 10px;
         letter-spacing: 2px;
     }
 
-    .hero h1 {
-        font-size: 65px;
-    }
-
-    .hero h2 {
-        font-size: 23px;
-        max-width: 330px;
-        margin: 0 auto;
+    .indicador-rolagem {
+        margin-top: 60px;
     }
 
     .apresentacao {
-        padding: 70px 7%;
+        padding: 75px 22px;
     }
 
-    .apresentacao h2 {
-        font-size: 37px;
+    .cabecalho {
+        padding: 16px 5%;
     }
 
-    .apresentacao p {
-        font-size: 15px;
+    .logo {
+        font-size: 18px;
     }
 
+    .link-voltar {
+        font-size: 12px;
+    }
+
+    .pagina-experiencia {
+        padding: 40px 15px 65px;
+    }
+
+    .grupo {
+        padding: 22px 18px;
+    }
+
+    .grupo h2 {
+        font-size: 20px;
+    }
+
+    .pagina-resultados {
+        padding: 45px 15px 65px;
+    }
+
+    .lista-receitas {
+        grid-template-columns: 1fr;
+    }
+
+    .botao {
+        text-align: center;
+        width: 100%;
+    }
 }
