@@ -1,116 +1,103 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#173D2B">
-<title>Harmonize+ | Comer bem é para todo mundo</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="./style.css?v=10">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#173D2B">
+  <title>Harmonize+ | Comer bem é para todo mundo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css?v=20">
 </head>
-
 <body>
+  <section class="hero">
+    <div class="hero-inner">
+      <img class="hero-logo" src="./logo.svg" alt="">
+      <h1>Harmonize<span>+</span></h1>
+      <p class="tagline">SABOR • INCLUSÃO • HARMONIA</p>
+      <h2>Comer bem é para todo mundo.</h2>
+      <a class="scroll" href="#apresentacao">Descubra nossa proposta ↓</a>
+    </div>
+  </section>
 
-<!-- PRIMEIRA TELA: APRESENTAÇÃO -->
-<section class="hero">
-  <div class="hero-inner">
-    <img class="hero-logo" src="./logo.svg" alt="Logotipo Harmonize+">
-
-    <h1>Harmonize<span>+</span></h1>
-
-    <p class="tagline">SABOR <b>•</b> INCLUSÃO <b>•</b> HARMONIA</p>
-
-    <h2>Comer bem é para todo mundo.</h2>
-
-    <a class="scroll" href="#apresentacao">
-      Descubra nossa proposta
-      <span>↓</span>
+  <header class="site-header">
+    <a class="brand" href="./index.html">
+      <img src="./logo.svg" alt="">
+      <span>Harmonize<span class="plus">+</span></span>
     </a>
-  </div>
-</section>
+    <nav>
+      <a href="./sobre.html">Sobre</a>
+      <a href="./seguranca.html">Segurança alimentar</a>
+      <a href="./experiencia.html">Começar →</a>
+    </nav>
+  </header>
 
-<!-- CABEÇALHO: APARECE DEPOIS DA PRIMEIRA TELA -->
-<header class="site-header">
-  <a class="brand" href="./index.html">
-    <img src="./logo.svg" alt="">
-    <span>Harmonize<span class="plus">+</span></span>
-  </a>
-
-  <a href="./experiencia.html">Começar →</a>
-</header>
-
-<main>
-  <section class="intro reveal" id="apresentacao">
-
-    <div>
-      <small class="eyebrow">SABOR, INCLUSÃO E EXPERIÊNCIA</small>
-
+  <main class="page">
+    <section class="intro content-section reveal" id="apresentacao">
+      <span class="eyebrow">SABOR, INCLUSÃO E EXPERIÊNCIA</span>
       <h2>Seu jeito de comer também merece ser celebrado.</h2>
-
       <p>
         Descubra um universo de receitas e harmonizações pensado para
         diferentes necessidades alimentares.
       </p>
-
       <p>
-        No Harmonize+, acreditamos que restrições e preferências
-        alimentares não devem impedir ninguém de explorar novos sabores
-        e aproveitar bons momentos à mesa.
+        No Harmonize+, acreditamos que restrições e preferências alimentares
+        não devem impedir ninguém de explorar novos sabores e aproveitar bons
+        momentos à mesa.
       </p>
-
       <p>
-        Encontre receitas, conheça ingredientes e descubra possibilidades
-        de harmonização com bebidas, incluindo opções sem álcool.
+        Encontre receitas, conheça ingredientes e descubra possibilidades de
+        harmonização com bebidas, incluindo opções sem álcool.
       </p>
+      <a class="button" href="./experiencia.html">Explore sua experiência →</a>
+    </section>
 
-      <a class="button" href="./experiencia.html">
-        Explore sua experiência →
-      </a>
-
-      <p class="disclaimer">
-        Projeto independente de caráter informativo. Não representa
-        parceria ou iniciativa oficial de marcas de bebidas.
+    <section class="content-section reveal">
+      <h2>Inclusão também é informação.</h2>
+      <p>
+        Conheça os cuidados que envolvem alergias, intolerâncias,
+        doença celíaca e outras necessidades alimentares.
       </p>
-    </div>
+      <a class="text-link" href="./seguranca.html">Leia sobre segurança alimentar →</a>
+    </section>
 
-    <img class="intro-logo" src="./logo.svg" alt="Símbolo Harmonize+">
+    <section class="content-section reveal">
+      <h2>Conheça nossa proposta.</h2>
+      <p>
+        Saiba mais sobre o propósito do projeto e como queremos tornar a
+        descoberta gastronômica mais acolhedora.
+      </p>
+      <a class="text-link" href="./sobre.html">Conheça o Harmonize+ →</a>
+    </section>
+  </main>
 
-  </section>
-</main>
+  <footer>
+    <a class="brand" href="./index.html">
+      <img src="./logo.svg" alt="">
+      <span>Harmonize<span class="plus">+</span></span>
+    </a>
+    <span>Sabor, inclusão e harmonia.</span>
+  </footer>
 
-<footer>
-  <a class="brand" href="./index.html">
-    <img src="./logo.svg" alt="">
-    <span>Harmonize<span class="plus">+</span></span>
-  </a>
+  <script>
+    const elementos = document.querySelectorAll(".reveal");
 
-  <span>Sabor, inclusão e harmonia.</span>
-</footer>
+    if ("IntersectionObserver" in window) {
+      const observador = new IntersectionObserver((entradas) => {
+        entradas.forEach((entrada) => {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add("visible");
+            observador.unobserve(entrada.target);
+          }
+        });
+      }, { threshold: 0.12 });
 
-<script>
-/* Animação dos elementos ao entrar na tela */
-const elementos = document.querySelectorAll('.reveal');
-
-const observador = new IntersectionObserver((entradas) => {
-  entradas.forEach((entrada) => {
-    if (entrada.isIntersecting) {
-      entrada.target.classList.add('visible');
-      observador.unobserve(entrada.target);
+      elementos.forEach(elemento => observador.observe(elemento));
+    } else {
+      elementos.forEach(elemento => elemento.classList.add("visible"));
     }
-  });
-}, {
-  threshold: 0.15
-});
-
-elementos.forEach((elemento) => {
-  observador.observe(elemento);
-});
-</script>
-
+  </script>
 </body>
 </html>
