@@ -1,11 +1,9 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Sua experiência | Harmony Heineken</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,139 +11,165 @@
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="./style.css?v=3">
+    <link rel="stylesheet" href="./style.css?v=6">
 </head>
 
 <body>
 
-    <header>
-        <h1>Harmony Heineken</h1>
-        <p>Uma experiência feita para você.</p>
+    <header class="cabecalho">
+        <a href="index.html" class="logo">Harmony Heineken</a>
+        <a href="index.html" class="link-voltar">Início</a>
     </header>
 
-    <main class="experiencia">
+    <main class="pagina-experiencia">
 
-        <span class="etapa">ETAPA 01 — PERSONALIZE SUA EXPERIÊNCIA</span>
+        <section class="experiencia">
 
-        <h2>Queremos conhecer suas necessidades!</h2>
+            <span class="etiqueta">SUA EXPERIÊNCIA COMEÇA AQUI</span>
 
-        <p>
-            Selecione as opções que representam suas necessidades
-            ou escolhas alimentares. Você pode marcar mais de uma.
-        </p>
+            <h1>Vamos descobrir novos sabores?</h1>
 
-        <form id="formulario">
+            <p class="texto-introducao">
+                Conte um pouco sobre suas necessidades alimentares
+                para encontrarmos receitas que combinem com você.
+            </p>
 
-            <section class="grupo">
-                <h3>Quais são suas restrições ou escolhas alimentares?</h3>
+            <form id="formulario-experiencia">
 
-                <label>
-                    <input type="checkbox" name="restricoes" value="Doença celíaca">
-                    Doença celíaca
-                </label>
+                <div class="grupo">
 
-                <label>
-                    <input type="checkbox" name="restricoes" value="Sensibilidade ao glúten">
-                    Sensibilidade ou restrição ao glúten
-                </label>
+                    <h2>1. Você possui alguma restrição ou preferência alimentar?</h2>
 
-                <label>
-                    <input type="checkbox" name="restricoes" value="Intolerância à lactose">
-                    Intolerância à lactose
-                </label>
+                    <p class="descricao-grupo">
+                        Selecione uma ou mais opções.
+                    </p>
 
-                <label>
-                    <input type="checkbox" name="restricoes" value="Alergia alimentar">
-                    Alergia alimentar
-                </label>
+                    <label class="opcao">
+                        <input type="checkbox" name="restricoes" value="sem-gluten">
+                        <span>Doença celíaca ou alimentação sem glúten</span>
+                    </label>
 
-                <div class="campo">
-                    <label for="alergia">Se marcou alergia, qual alimento?</label>
-                    <input type="text" id="alergia" name="alergia"
-                        placeholder="Ex.: amendoim, leite, ovo...">
+                    <label class="opcao">
+                        <input type="checkbox" name="restricoes" value="sem-lactose">
+                        <span>Intolerância à lactose ou alimentação sem lactose</span>
+                    </label>
+
+                    <label class="opcao">
+                        <input type="checkbox" name="restricoes" value="diabetes">
+                        <span>Diabetes tipo 1</span>
+                    </label>
+
+                    <label class="opcao">
+                        <input type="checkbox" name="restricoes" value="vegetariana">
+                        <span>Alimentação vegetariana</span>
+                    </label>
+
+                    <label class="opcao">
+                        <input type="checkbox" name="restricoes" value="vegana">
+                        <span>Alimentação vegana</span>
+                    </label>
+
+                    <label class="opcao">
+                        <input type="checkbox" name="restricoes" value="alergia">
+                        <span>Possuo alguma alergia alimentar</span>
+                    </label>
+
+                    <label class="opcao">
+                        <input type="checkbox" name="restricoes" value="outra">
+                        <span>Outra necessidade alimentar</span>
+                    </label>
+
                 </div>
 
-                <label>
-                    <input type="checkbox" name="restricoes" value="Diabetes tipo 1">
-                    Diabetes tipo 1
-                </label>
+                <div class="grupo">
 
-                <label>
-                    <input type="checkbox" name="restricoes" value="Vegetariano">
-                    Alimentação vegetariana
-                </label>
+                    <h2>2. Deseja informar alguma alergia ou outra necessidade?</h2>
 
-                <label>
-                    <input type="checkbox" name="restricoes" value="Vegano">
-                    Alimentação vegana
-                </label>
+                    <p class="descricao-grupo">
+                        Especifique os alimentos que precisam ser evitados.
+                    </p>
 
-                <label>
-                    <input type="checkbox" name="restricoes" value="Outra necessidade">
-                    Outra necessidade alimentar
-                </label>
+                    <textarea
+                        id="detalhes"
+                        name="detalhes"
+                        placeholder="Exemplo: alergia a amendoim, castanhas..."
+                        rows="4"
+                    ></textarea>
 
-                <div class="campo">
-                    <label for="outra">Quer especificar outra necessidade?</label>
-                    <input type="text" id="outra" name="outra"
-                        placeholder="Conte para nós...">
                 </div>
-            </section>
 
-            <section class="grupo">
-                <h3>Que tipo de refeição você procura?</h3>
+                <div class="grupo">
 
-                <select id="refeicao" required>
-                    <option value="">Selecione uma opção</option>
-                    <option value="Café da manhã">Café da manhã</option>
-                    <option value="Entrada">Entrada</option>
-                    <option value="Prato principal">Prato principal</option>
-                    <option value="Lanche">Lanche</option>
-                    <option value="Sobremesa">Sobremesa</option>
-                </select>
-            </section>
+                    <h2>3. Qual refeição você deseja preparar?</h2>
 
-            <button type="submit" class="botao">
-                Encontrar minhas receitas
-            </button>
+                    <p class="descricao-grupo">
+                        Escolha a categoria que mais combina com seu momento.
+                    </p>
 
-        </form>
+                    <label class="opcao">
+                        <input type="radio" name="refeicao" value="cafe" required>
+                        <span>Café da manhã</span>
+                    </label>
 
-        <p class="aviso">
-            Suas escolhas ajudam a personalizar as sugestões.
-            As receitas ainda deverão ter seus ingredientes,
-            alergênicos e riscos de contaminação cruzada verificados.
-        </p>
+                    <label class="opcao">
+                        <input type="radio" name="refeicao" value="entrada">
+                        <span>Entrada</span>
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="refeicao" value="principal">
+                        <span>Prato principal</span>
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="refeicao" value="lanche">
+                        <span>Lanche</span>
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="refeicao" value="sobremesa">
+                        <span>Sobremesa</span>
+                    </label>
+
+                </div>
+
+                <button type="submit" class="botao">
+                    Encontrar receitas →
+                </button>
+
+            </form>
+
+            <p class="aviso">
+                Atenção: as sugestões são informativas.
+                Em caso de alergias ou doença celíaca, confira sempre
+                os rótulos, a composição e o risco de contaminação cruzada.
+            </p>
+
+        </section>
 
     </main>
 
     <script>
-        const formulario = document.getElementById("formulario");
+        const formulario = document.getElementById("formulario-experiencia");
 
         formulario.addEventListener("submit", function(event) {
             event.preventDefault();
 
-            const selecionadas = document.querySelectorAll(
-                'input[name="restricoes"]:checked'
-            );
+            const restricoes = Array.from(
+                document.querySelectorAll('input[name="restricoes"]:checked')
+            ).map(item => item.value);
 
-            const restricoes = Array.from(selecionadas)
-                .map(opcao => opcao.value);
+            const refeicao = document.querySelector(
+                'input[name="refeicao"]:checked'
+            ).value;
 
-            const alergia = document.getElementById("alergia").value;
-            const outra = document.getElementById("outra").value;
-            const refeicao = document.getElementById("refeicao").value;
+            const detalhes = document.getElementById("detalhes").value;
 
-            const dados = {
-                restricoes: restricoes,
-                alergia: alergia,
-                outra: outra,
-                refeicao: refeicao
-            };
+            const parametros = new URLSearchParams();
 
-            const parametros = new URLSearchParams({
-                dados: JSON.stringify(dados)
-            });
+            parametros.set("restricoes", restricoes.join(","));
+            parametros.set("refeicao", refeicao);
+            parametros.set("detalhes", detalhes);
 
             window.location.href = "resultado.html?" + parametros.toString();
         });
