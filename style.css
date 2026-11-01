@@ -232,3 +232,159 @@ button:hover {
 body {
     background-color: #F29BB9 !important;
 }
+
+
+/* =================================
+   PRIMEIRA TELA - APRESENTAÇÃO
+================================= */
+
+.hero {
+    min-height: 100vh;
+    background-color: var(--verde);
+    color: var(--branco);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    padding: 60px 8%;
+    position: relative;
+}
+
+.hero-conteudo {
+    max-width: 1000px;
+    width: 100%;
+}
+
+.hero-subtitulo {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 25px;
+    color: var(--amarelo);
+}
+
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(65px, 12vw, 130px);
+    line-height: 0.95;
+    font-weight: 700;
+    margin-bottom: 35px;
+    color: var(--branco);
+}
+
+.hero h2 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(22px, 4vw, 38px);
+    font-weight: 500;
+    color: var(--rosa-claro);
+}
+
+.indicador-rolagem {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-size: 13px;
+    color: var(--branco);
+    gap: 5px;
+}
+
+.seta {
+    font-size: 27px;
+    color: var(--amarelo);
+}
+
+
+/* =================================
+   SEGUNDA TELA - APRESENTAÇÃO
+================================= */
+
+.apresentacao {
+    min-height: 100vh;
+    background-color: var(--branco);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 90px 8%;
+}
+
+.apresentacao-conteudo {
+    max-width: 760px;
+    width: 100%;
+}
+
+.etiqueta {
+    color: var(--rosa);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.apresentacao h2 {
+    color: var(--verde);
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 55px);
+    margin: 22px 0;
+}
+
+.apresentacao p {
+    color: var(--texto);
+    font-size: 17px;
+    line-height: 1.8;
+    margin-bottom: 18px;
+    max-width: 680px;
+}
+
+.apresentacao .botao {
+    margin-top: 20px;
+}
+
+
+/* =================================
+   RESPONSIVIDADE
+================================= */
+
+@media (max-width: 600px) {
+
+    .hero {
+        padding: 40px 6%;
+    }
+
+    .hero-subtitulo {
+        font-size: 11px;
+        letter-spacing: 2px;
+    }
+
+    .hero h1 {
+        font-size: 65px;
+    }
+
+    .hero h2 {
+        font-size: 23px;
+        max-width: 330px;
+        margin: 0 auto;
+    }
+
+    .apresentacao {
+        padding: 70px 7%;
+    }
+
+    .apresentacao h2 {
+        font-size: 37px;
+    }
+
+    .apresentacao p {
+        font-size: 15px;
+    }
+
+}
