@@ -6,53 +6,111 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#173D2B">
 <title>Harmonize+ | Comer bem é para todo mundo</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./style.css?v=9">
+
+<link rel="stylesheet" href="./style.css?v=10">
 </head>
+
 <body>
 
+<!-- PRIMEIRA TELA: APRESENTAÇÃO -->
 <section class="hero">
-<div class="hero-inner">
-<img class="hero-logo" src="./logo.svg" alt="Símbolo Harmonize+, garfo e folha">
-<h1>Harmonize<span>+</span></h1>
-<p class="tagline">SABOR <b>•</b> INCLUSÃO <b>•</b> HARMONIA</p>
-<h2>Comer bem é para todo mundo.</h2>
-<a class="scroll" href="#apresentacao">Descubra nossa proposta <span>↓</span></a>
-</div>
+  <div class="hero-inner">
+    <img class="hero-logo" src="./logo.svg" alt="Logotipo Harmonize+">
+
+    <h1>Harmonize<span>+</span></h1>
+
+    <p class="tagline">SABOR <b>•</b> INCLUSÃO <b>•</b> HARMONIA</p>
+
+    <h2>Comer bem é para todo mundo.</h2>
+
+    <a class="scroll" href="#apresentacao">
+      Descubra nossa proposta
+      <span>↓</span>
+    </a>
+  </div>
 </section>
 
+<!-- CABEÇALHO: APARECE DEPOIS DA PRIMEIRA TELA -->
 <header class="site-header">
-<a class="brand" href="./index.html">
-<img src="./logo.svg" alt="">
-<span>Harmonize<span class="plus">+</span></span>
-</a>
-<a href="./experiencia.html">Começar →</a>
+  <a class="brand" href="./index.html">
+    <img src="./logo.svg" alt="">
+    <span>Harmonize<span class="plus">+</span></span>
+  </a>
+
+  <a href="./experiencia.html">Começar →</a>
 </header>
 
 <main>
-<section class="intro" id="apresentacao">
-<div>
-<small class="eyebrow">SABOR, INCLUSÃO E EXPERIÊNCIA</small>
-<h2>Seu jeito de comer também merece ser celebrado.</h2>
-<p>Descubra um universo de receitas e harmonizações pensado para diferentes necessidades alimentares.</p>
-<p>No Harmonize+, acreditamos que restrições e preferências alimentares não devem impedir ninguém de explorar novos sabores e aproveitar bons momentos à mesa.</p>
-<p>Encontre receitas, conheça ingredientes e descubra possibilidades de harmonização com bebidas, incluindo opções sem álcool.</p>
-<a class="button" href="./experiencia.html">Explore sua experiência →</a>
-<p class="disclaimer">Projeto independente de caráter informativo. Não representa parceria ou iniciativa oficial de marcas de bebidas.</p>
-</div>
-<img class="intro-logo" src="./logo.svg" alt="Símbolo Harmonize+">
-</section>
+  <section class="intro reveal" id="apresentacao">
+
+    <div>
+      <small class="eyebrow">SABOR, INCLUSÃO E EXPERIÊNCIA</small>
+
+      <h2>Seu jeito de comer também merece ser celebrado.</h2>
+
+      <p>
+        Descubra um universo de receitas e harmonizações pensado para
+        diferentes necessidades alimentares.
+      </p>
+
+      <p>
+        No Harmonize+, acreditamos que restrições e preferências
+        alimentares não devem impedir ninguém de explorar novos sabores
+        e aproveitar bons momentos à mesa.
+      </p>
+
+      <p>
+        Encontre receitas, conheça ingredientes e descubra possibilidades
+        de harmonização com bebidas, incluindo opções sem álcool.
+      </p>
+
+      <a class="button" href="./experiencia.html">
+        Explore sua experiência →
+      </a>
+
+      <p class="disclaimer">
+        Projeto independente de caráter informativo. Não representa
+        parceria ou iniciativa oficial de marcas de bebidas.
+      </p>
+    </div>
+
+    <img class="intro-logo" src="./logo.svg" alt="Símbolo Harmonize+">
+
+  </section>
 </main>
 
 <footer>
-<a class="brand" href="./index.html">
-<img src="./logo.svg" alt="">
-<span>Harmonize<span class="plus">+</span></span>
-</a>
-<span>Sabor, inclusão e harmonia.</span>
+  <a class="brand" href="./index.html">
+    <img src="./logo.svg" alt="">
+    <span>Harmonize<span class="plus">+</span></span>
+  </a>
+
+  <span>Sabor, inclusão e harmonia.</span>
 </footer>
+
+<script>
+/* Animação dos elementos ao entrar na tela */
+const elementos = document.querySelectorAll('.reveal');
+
+const observador = new IntersectionObserver((entradas) => {
+  entradas.forEach((entrada) => {
+    if (entrada.isIntersecting) {
+      entrada.target.classList.add('visible');
+      observador.unobserve(entrada.target);
+    }
+  });
+}, {
+  threshold: 0.15
+});
+
+elementos.forEach((elemento) => {
+  observador.observe(elemento);
+});
+</script>
 
 </body>
 </html>
