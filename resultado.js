@@ -24,11 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const resumoRestricoes = document.getElementById("restrictions");
 
   const nomesCategorias = {
-    cafe: "Café da manhã",
-    entrada: "Entrada",
-    principal: "Prato principal",
-    lanche: "Lanche",
-    sobremesa: "Sobremesa"
+  entrada: "Entrada",
+  principal: "Prato principal",
+  sobremesa: "Sobremesa",
+  petisco: "Petisco",
+  lanche: "Lanche",
+  bebida: "Bebida",
+  outro: "Outro"
+};
   };
 
   resumo.textContent = "Categoria selecionada: " +
