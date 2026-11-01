@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receitas | Harmony Heineken</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./style.css?v=6">
+</head>
+
+<body>
+
+    <header class="cabecalho">
+        <a href="index.html" class="logo">Harmony Heineken</a>
+        <a href="experiencia.html" class="link-voltar">Alterar preferências</a>
+    </header>
+
+    <main class="pagina-resultados">
+
+        <section class="resultados-intro">
+            <span class="etiqueta">SABORES PARA DESCOBRIR</span>
+
+            <h1>Encontramos algumas ideias para você!</h1>
+
+            <p id="resumo-escolhas">
+                Confira as sugestões de receitas.
+            </p>
+        </section>
+
+        <section class="lista-receitas" id="lista-receitas">
+
+            <article class="cartao-receita" data-refeicao="cafe">
+                <div class="receita-imagem imagem-cafe">
+                    <span>Café da manhã</span>
+                </div>
+
+                <div class="receita-conteudo">
+                    <h2>Panquecas de banana e aveia</h2>
+
+                    <p>
+                        Uma opção prática para começar o dia,
+                        preparada com banana, ovos e aveia.
+                    </p>
+
+                    <p class="harmonizacao">
+                        <strong>Harmonização sugerida:</strong>
+                        cerveja sem álcool, conforme ingredientes
+                        e perfil de sabor do produto escolhido.
+                    </p>
+                </div>
+            </article>
+
+            <article class="cartao-receita" data-refeicao="entrada">
+                <div class="receita-imagem imagem-entrada">
+                    <span>Entrada</span>
+                </div>
+
+                <div class="receita-conteudo">
+                    <h2>Bruschetta de tomate e manjericão</h2>
+
+                    <p>
+                        Uma entrada leve com tomate fresco,
+                        manjericão e azeite.
+                    </p>
+
+                    <p class="harmonizacao">
+                        <strong>Harmonização sugerida:</strong>
+                        cerveja de perfil leve, alcoólica ou sem álcool,
+                        conforme a preferência e as restrições.
+                    </p>
+                </div>
+            </article>
+
+            <article class="cartao-receita" data-refeicao="principal">
+                <div class="receita-imagem imagem-principal">
+                    <span>Prato principal</span>
+                </div>
+
+                <div class="receita-conteudo">
+                    <h2>Risoto de cogumelos</h2>
+
+                    <p>
+                        Uma combinação cremosa de arroz,
+                        cogumelos e temperos frescos.
+                    </p>
+
+                    <p class="harmonizacao">
+                        <strong>Harmonização sugerida:</strong>
+                        cerveja de sabor equilibrado, incluindo
+                        alternativa sem álcool.
+                    </p>
+                </div>
+            </article>
+
+            <article class="cartao-receita" data-refeicao="lanche">
+                <div class="receita-imagem imagem-lanche">
+                    <span>Lanche</span>
+                </div>
+
+                <div class="receita-conteudo">
+                    <h2>Sanduíche de legumes grelhados</h2>
+
+                    <p>
+                        Uma opção colorida com legumes grelhados,
+                        folhas e molho de sua preferência.
+                    </p>
+
+                    <p class="harmonizacao">
+                        <strong>Harmonização sugerida:</strong>
+                        cerveja leve ou opção sem álcool,
+                        após conferir a composição.
+                    </p>
+                </div>
+            </article>
+
+            <article class="cartao-receita" data-refeicao="sobremesa">
+                <div class="receita-imagem imagem-sobremesa">
+                    <span>Sobremesa</span>
+                </div>
+
+                <div class="receita-conteudo">
+                    <h2>Mousse de chocolate</h2>
+
+                    <p>
+                        Uma sobremesa cremosa para quem gosta
+                        de sabores intensos.
+                    </p>
+
+                    <p class="harmonizacao">
+                        <strong>Harmonização sugerida:</strong>
+                        cerveja de perfil maltado ou opção sem álcool,
+                        considerando os ingredientes.
+                    </p>
+                </div>
+            </article>
+
+        </section>
+
+        <p id="mensagem-vazia" class="mensagem-vazia" hidden>
+            Ainda não temos uma sugestão cadastrada para essa categoria.
+            Em breve, novas receitas poderão ser adicionadas!
+        </p>
+
+        <section class="aviso-resultados">
+            <h2>Uma experiência que respeita suas escolhas</h2>
+
+            <p>
+                As receitas e harmonizações são sugestões.
+                Verifique sempre os ingredientes, os rótulos dos produtos
+                e as informações sobre alergênicos. Produtos sem álcool
+                também podem conter glúten ou outros ingredientes
+                que precisam ser conferidos.
+            </p>
+        </section>
+
+        <a href="experiencia.html" class="botao">
+            Fazer uma nova busca →
+        </a>
+
+    </main>
+
+    <script>
+        const parametros = new URLSearchParams(window.location.search);
+
+        const refeicao = parametros.get("refeicao");
+        const restricoes = parametros.get("restricoes") || "";
+        const detalhes = parametros.get("detalhes") || "";
+
+        const nomesRefeicoes = {
+            cafe: "Café da manhã",
+            entrada: "Entrada",
+            principal: "Prato principal",
+            lanche: "Lanche",
+            sobremesa: "Sobremesa"
+        };
+
+        const nomeRefeicao = nomesRefeicoes[refeicao] || "sua refeição";
+
+        document.getElementById("resumo-escolhas").textContent =
+            "Categoria selecionada: " + nomeRefeicao + ".";
+
+        const cartoes = document.querySelectorAll(".cartao-receita");
+        let encontrados = 0;
+
+        cartoes.forEach(function(cartao) {
+            if (cartao.dataset.refeicao === refeicao) {
+                cartao.hidden = false;
+                encontrados++;
+            } else {
+                cartao.hidden = true;
+            }
+        });
+
+        if (encontrados === 0) {
+            document.getElementById("mensagem-vazia").hidden = false;
+        }
+
+        if (restricoes || detalhes) {
+            const aviso = document.createElement("p");
+            aviso.className = "aviso";
+
+            aviso.textContent =
+                "Importante: suas restrições foram consideradas como informações de busca, " +
+                "mas a compatibilidade de cada receita precisa ser conferida individualmente.";
+
+            document.querySelector(".resultados-intro").appendChild(aviso);
+        }
+    </script>
+
+</body>
+</html>
