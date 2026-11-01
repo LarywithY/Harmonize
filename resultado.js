@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
   bebida: "Bebida",
   outro: "Outro"
 };
-  };
 
   resumo.textContent = "Categoria selecionada: " +
     (nomesCategorias[categoria] || "não informada") + ".";
