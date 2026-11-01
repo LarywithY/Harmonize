@@ -1,77 +1,74 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#173D2B">
-<title>Receitas | Harmonize+</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="./style.css?v=11">
-<script src="./receitas.js" defer></script>
-<script src="./resultado.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#173D2B">
+  <title>Suas receitas | Harmonize+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css?v=20">
+  <script src="./receitas.js" defer></script>
+  <script src="./resultado.js" defer></script>
 </head>
-
 <body>
+  <header class="site-header">
+    <a class="brand" href="./index.html">
+      <img src="./logo.svg" alt="">
+      <span>Harmonize<span class="plus">+</span></span>
+    </a>
+    <nav>
+      <a href="./sobre.html">Sobre</a>
+      <a href="./seguranca.html">Segurança alimentar</a>
+      <a href="./experiencia.html">↻ Alterar preferências</a>
+    </nav>
+  </header>
 
-<header class="site-header">
-  <a class="brand" href="./index.html">
-    <img src="./logo.svg" alt="">
-    <span>Harmonize<span class="plus">+</span></span>
-  </a>
-  <a href="./experiencia.html">↻ Alterar preferências</a>
-</header>
+  <main class="page">
+    <div class="page-heading">
+      <span class="eyebrow">SABORES PARA DESCOBRIR</span>
+      <h1>Suas receitas</h1>
+      <p id="summary" class="lead">Estamos preparando sua busca.</p>
+      <p id="restrictions" class="restriction-summary"></p>
+    </div>
 
-<main class="page">
+    <div id="loading" class="notice" role="status">Procurando receitas compatíveis...</div>
+    <section id="recipe-results" class="recipes" aria-live="polite"></section>
 
-  <div class="page-heading">
-    <small class="eyebrow">SABORES PARA DESCOBRIR</small>
-    <h1>Suas receitas</h1>
-    <p id="summary">Estamos procurando opções para sua seleção.</p>
-    <p id="restrictions" class="restriction-summary"></p>
-  </div>
+    <section id="empty" class="notice" hidden>
+      <h2>Não encontramos opções neste momento.</h2>
+      <p>
+        Ainda não temos receitas cadastradas e verificadas que correspondam
+        a todos os critérios selecionados. Você pode alterar suas preferências
+        ou voltar em outro momento.
+      </p>
+      <a class="button" href="./experiencia.html">Alterar preferências</a>
+    </section>
 
-  <section id="recipe-results" class="recipes" aria-live="polite"></section>
+    <section class="notice">
+      <h2>Segurança alimentar</h2>
+      <p>
+        As receitas exibidas dependem das informações de verificação
+        cadastradas pela equipe. Confira sempre os rótulos, ingredientes,
+        fornecedores e condições reais de preparo.
+      </p>
+      <p>
+        A compatibilidade apresentada não garante ausência de risco,
+        especialmente em casos de alergias e doença celíaca.
+      </p>
+      <a class="text-link" href="./seguranca.html">Leia nossas orientações de segurança →</a>
+    </section>
 
-  <section id="empty" class="notice" hidden>
-    <h2>Estamos preparando novas opções!</h2>
-    <p>
-      Ainda não encontramos receitas cadastradas e verificadas que atendam
-      a todos os critérios selecionados. Você pode alterar suas escolhas
-      ou voltar em outro momento.
-    </p>
-    <a class="button" href="./experiencia.html">Alterar preferências</a>
-  </section>
+    <a class="button" href="./experiencia.html">Fazer nova busca →</a>
+  </main>
 
-  <section class="notice">
-    <h2>Sobre a segurança alimentar</h2>
-    <p>
-      As receitas exibidas passam por critérios de verificação cadastrados
-      pela equipe do Harmonize+. Mesmo assim, confira os rótulos e as
-      condições reais de preparo. Em caso de alergias ou doença celíaca,
-      é indispensável avaliar também a contaminação cruzada.
-    </p>
-    <p>
-      Para diabetes tipo 1, as informações de carboidratos são referências
-      por porção e não substituem orientação individualizada.
-    </p>
-  </section>
-
-  <a class="button" href="./experiencia.html">Fazer nova busca →</a>
-
-</main>
-
-<footer>
-  <a class="brand" href="./index.html">
-    <img src="./logo.svg" alt="">
-    <span>Harmonize<span class="plus">+</span></span>
-  </a>
-  <span>Sabor, inclusão e harmonia.</span>
-</footer>
-
+  <footer>
+    <a class="brand" href="./index.html">
+      <img src="./logo.svg" alt="">
+      <span>Harmonize<span class="plus">+</span></span>
+    </a>
+    <span>Sabor, inclusão e harmonia.</span>
+  </footer>
 </body>
 </html>
