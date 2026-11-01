@@ -1,523 +1,506 @@
 
-/* =====================================
-   HARMONY HEINEKEN
-   IDENTIDADE VISUAL
-===================================== */
-
 :root {
-    --verde: #173D2B;
-    --vermelho: #E31B36;
-    --off-white: #F5F1E8;
-    --dourado: #FFB000;
-
-    --branco: #FFFFFF;
-    --texto: #26352C;
-    --cinza: #70776F;
+--green: #173D2B;
+--red: #E31B36;
+--cream: #F5F1E8;
+--gold: #FFB000;
+--white: #fff;
+--ink: #26352C;
+--muted: #70776F;
+--line: rgba(23,61,43,.14);
 }
 
-/* =====================================
-   CONFIGURAÇÕES GERAIS
-===================================== */
-
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+box-sizing: border-box;
+margin: 0;
+padding: 0;
 }
 
 html {
-    scroll-behavior: smooth;
+scroll-behavior: smooth;
+scroll-padding-top: 80px;
 }
 
 body {
-    font-family: 'DM Sans', sans-serif;
-    background-color: var(--off-white);
-    color: var(--texto);
-    line-height: 1.7;
+font-family: 'DM Sans', sans-serif;
+background: var(--cream);
+color: var(--ink);
+line-height: 1.65;
 }
 
-h1,
-h2,
-h3 {
-    font-family: 'Playfair Display', serif;
-    color: var(--verde);
-    line-height: 1.2;
+h1, h2 {
+font-family: 'Playfair Display', serif;
+color: var(--green);
+line-height: 1.16;
 }
 
 a {
-    text-decoration: none;
+text-decoration: none;
 }
 
-button,
-input,
-textarea {
-    font: inherit;
+button, input, textarea {
+font: inherit;
 }
 
-/* =====================================
-   PRIMEIRA TELA - HOME
-===================================== */
+[hidden] {
+display: none !important;
+}
+
+.brand {
+display: inline-flex;
+align-items: center;
+gap: 9px;
+color: var(--green);
+font: 700 23px 'Playfair Display', serif;
+}
+
+.brand img {
+width: 40px;
+height: 40px;
+}
+
+.plus {
+color: var(--red);
+}
 
 .hero {
-    min-height: 100vh;
-    background-color: var(--verde);
-    color: var(--off-white);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-    padding: 40px 20px;
+min-height: 100svh;
+display: grid;
+place-items: center;
+text-align: center;
+background: var(--green);
+color: var(--cream);
+padding: 45px 20px;
 }
 
-.hero-conteudo {
-    max-width: 850px;
+.hero-inner {
+max-width: 850px;
 }
 
-.hero-subtitulo {
-    color: var(--dourado);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 4px;
-    margin-bottom: 25px;
+.hero-logo {
+width: 112px;
+height: 112px;
+object-fit: contain;
 }
 
 .hero h1 {
-    color: var(--off-white);
-    font-size: clamp(55px, 10vw, 110px);
-    line-height: 1.05;
-    margin-bottom: 25px;
+font-size: clamp(64px, 11vw, 112px);
+color: var(--cream);
+letter-spacing: -3px;
+}
+
+.hero h1 span {
+color: var(--gold);
+}
+
+.tagline {
+color: var(--gold);
+letter-spacing: 4px;
+font-size: 12px;
+font-weight: 700;
+margin: 8px 0 26px;
+}
+
+.tagline b {
+color: var(--red);
 }
 
 .hero h2 {
-    color: var(--off-white);
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(18px, 3vw, 27px);
-    font-weight: 400;
+color: var(--cream);
+font: 500 clamp(19px, 3vw, 28px) 'DM Sans', sans-serif;
 }
 
-.indicador-rolagem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-
-    margin-top: 80px;
-
-    font-size: 13px;
-    color: var(--off-white);
+.scroll {
+display: flex;
+flex-direction: column;
+gap: 8px;
+align-items: center;
+color: var(--cream);
+margin-top: 50px;
 }
 
-.seta {
-    color: var(--dourado);
-    font-size: 30px;
-    animation: movimento 1.5s infinite;
+.scroll span {
+font-size: 32px;
+color: var(--gold);
 }
 
-@keyframes movimento {
-    0%, 100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(8px);
-    }
+.site-header {
+position: sticky;
+top: 0;
+z-index: 10;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 11px 7%;
+background: var(--cream);
+border-bottom: 1px solid var(--line);
+box-shadow: 0 3px 14px #173d2b0a;
 }
 
-/* =====================================
-   APRESENTAÇÃO DO PROJETO
-===================================== */
-
-.apresentacao {
-    min-height: 85vh;
-    background-color: var(--off-white);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 100px 25px;
+.site-header > a:last-child {
+color: var(--green);
+font-weight: 700;
+font-size: 14px;
 }
 
-.apresentacao-conteudo {
-    max-width: 750px;
-    text-align: center;
+.site-header > a:last-child:hover {
+color: var(--red);
 }
 
-.etiqueta {
-    display: inline-block;
-    color: var(--vermelho);
-
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-
-    margin-bottom: 22px;
+.intro {
+min-height: 75vh;
+max-width: 1100px;
+margin: auto;
+padding: 90px 25px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 40px;
 }
 
-.apresentacao h2 {
-    font-size: clamp(32px, 5vw, 48px);
-    margin-bottom: 25px;
+.intro > div {
+max-width: 680px;
 }
 
-.apresentacao p {
-    margin-bottom: 18px;
-    font-size: 16px;
+.eyebrow {
+display: inline-block;
+color: var(--red);
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 2px;
+margin-bottom: 17px;
 }
 
-/* =====================================
-   BOTÕES
-===================================== */
-
-.botao {
-    display: inline-block;
-
-    background-color: var(--vermelho);
-    color: var(--branco);
-
-    border: none;
-    border-radius: 6px;
-
-    padding: 15px 30px;
-    margin-top: 25px;
-
-    font-weight: 700;
-    cursor: pointer;
-
-    transition: 0.3s ease;
+.intro h2 {
+font-size: clamp(34px, 5vw, 52px);
+margin-bottom: 20px;
 }
 
-.botao:hover {
-    background-color: var(--dourado);
-    color: var(--verde);
-    transform: translateY(-2px);
+.intro p {
+margin-bottom: 15px;
 }
 
-/* =====================================
-   CABEÇALHO DAS PÁGINAS INTERNAS
-===================================== */
-
-.cabecalho {
-    width: 100%;
-    background-color: var(--verde);
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 18px 7%;
+.intro-logo {
+width: 190px;
 }
 
-.logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 23px;
-    font-weight: 700;
-    color: var(--off-white);
+.disclaimer, .notice {
+font-size: 12px;
+color: var(--muted);
+margin-top: 25px;
 }
 
-.link-voltar {
-    color: var(--dourado);
-    font-size: 14px;
-    font-weight: 600;
+.button {
+display: inline-flex;
+justify-content: center;
+align-items: center;
+margin-top: 22px;
+padding: 13px 25px;
+border: 0;
+border-radius: 30px;
+background: var(--red);
+color: var(--white);
+font-weight: 700;
+cursor: pointer;
+transition: .2s;
 }
 
-.link-voltar:hover {
-    color: var(--branco);
+.button:hover {
+background: var(--gold);
+color: var(--green);
 }
 
-/* =====================================
-   PÁGINA DE EXPERIÊNCIA
-===================================== */
-
-.pagina-experiencia {
-    padding: 60px 20px 90px;
+.wide {
+width: 100%;
+font-size: 16px;
 }
 
-.experiencia {
-    max-width: 850px;
-    margin: 0 auto;
+.page {
+max-width: 1050px;
+margin: auto;
+padding: 55px 22px 80px;
 }
 
-.experiencia > h1 {
-    font-size: clamp(35px, 6vw, 52px);
-    margin-bottom: 18px;
+.page-heading {
+text-align: center;
+max-width: 750px;
+margin: 0 auto 35px;
 }
 
-.texto-introducao {
-    color: var(--cinza);
-    margin-bottom: 35px;
+.page-heading h1 {
+font-size: clamp(36px, 6vw, 54px);
+margin-bottom: 13px;
 }
 
-.grupo {
-    background-color: var(--branco);
-    padding: 30px;
-    margin-bottom: 25px;
-    border-radius: 12px;
-
-    border: 1px solid rgba(23, 61, 43, 0.10);
+.page-heading p {
+color: var(--muted);
 }
 
-.grupo h2 {
-    font-size: 23px;
-    margin-bottom: 10px;
+.panel {
+padding: 27px;
+margin-bottom: 21px;
+border: 1px solid var(--line);
+border-radius: 15px;
+background: var(--white);
+box-shadow: 0 7px 22px #173d2b08;
 }
 
-.descricao-grupo {
-    color: var(--cinza);
-    font-size: 14px;
-    margin-bottom: 20px;
+.panel h2 {
+font-size: 22px;
+margin-bottom: 8px;
 }
 
-.opcao {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    padding: 12px 0;
-    border-bottom: 1px solid #EAE7DF;
-
-    cursor: pointer;
+.panel > p {
+color: var(--muted);
+font-size: 14px;
+margin-bottom: 17px;
 }
 
-.opcao:last-child {
-    border-bottom: none;
+.choices {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 7px 20px;
 }
 
-.opcao input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--vermelho);
-    flex-shrink: 0;
+.choices label {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 10px 0;
+border-bottom: 1px solid #eeeae1;
+cursor: pointer;
+font-size: 14px;
 }
 
-.opcao span {
-    font-size: 15px;
+.choices input, .meal-choices input {
+width: 18px;
+height: 18px;
+accent-color: var(--red);
+flex-shrink: 0;
 }
 
 textarea {
-    width: 100%;
-    padding: 15px;
-
-    border: 1px solid #D8D8D0;
-    border-radius: 8px;
-
-    background-color: var(--off-white);
-    color: var(--texto);
-
-    resize: vertical;
+width: 100%;
+padding: 14px;
+border: 1px solid #d8d8d0;
+border-radius: 9px;
+background: var(--cream);
+resize: vertical;
 }
 
-textarea:focus {
-    outline: 2px solid var(--dourado);
-    border-color: var(--verde);
+.meal-choices {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
 }
 
-.experiencia button {
-    font-size: 16px;
+.meal-choices label {
+display: flex;
+align-items: center;
+gap: 8px;
+padding: 11px 13px;
+border: 1px solid var(--line);
+border-radius: 9px;
+cursor: pointer;
 }
 
-.aviso,
-.aviso-institucional {
-    color: var(--cinza);
-    font-size: 12px;
-    margin-top: 25px;
+.meal-choices label:has(input:checked) {
+border-color: var(--red);
+background: #fff6f3;
 }
 
-.aviso-institucional {
-    margin-top: 35px;
+.notice {
+padding: 22px;
+border-radius: 12px;
+background: #ebe5d8;
 }
 
-/* =====================================
-   PÁGINA DE RESULTADOS
-===================================== */
-
-.pagina-resultados {
-    max-width: 1100px;
-    margin: 0 auto;
-
-    padding: 65px 25px 90px;
+.notice h2 {
+font-size: 24px;
+margin-bottom: 8px;
 }
 
-.resultados-intro {
-    max-width: 750px;
-    margin-bottom: 40px;
+.notice p {
+color: var(--ink);
 }
 
-.resultados-intro h1 {
-    font-size: clamp(35px, 6vw, 52px);
-    margin-bottom: 18px;
+.recipes {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+gap: 20px;
 }
 
-.resultados-intro p {
-    color: var(--cinza);
+.recipe {
+overflow: hidden;
+background: var(--white);
+border: 1px solid var(--line);
+border-radius: 14px;
+box-shadow: 0 7px 20px #173d2b08;
 }
 
-.lista-receitas {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
+.recipe > div:last-child {
+padding: 20px;
 }
 
-.cartao-receita {
-    overflow: hidden;
-    background-color: var(--branco);
-    border-radius: 12px;
-
-    border: 1px solid rgba(23, 61, 43, 0.10);
-
-    transition: transform 0.3s ease;
+.recipe h2 {
+font-size: 21px;
+margin-bottom: 9px;
 }
 
-.cartao-receita:hover {
-    transform: translateY(-5px);
+.recipe p {
+font-size: 13px;
+color: var(--muted);
+margin-bottom: 12px;
 }
 
-.cartao-receita[hidden] {
-    display: none;
+.recipe p b {
+color: var(--green);
 }
 
-.receita-imagem {
-    min-height: 170px;
-
-    display: flex;
-    align-items: flex-end;
-
-    padding: 18px;
-
-    background-color: var(--verde);
+.photo {
+height: 145px;
+display: flex;
+align-items: flex-end;
+padding: 15px;
 }
 
-.receita-imagem span {
-    background-color: var(--dourado);
-    color: var(--verde);
-
-    font-size: 12px;
-    font-weight: 700;
-
-    padding: 6px 12px;
-    border-radius: 20px;
+.photo span {
+padding: 5px 11px;
+border-radius: 20px;
+background: var(--gold);
+color: var(--green);
+font-size: 12px;
+font-weight: 700;
 }
 
-.imagem-cafe {
-    background: linear-gradient(135deg, #D9A15B, #F5D8A8);
+.cafe {
+background: linear-gradient(135deg, #d9a15b, #f5d8a8);
 }
 
-.imagem-entrada {
-    background: linear-gradient(135deg, #B83A35, #E9A36A);
+.entrada {
+background: linear-gradient(135deg, #b83a35, #e9a36a);
 }
 
-.imagem-principal {
-    background: linear-gradient(135deg, #566E43, #A7A76A);
+.principal {
+background: linear-gradient(135deg, #566e43, #a7a76a);
 }
 
-.imagem-lanche {
-    background: linear-gradient(135deg, #C77D3D, #E7C58A);
+.lanche {
+background: linear-gradient(135deg, #c77d3d, #e7c58a);
 }
 
-.imagem-sobremesa {
-    background: linear-gradient(135deg, #59352D, #B77A64);
+.sobremesa {
+background: linear-gradient(135deg, #59352d, #b77a64);
 }
 
-.receita-conteudo {
-    padding: 23px;
+.restriction-summary {
+margin-top: 12px;
+padding: 12px 15px;
+border-left: 3px solid var(--gold);
+background: #fffaf0;
+text-align: left;
+font-size: 13px;
 }
 
-.receita-conteudo h2 {
-    font-size: 23px;
-    margin-bottom: 12px;
+footer {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 15px;
+padding: 20px 7%;
+border-top: 1px solid var(--line);
+color: var(--muted);
+font-size: 12px;
 }
 
-.receita-conteudo p {
-    font-size: 14px;
-    color: var(--cinza);
-    margin-bottom: 15px;
+footer .brand {
+font-size: 20px;
 }
 
-.harmonizacao strong {
-    color: var(--verde);
+footer .brand img {
+width: 33px;
+height: 33px;
 }
 
-.mensagem-vazia {
-    background-color: var(--branco);
-    padding: 25px;
-    border-radius: 10px;
-    margin-top: 25px;
+@media (max-width: 650px) {
+.hero {
+min-height: 92svh;
 }
 
-.aviso-resultados {
-    background-color: #E9E3D5;
-    padding: 30px;
-    border-radius: 12px;
-    margin-top: 45px;
+.hero-logo {
+width: 95px;
+height: 95px;
 }
 
-.aviso-resultados h2 {
-    font-size: 25px;
-    margin-bottom: 12px;
+.hero h1 {
+letter-spacing: -2px;
 }
 
-.aviso-resultados p {
-    font-size: 14px;
+.tagline {
+font-size: 10px;
+letter-spacing: 2px;
 }
 
-/* =====================================
-   RESPONSIVIDADE - CELULAR
-===================================== */
+.site-header {
+padding: 10px 5%;
+}
 
-@media (max-width: 600px) {
+.brand {
+font-size: 19px;
+}
 
-    .hero {
-        min-height: 90vh;
-    }
+.brand img {
+width: 34px;
+height: 34px;
+}
 
-    .hero-subtitulo {
-        font-size: 10px;
-        letter-spacing: 2px;
-    }
+.site-header > a:last-child {
+font-size: 12px;
+}
 
-    .indicador-rolagem {
-        margin-top: 60px;
-    }
+.intro {
+min-height: auto;
+padding: 65px 22px;
+}
 
-    .apresentacao {
-        padding: 75px 22px;
-    }
+.intro-logo {
+display: none;
+}
 
-    .cabecalho {
-        padding: 16px 5%;
-    }
+.page {
+padding: 40px 15px 65px;
+}
 
-    .logo {
-        font-size: 18px;
-    }
+.panel {
+padding: 20px 16px;
+}
 
-    .link-voltar {
-        font-size: 12px;
-    }
+.panel h2 {
+font-size: 19px;
+}
 
-    .pagina-experiencia {
-        padding: 40px 15px 65px;
-    }
+.choices {
+grid-template-columns: 1fr;
+}
 
-    .grupo {
-        padding: 22px 18px;
-    }
+.meal-choices {
+flex-direction: column;
+}
 
-    .grupo h2 {
-        font-size: 20px;
-    }
+.meal-choices label {
+width: 100%;
+}
 
-    .pagina-resultados {
-        padding: 45px 15px 65px;
-    }
+.recipes {
+grid-template-columns: 1fr;
+}
 
-    .lista-receitas {
-        grid-template-columns: 1fr;
-    }
+footer {
+flex-direction: column;
+text-align: center;
+}
 
-    .botao {
-        text-align: center;
-        width: 100%;
-    }
+.button {
+width: 100%;
+}
 }
