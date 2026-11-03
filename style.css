@@ -590,3 +590,340 @@ footer .brand {
     padding: 25px 6%;
   }
 }
+
+/* =====================================================
+   HARMONIZE+ — NOVO VISUAL DA HARMONIZAÇÃO
+   ===================================================== */
+
+/* Cada resultado reúne dois cartões conectados:
+   o cartão da receita e o cartão da harmonização. */
+
+.result-item {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  animation: pairingEntrance .65s ease both;
+}
+
+.result-item .recipe-card {
+  width: 100%;
+  border-radius: 16px 16px 0 0;
+  border-bottom: 0;
+  transform: none;
+}
+
+.result-item .recipe-card:hover {
+  transform: none;
+  box-shadow: var(--sombra);
+}
+
+.result-item .automatic-pairing {
+  width: 100%;
+  border-radius: 0 0 16px 16px;
+}
+
+@keyframes pairingEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* CARTÃO PRINCIPAL DA HARMONIZAÇÃO */
+
+.automatic-pairing {
+  position: relative;
+  overflow: hidden;
+  padding: 25px;
+  background:
+    linear-gradient(
+      145deg,
+      #FFFFFF 0%,
+      #F8F7F1 100%
+    );
+  border: 1px solid var(--borda);
+  border-top: 1px solid #E9E2D0;
+  box-shadow: 0 12px 30px rgba(23, 61, 43, .09);
+}
+
+.automatic-pairing::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: var(--dourado);
+}
+
+.pairing-heading {
+  margin-bottom: 18px;
+}
+
+.pairing-eyebrow {
+  display: inline-block;
+  margin-bottom: 7px;
+  color: var(--vermelho);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}
+
+.pairing-heading h3 {
+  margin-bottom: 7px;
+  font-size: 27px;
+}
+
+.pairing-intro {
+  color: var(--cinza);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pairing-profile {
+  display: inline-block;
+  padding: 7px 11px;
+  margin: 0 0 18px;
+  border-radius: 7px;
+  background: #F1EEE5;
+  color: var(--verde);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* OPÇÕES DE BEBIDA */
+
+.pairing-option {
+  min-width: 0;
+  padding: 17px;
+  margin-top: 13px;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  background: var(--branco);
+}
+
+.pairing-option-featured {
+  padding: 19px;
+  border-color: rgba(23, 61, 43, .25);
+  box-shadow: 0 7px 20px rgba(23, 61, 43, .07);
+}
+
+.pairing-option-title {
+  margin-bottom: 13px;
+  color: var(--verde);
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* IMAGEM E IDENTIFICAÇÃO DO PRODUTO */
+
+.pairing-product {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  min-width: 0;
+  margin-bottom: 15px;
+}
+
+.pairing-product-image {
+  display: block;
+  flex: 0 0 104px;
+  width: 104px;
+  height: 125px;
+  object-fit: contain;
+  padding: 7px;
+  border-radius: 10px;
+  background: #F7F5EF;
+}
+
+.pairing-product-info {
+  min-width: 0;
+}
+
+.pairing-beverage-name {
+  color: var(--verde);
+  font-family: "Playfair Display", serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.pairing-brand {
+  margin-top: 5px;
+  color: var(--vermelho);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pairing-style {
+  margin-top: 5px;
+  color: var(--cinza);
+  font-size: 12px;
+}
+
+/* CARACTERÍSTICAS DA BEBIDA */
+
+.pairing-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 12px;
+  padding: 13px 0;
+  border-top: 1px solid #F0EEE8;
+  border-bottom: 1px solid #F0EEE8;
+}
+
+.pairing-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  min-width: 0;
+  color: var(--cinza);
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.pairing-detail-icon {
+  flex: 0 0 auto;
+  color: var(--vermelho);
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+/* JUSTIFICATIVA DA HARMONIZAÇÃO */
+
+.pairing-reason {
+  padding: 12px 13px;
+  margin-top: 13px;
+  border-left: 3px solid var(--dourado);
+  border-radius: 0 8px 8px 0;
+  background: #FAF7EF;
+  color: var(--texto);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.pairing-neutral .pairing-reason {
+  background: #F3F5F1;
+  border-left-color: var(--verde);
+}
+
+.pairing-unavailable {
+  color: var(--cinza);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.pairing-alcohol-content {
+  margin-top: 10px;
+  color: var(--cinza);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pairing-age-notice {
+  margin-top: 10px;
+  color: #8C4A20;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.pairing-source {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--verde);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration-color: var(--dourado);
+  text-underline-offset: 4px;
+}
+
+/* FOCO E TOQUE */
+
+html,
+body,
+a,
+button,
+input,
+textarea,
+select,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--dourado);
+  outline-offset: 3px;
+  border-radius: 5px;
+}
+
+/* RESPONSIVIDADE DA HARMONIZAÇÃO */
+
+@media (max-width: 700px) {
+  .automatic-pairing {
+    padding: 21px 17px;
+  }
+
+  .pairing-heading h3 {
+    font-size: 24px;
+  }
+
+  .pairing-option {
+    padding: 15px;
+  }
+
+  .pairing-option-featured {
+    padding: 16px;
+  }
+
+  .pairing-product {
+    gap: 13px;
+  }
+
+  .pairing-product-image {
+    flex-basis: 88px;
+    width: 88px;
+    height: 110px;
+  }
+
+  .pairing-beverage-name {
+    font-size: 19px;
+  }
+
+  .pairing-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .pairing-product {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pairing-product-image {
+    width: 100%;
+    height: 135px;
+  }
+}
+
+/* ACESSIBILIDADE: REDUÇÃO DE MOVIMENTO */
+
+@media (prefers-reduced-motion: reduce) {
+  .result-item {
+    animation: none;
+  }
+}
