@@ -4,7 +4,6 @@
    ===================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
-
   const parametros = new URLSearchParams(window.location.search);
   let dados = {};
 
@@ -46,8 +45,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       .trim();
   }
 
-  // Identifica palavras completas para reduzir falsos positivos.
-  // Exemplo: "sal" não será identificado dentro de "salada".
   function contemPalavras(texto, palavras) {
     const conteudo = normalizar(texto);
 
@@ -156,17 +153,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function compativel(receita) {
     const v = receita.verificacao;
-
     const tags = receita.restricoesCompativeis.map(normalizar);
 
     const possuiTag = tag =>
       tags.includes(normalizar(tag));
 
     if (!receitaAprovada(receita)) return false;
-
     if (receita.categoria !== categoria) return false;
 
-    // DOENÇA CELÍACA
     if (temRestricao("Doença celíaca")) {
       if (
         !v.semGlutenVerificado ||
@@ -175,7 +169,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       ) return false;
     }
 
-    // SENSIBILIDADE AO GLÚTEN
     if (temRestricao("Sensibilidade ao glúten")) {
       if (
         !v.semGlutenVerificado ||
@@ -183,7 +176,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       ) return false;
     }
 
-    // INTOLERÂNCIA À LACTOSE
     if (temRestricao("Intolerância à lactose")) {
       if (
         !v.semLactoseVerificado ||
@@ -191,24 +183,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       ) return false;
     }
 
-    // VEGETARIANA
     if (
       temRestricao("Vegetariana") &&
       !possuiTag("Vegetariana")
     ) return false;
 
-    // VEGANA
     if (
       temRestricao("Vegana") &&
       !possuiTag("Vegana")
     ) return false;
 
-    // OUTRA NECESSIDADE
     if (temRestricao("Outra necessidade")) {
       return false;
     }
 
-    // ALERGIA ALIMENTAR
     if (temRestricao("Alergia alimentar")) {
       if (!alergia) return false;
 
@@ -239,7 +227,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (conflito) return false;
     }
 
-    // DIABETES TIPO 1
     if (temRestricao("Diabetes tipo 1")) {
       if (
         typeof receita.carboidratosPorPorcao !== "number" ||
@@ -289,7 +276,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const contem = palavras =>
       contemPalavras(texto, palavras);
 
-    // DOCE
     if (
       receita.categoria === "sobremesa" ||
       contem([
@@ -303,7 +289,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       perfis.push("doce");
     }
 
-    // PICANTE
     if (contem([
       "pimenta", "pimentao picante",
       "chili", "jalapeno", "malagueta",
@@ -313,7 +298,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       perfis.push("picante");
     }
 
-    // ÁCIDO / CÍTRICO
     if (contem([
       "limao", "vinagre", "maracuja",
       "acerola", "laranja azeda",
@@ -322,7 +306,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       perfis.push("acido");
     }
 
-    // SALGADO
     if (contem([
       "sal", "queijo", "bacon",
       "presunto", "azeitona", "shoyu",
@@ -332,7 +315,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       perfis.push("salgado");
     }
 
-    // GORDUROSO
     if (contem([
       "frito", "fritura", "empanado",
       "manteiga", "creme de leite",
@@ -342,7 +324,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       perfis.push("gorduroso");
     }
 
-    // UMAMI
     if (contem([
       "cogumelo", "shoyu", "parmesao",
       "tomate", "carne", "caldo de carne",
@@ -351,7 +332,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       perfis.push("umami");
     }
 
-    // AMARGO
     if (contem([
       "cafe", "cacau amargo",
       "chocolate amargo", "rucula",
@@ -360,7 +340,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       perfis.push("amargo");
     }
 
-    // PERFIL LEVE
     if (
       receita.categoria === "entrada" ||
       receita.categoria === "lanche" ||
@@ -389,6 +368,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       amargor: item.bitterness || "",
       carbonatacao: item.carbonation || "",
       descricao: item.description || "",
+      imagem: item.image_url || "",
       teorAlcoolico: item.alcohol_content,
       alcoolica: item.is_alcoholic === true,
       fonte: item.source_url || ""
@@ -396,19 +376,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // =====================================================
-  // ANÁLISE DAS CARACTERÍSTICAS OFICIAIS DA BEBIDA
+  // ANÁLISE DAS CARACTERÍSTICAS DA BEBIDA
   // =====================================================
 
   function analisarBebida(bebida) {
-    // A análise considera somente informações descritivas
-    // cadastradas no catálogo.
-    //
-    // O estilo da bebida não é usado para presumir aroma,
-    // amargor, refrescância ou sabor.
-    //
-    // Exemplo: nem toda IPA será automaticamente marcada
-    // como amarga sem uma descrição oficial que confirme isso.
-
     const texto = normalizar([
       bebida.aroma,
       bebida.sabor,
@@ -420,9 +391,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const sinais = [];
 
-    // AMARGOR
-    // Não considera simplesmente qualquer campo preenchido.
-    // Valores como "baixo" ou "suave" não geram esse sinal.
     if (
       contemPalavras(texto, [
         "amargor", "amargo", "amarga"
@@ -434,7 +402,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       sinais.push("amargo");
     }
 
-    // NOTAS CÍTRICAS
     if (contemPalavras(texto, [
       "limao", "laranja", "citrico",
       "citrica", "maracuja"
@@ -442,22 +409,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       sinais.push("citrico");
     }
 
-    // REFRESCÂNCIA
     if (contemPalavras(texto, [
       "refrescante", "refrescancia"
     ])) {
       sinais.push("refrescante");
     }
 
-    // DOÇURA
-    // "Frutado" sozinho não significa necessariamente doce.
     if (contemPalavras(texto, [
       "doce", "dulcor", "adocicado"
     ])) {
       sinais.push("doce");
     }
 
-    // NOTAS TOSTADAS
     if (contemPalavras(texto, [
       "tostado", "torrado",
       "cafe", "chocolate"
@@ -465,9 +428,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       sinais.push("tostado");
     }
 
-    // CARBONATAÇÃO
-    // Só considera o sinal quando o campo específico
-    // de carbonatação estiver preenchido no catálogo.
     if (
       bebida.carbonatacao &&
       String(bebida.carbonatacao).trim() !== ""
@@ -475,7 +435,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       sinais.push("carbonatado");
     }
 
-    // NOTAS DE MALTE
     if (contemPalavras(texto, [
       "malte", "maltado", "maltada",
       "cereal", "pao"
@@ -487,7 +446,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // =====================================================
-  // MOTOR DE HARMONIZAÇÃO AUTOMÁTICA
+  // MOTOR DE HARMONIZAÇÃO
   // =====================================================
 
   function pontuarHarmonizacao(perfisReceita, bebida) {
@@ -506,120 +465,81 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    // DOCE
     adicionar(
-      "doce",
-      "amargo",
-      4,
+      "doce", "amargo", 4,
       "O amargor documentado pode criar contraste com a doçura da receita."
     );
 
     adicionar(
-      "doce",
-      "tostado",
-      2,
+      "doce", "tostado", 2,
       "As notas tostadas podem complementar o perfil doce do prato."
     );
 
-    // PICANTE
     adicionar(
-      "picante",
-      "refrescante",
-      3,
+      "picante", "refrescante", 3,
       "O perfil refrescante documentado pode ajudar a equilibrar a sensação de picância."
     );
 
     adicionar(
-      "picante",
-      "citrico",
-      2,
+      "picante", "citrico", 2,
       "As notas cítricas documentadas podem trazer contraste à picância."
     );
 
-    // ÁCIDO
     adicionar(
-      "acido",
-      "refrescante",
-      2,
+      "acido", "refrescante", 2,
       "O perfil refrescante documentado pode acompanhar a acidez da receita."
     );
 
     adicionar(
-      "acido",
-      "maltado",
-      1,
+      "acido", "maltado", 1,
       "As notas de malte documentadas podem oferecer contraste à acidez."
     );
 
-    // SALGADO
     adicionar(
-      "salgado",
-      "refrescante",
-      2,
+      "salgado", "refrescante", 2,
       "O perfil refrescante documentado pode acompanhar os sabores salgados."
     );
 
     adicionar(
-      "salgado",
-      "maltado",
-      2,
+      "salgado", "maltado", 2,
       "As notas de malte documentadas podem complementar o perfil salgado."
     );
 
-    // GORDUROSO
     adicionar(
-      "gorduroso",
-      "carbonatado",
-      3,
+      "gorduroso", "carbonatado", 3,
       "A carbonatação informada pode ajudar a limpar a sensação de gordura no paladar."
     );
 
     adicionar(
-      "gorduroso",
-      "citrico",
-      2,
+      "gorduroso", "citrico", 2,
       "As notas cítricas documentadas podem criar contraste com a gordura."
     );
 
     adicionar(
-      "gorduroso",
-      "amargo",
-      1,
+      "gorduroso", "amargo", 1,
       "O amargor documentado pode criar contraste com a untuosidade."
     );
 
-    // UMAMI
     adicionar(
-      "umami",
-      "maltado",
-      2,
+      "umami", "maltado", 2,
       "As notas maltadas documentadas podem acompanhar a intensidade do umami."
     );
 
     adicionar(
-      "umami",
-      "refrescante",
-      1,
+      "umami", "refrescante", 1,
       "O perfil refrescante documentado pode equilibrar a intensidade do prato."
     );
 
-    // AMARGO
     adicionar(
-      "amargo",
-      "doce",
-      2,
+      "amargo", "doce", 2,
       "As notas doces documentadas podem contrastar com o amargor da receita."
     );
 
-    // LEVE
     adicionar(
-      "leve",
-      "refrescante",
-      2,
+      "leve", "refrescante", 2,
       "O perfil leve e refrescante documentado pode acompanhar a delicadeza da receita."
     );
 
-    // PICANTE + DOCE
     if (
       perfisReceita.includes("doce") &&
       perfisReceita.includes("picante") &&
@@ -627,20 +547,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       sinaisBebida.includes("citrico")
     ) {
       pontos += 2;
-
       motivos.push(
         "A combinação de notas cítricas e perfil refrescante considera tanto a doçura quanto a picância do prato."
       );
     }
 
-    // PICANTE + GORDUROSO
     if (
       perfisReceita.includes("picante") &&
       perfisReceita.includes("gorduroso") &&
       sinaisBebida.includes("carbonatado")
     ) {
       pontos += 1;
-
       motivos.push(
         "A carbonatação documentada pode contribuir para equilibrar a sensação de gordura e picância."
       );
@@ -664,8 +581,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           return bebida.alcoolica === true;
         }
 
-        // Para a alternativa sem álcool, exige que o
-        // cadastro indique explicitamente is_alcoholic=false.
         return bebida.alcoolica === false;
       })
       .map(bebida => ({
@@ -685,6 +600,53 @@ document.addEventListener("DOMContentLoaded", async () => {
       : null;
   }
 
+  // Identifica água comum ou com gás no catálogo.
+  // Não escolhe água proteica como fallback automático.
+  function selecionarAguaPortfolio(bebidas) {
+    const aguas = bebidas.filter(bebida => {
+      if (bebida.alcoolica !== false) return false;
+
+      const categoriaAgua = [
+        "water",
+        "agua",
+        "aguas",
+        "agua mineral"
+      ].includes(bebida.categoria);
+
+      const nome = normalizar(
+        bebida.nome + " " + bebida.marca
+      );
+
+      const nomeAgua =
+        contemPalavras(nome, [
+          "agua", "agua mineral", "agua com gas",
+          "agua sem gas", "agua natural"
+        ]);
+
+      const proteica = contemPalavras(nome, [
+        "proteina", "protein", "whey"
+      ]);
+
+      return (categoriaAgua || nomeAgua) && !proteica;
+    });
+
+    if (!aguas.length) return null;
+
+    // Dá preferência à água sem gás quando o catálogo
+    // não oferece uma indicação culinária específica.
+    const semGas = aguas.find(bebida => {
+      const texto = normalizar(
+        bebida.nome + " " + bebida.descricao
+      );
+
+      return contemPalavras(texto, [
+        "sem gas", "natural", "still"
+      ]);
+    });
+
+    return semGas || aguas[0];
+  }
+
   // =====================================================
   // ELEMENTOS VISUAIS
   // =====================================================
@@ -701,19 +663,67 @@ document.addEventListener("DOMContentLoaded", async () => {
     return elemento;
   }
 
-  function criarIndicacaoBebida(resultado, titulo) {
-    const bloco = criarElemento("div", "pairing-option");
+  function criarImagemBebida(bebida) {
+    if (!bebida.imagem) return null;
+
+    const imagem = document.createElement("img");
+    imagem.className = "pairing-product-image";
+    imagem.src = bebida.imagem;
+    imagem.alt = "Imagem de " + bebida.nome;
+    imagem.loading = "lazy";
+
+    imagem.onerror = () => {
+      imagem.remove();
+    };
+
+    return imagem;
+  }
+
+  function criarDetalheBebida(bloco, icone, rotulo, valor) {
+    if (!valor || !String(valor).trim()) return;
+
+    const linha = criarElemento(
+      "p",
+      "pairing-detail"
+    );
+
+    const simbolo = criarElemento(
+      "span",
+      "pairing-detail-icon",
+      icone
+    );
+
+    simbolo.setAttribute("aria-hidden", "true");
+
+    linha.appendChild(simbolo);
+    linha.appendChild(document.createTextNode(
+      rotulo + ": " + valor
+    ));
+
+    bloco.appendChild(linha);
+  }
+
+  function criarIndicacaoBebida(resultado, titulo, configuracao = {}) {
+    const bloco = criarElemento(
+      "article",
+      "pairing-option"
+    );
+
+    if (configuracao.destaque) {
+      bloco.classList.add("pairing-option-featured");
+    }
 
     bloco.appendChild(criarElemento(
       "h4",
-      "",
+      "pairing-option-title",
       titulo
     ));
 
     if (!resultado) {
       bloco.appendChild(criarElemento(
         "p",
-        "",
+        "pairing-unavailable",
+        configuracao.mensagem ||
         "Ainda não temos informações oficiais suficientes no catálogo para indicar uma bebida compatível com segurança."
       ));
 
@@ -722,14 +732,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const bebida = resultado.bebida;
 
-    bloco.appendChild(criarElemento(
+    const produto = criarElemento(
+      "div",
+      "pairing-product"
+    );
+
+    const imagem = criarImagemBebida(bebida);
+
+    if (imagem) {
+      produto.appendChild(imagem);
+    }
+
+    const identificacao = criarElemento(
+      "div",
+      "pairing-product-info"
+    );
+
+    identificacao.appendChild(criarElemento(
       "p",
       "pairing-beverage-name",
       bebida.nome
     ));
 
     if (bebida.marca) {
-      bloco.appendChild(criarElemento(
+      identificacao.appendChild(criarElemento(
         "p",
         "pairing-brand",
         bebida.marca
@@ -737,69 +763,73 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (bebida.estilo) {
-      bloco.appendChild(criarElemento(
+      identificacao.appendChild(criarElemento(
         "p",
-        "",
-        "Estilo: " + bebida.estilo
+        "pairing-style",
+        bebida.estilo
       ));
     }
 
-    if (bebida.aroma) {
+    produto.appendChild(identificacao);
+    bloco.appendChild(produto);
+
+    if (resultado.fallback) {
+      bloco.classList.add("pairing-neutral");
+
       bloco.appendChild(criarElemento(
         "p",
-        "",
-        "Aroma: " + bebida.aroma
+        "pairing-reason",
+        resultado.mensagem
+      ));
+
+    } else {
+      const detalhes = criarElemento(
+        "div",
+        "pairing-details"
+      );
+
+      criarDetalheBebida(
+        detalhes, "◌", "Aroma", bebida.aroma
+      );
+
+      criarDetalheBebida(
+        detalhes, "✦", "Sabor", bebida.sabor
+      );
+
+      criarDetalheBebida(
+        detalhes, "◒", "Corpo", bebida.corpo
+      );
+
+      criarDetalheBebida(
+        detalhes, "◇", "Amargor", bebida.amargor
+      );
+
+      criarDetalheBebida(
+        detalhes, "◎", "Carbonatação", bebida.carbonatacao
+      );
+
+      if (detalhes.children.length) {
+        bloco.appendChild(detalhes);
+      }
+
+      bloco.appendChild(criarElemento(
+        "p",
+        "pairing-reason",
+        "Por que combina: " +
+        resultado.resultado.motivos.join(" ")
       ));
     }
 
-    if (bebida.sabor) {
+    if (
+      !resultado.fallback &&
+      bebida.teorAlcoolico != null
+    ) {
       bloco.appendChild(criarElemento(
         "p",
-        "",
-        "Sabor: " + bebida.sabor
+        "pairing-alcohol-content",
+        "Teor alcoólico: " + bebida.teorAlcoolico + "%"
       ));
     }
-
-    if (bebida.corpo) {
-      bloco.appendChild(criarElemento(
-        "p",
-        "",
-        "Corpo: " + bebida.corpo
-      ));
-    }
-
-    if (bebida.amargor) {
-      bloco.appendChild(criarElemento(
-        "p",
-        "",
-        "Amargor: " + bebida.amargor
-      ));
-    }
-
-    if (bebida.carbonatacao) {
-      bloco.appendChild(criarElemento(
-        "p",
-        "",
-        "Carbonatação: " + bebida.carbonatacao
-      ));
-    }
-
-    if (bebida.teorAlcoolico != null) {
-      bloco.appendChild(criarElemento(
-        "p",
-        "",
-        "Teor alcoólico: " +
-        bebida.teorAlcoolico +
-        "%"
-      ));
-    }
-
-    bloco.appendChild(criarElemento(
-      "p",
-      "pairing-reason",
-      "Por que combina: " +
-      resultado.resultado.motivos.join(" ")
-    ));
 
     if (bebida.fonte) {
       const fonte = document.createElement("a");
@@ -808,6 +838,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       fonte.textContent = "Consultar fonte oficial";
       fonte.target = "_blank";
       fonte.rel = "noopener noreferrer";
+      fonte.className = "pairing-source";
 
       bloco.appendChild(fonte);
     }
@@ -815,7 +846,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (bebida.alcoolica) {
       bloco.appendChild(criarElemento(
         "p",
-        "recipe-meta",
+        "pairing-age-notice",
         "Bebida alcoólica: recomendada somente para maiores de 18 anos."
       ));
     }
@@ -823,36 +854,61 @@ document.addEventListener("DOMContentLoaded", async () => {
     return bloco;
   }
 
+  // =====================================================
+  // HARMONIZAÇÃO AUTOMÁTICA
+  // =====================================================
+
   function criarHarmonizacaoAutomatica(receita, bebidas) {
     const secao = criarElemento(
       "section",
       "automatic-pairing"
     );
 
-    secao.appendChild(criarElemento(
+    secao.setAttribute(
+      "aria-label",
+      "Harmonização de bebidas para esta receita"
+    );
+
+    const cabecalho = criarElemento(
+      "div",
+      "pairing-heading"
+    );
+
+    cabecalho.appendChild(criarElemento(
+      "span",
+      "pairing-eyebrow",
+      "HARMONIZE+ RECOMENDA"
+    ));
+
+    cabecalho.appendChild(criarElemento(
       "h3",
       "",
-      "Harmonização automática"
+      "Harmonização ideal"
     ));
+
+    cabecalho.appendChild(criarElemento(
+      "p",
+      "pairing-intro",
+      "Descubra a bebida do portfólio que melhor acompanha esta receita."
+    ));
+
+    secao.appendChild(cabecalho);
 
     const perfis = analisarReceita(receita);
 
-    if (perfis.length === 0) {
+    if (perfis.length > 0) {
       secao.appendChild(criarElemento(
         "p",
-        "",
-        "Não identificamos características de sabor suficientes na descrição e nos ingredientes desta receita para sugerir uma harmonização confiável."
+        "pairing-profile",
+        "Perfil identificado: " + perfis.join(", ") + "."
       ));
-
-      return secao;
+    } else {
+      secao.appendChild(criarElemento(
+        "p",
+        "pairing-profile",
+        "Não foi possível identificar características sensoriais suficientes para uma combinação específica."
+      ));
     }
-
-    secao.appendChild(criarElemento(
-      "p",
-      "pairing-profile",
-      "Perfil identificado: " +
-      perfis.join(", ") + "."
-    ));
 
     const alcoolica = selecionarMelhorBebida(
       perfis,
@@ -866,15 +922,83 @@ document.addEventListener("DOMContentLoaded", async () => {
       "sem_alcool"
     );
 
-    secao.appendChild(criarIndicacaoBebida(
-      alcoolica,
-      "Sugestão alcoólica"
-    ));
+    const aguaFallback = !semAlcool
+      ? selecionarAguaPortfolio(bebidas)
+      : null;
 
-    secao.appendChild(criarIndicacaoBebida(
-      semAlcool,
-      "Alternativa sem álcool"
-    ));
+    // Apresenta a sugestão com melhor pontuação como destaque.
+    let principal = null;
+    let tituloPrincipal = "Sugestão em destaque";
+
+    if (alcoolica && semAlcool) {
+      if (
+        alcoolica.resultado.pontos >=
+        semAlcool.resultado.pontos
+      ) {
+        principal = alcoolica;
+        tituloPrincipal = "Sugestão em destaque";
+      } else {
+        principal = semAlcool;
+        tituloPrincipal = "Sugestão em destaque";
+      }
+    } else if (alcoolica) {
+      principal = alcoolica;
+    } else if (semAlcool) {
+      principal = semAlcool;
+    }
+
+    if (principal) {
+      secao.appendChild(criarIndicacaoBebida(
+        principal,
+        tituloPrincipal,
+        { destaque: true }
+      ));
+
+      // Mantém a outra categoria como opção complementar.
+      if (principal === alcoolica) {
+        secao.appendChild(criarIndicacaoBebida(
+          semAlcool,
+          "Alternativa sem álcool"
+        ));
+      } else {
+        secao.appendChild(criarIndicacaoBebida(
+          alcoolica,
+          "Alternativa alcoólica"
+        ));
+      }
+
+    } else if (aguaFallback) {
+      secao.appendChild(criarIndicacaoBebida(
+        {
+          bebida: aguaFallback,
+          fallback: true,
+          mensagem:
+            "Esta é uma opção neutra para acompanhar a refeição. Como não há dados sensoriais suficientes para justificar uma harmonização específica, a água é apresentada como acompanhamento, e não como uma combinação técnica."
+        },
+        "Acompanhamento neutro",
+        { destaque: true }
+      ));
+
+      secao.appendChild(criarIndicacaoBebida(
+        null,
+        "Outras combinações",
+        {
+          mensagem:
+            "O catálogo ainda não possui outra bebida com informações suficientes para sustentar uma harmonização específica."
+        }
+      ));
+
+    } else {
+      secao.appendChild(criarIndicacaoBebida(
+        null,
+        "Sugestão de bebida",
+        {
+          destaque: true,
+          mensagem:
+            "Não há uma bebida com informações suficientes para justificar uma harmonização neste momento. Cadastre ou ative produtos no catálogo para disponibilizar recomendações."
+        }
+      ));
+    }
 
     return secao;
   }
@@ -884,7 +1008,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =====================================================
 
   function criarCartao(receita, bebidas) {
-    const cartao = criarElemento("article", "recipe-card");
+    const conjunto = criarElemento(
+      "div",
+      "result-item"
+    );
+
+    const cartao = criarElemento(
+      "article",
+      "recipe-card"
+    );
 
     if (receita.imagem) {
       const foto = document.createElement("img");
@@ -975,15 +1107,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const ingredientes = document.createElement("ul");
 
     receita.ingredientes.forEach(item => {
-      ingredientes.appendChild(
-        criarElemento(
-          "li",
-          "",
-          typeof item === "string"
-            ? item
-            : JSON.stringify(item)
-        )
-      );
+      ingredientes.appendChild(criarElemento(
+        "li",
+        "",
+        typeof item === "string"
+          ? item
+          : JSON.stringify(item)
+      ));
     });
 
     corpo.appendChild(ingredientes);
@@ -997,15 +1127,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const preparo = document.createElement("ol");
 
     receita.preparo.forEach(etapa => {
-      preparo.appendChild(
-        criarElemento(
-          "li",
-          "",
-          typeof etapa === "string"
-            ? etapa
-            : JSON.stringify(etapa)
-        )
-      );
+      preparo.appendChild(criarElemento(
+        "li",
+        "",
+        typeof etapa === "string"
+          ? etapa
+          : JSON.stringify(etapa)
+      ));
     });
 
     corpo.appendChild(preparo);
@@ -1023,11 +1151,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     detalhes.appendChild(corpo);
     conteudo.appendChild(detalhes);
 
-    // HARMONIZAÇÃO AUTOMÁTICA
-    conteudo.appendChild(
-      criarHarmonizacaoAutomatica(receita, bebidas)
-    );
-
     // AVISO DE SEGURANÇA
     conteudo.appendChild(criarElemento(
       "p",
@@ -1037,7 +1160,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     cartao.appendChild(conteudo);
 
-    return cartao;
+    // A harmonização fica fora do cartão da receita,
+    // formando um segundo cartão visual conectado a ele.
+    conjunto.appendChild(cartao);
+    conjunto.appendChild(
+      criarHarmonizacaoAutomatica(receita, bebidas)
+    );
+
+    return conjunto;
   }
 
   // =====================================================
@@ -1064,10 +1194,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     }
 
-    // As consultas são independentes:
-    // uma falha no catálogo de bebidas não impede
-    // a exibição das receitas.
-
     const [receitasResultado, bebidasResultado] =
       await Promise.all([
         client
@@ -1089,6 +1215,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             bitterness,
             carbonation,
             description,
+            image_url,
             alcohol_content,
             is_alcoholic,
             source_url
@@ -1114,7 +1241,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
 
       erroCatalogoBebidas = true;
-
     } else {
       bebidas = (
         bebidasResultado.data || []
@@ -1126,31 +1252,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       .slice(0, 3);
 
     encontrados.forEach(receita => {
-      const cartao = criarCartao(
+      const conjunto = criarCartao(
         receita,
         erroCatalogoBebidas ? [] : bebidas
       );
 
       if (erroCatalogoBebidas) {
-        const aviso = criarElemento(
-          "p",
-          "",
-          "Não foi possível consultar o catálogo de bebidas neste momento. A harmonização automática está temporariamente indisponível."
-        );
-
-        const secao = cartao.querySelector(
+        const secao = conjunto.querySelector(
           ".automatic-pairing"
         );
 
         if (secao) {
           secao.replaceChildren(
-            criarElemento("h3", "", "Harmonização automática"),
-            aviso
+            criarElemento(
+              "h3",
+              "",
+              "Harmonização automática"
+            ),
+            criarElemento(
+              "p",
+              "pairing-unavailable",
+              "Não foi possível consultar o catálogo de bebidas neste momento. A harmonização automática está temporariamente indisponível."
+            )
           );
         }
       }
 
-      resultados.appendChild(cartao);
+      resultados.appendChild(conjunto);
     });
 
     loading.hidden = true;
@@ -1185,5 +1313,4 @@ document.addEventListener("DOMContentLoaded", async () => {
       "Ocorreu um problema ao consultar o banco de dados. Tente novamente mais tarde."
     );
   }
-
 });
