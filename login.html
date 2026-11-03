@@ -60,7 +60,7 @@
 
     button {
       width: 100%;
-      margin-top: 24px;
+      margin-top: 18px;
       padding: 14px;
       border: 0;
       border-radius: 10px;
@@ -75,6 +75,13 @@
       cursor: wait;
     }
 
+    #recuperarSenha {
+      background: transparent;
+      color: #173D2B;
+      border: 1px solid #173D2B;
+      margin-top: 12px;
+    }
+
     #mensagem {
       min-height: 24px;
       font-size: 14px;
@@ -83,8 +90,6 @@
 
     #mensagem.erro { color: #b42318; }
     #mensagem.sucesso { color: #176b39; }
-
-    a { color: #173D2B; }
   </style>
 </head>
 
@@ -114,8 +119,12 @@
         required
       >
 
+      <button type="submit" id="entrar">
+        Entrar no painel
+      </button>
+
       <button type="button" id="recuperarSenha">
-  Esqueci minha senha
+        Esqueci minha senha
       </button>
 
       <p id="mensagem" role="status" aria-live="polite"></p>
@@ -130,39 +139,6 @@
     const mensagem = document.getElementById("mensagem");
     const botao = document.getElementById("entrar");
     const botaoRecuperar = document.getElementById("recuperarSenha");
-
-botaoRecuperar.addEventListener("click", async function () {
-  const email = document.getElementById("email").value.trim();
-
-  if (!email) {
-    mostrarMensagem("Digite seu e-mail antes de solicitar a recuperação.");
-    return;
-  }
-
-  botaoRecuperar.disabled = true;
-  botaoRecuperar.textContent = "Enviando...";
-
-  try {
-    const { error } = await client.auth.resetPasswordForEmail(email, {
-      redirectTo: "https://larywithy.github.io/Harmonize/redefinir-senha.html"
-    });
-
-    if (error) throw error;
-
-    mostrarMensagem(
-      "Se o e-mail estiver cadastrado, você receberá um link para redefinir sua senha. Confira sua caixa de entrada e o spam.",
-      "sucesso"
-    );
-
-  } catch (erro) {
-    console.error("Erro na recuperação:", erro);
-    mostrarMensagem("Não foi possível enviar o e-mail. Tente novamente.");
-
-  } finally {
-    botaoRecuperar.disabled = false;
-    botaoRecuperar.textContent = "Esqueci minha senha";
-  }
-});
     const client = window.harmonizeSupabase;
 
     function mostrarMensagem(texto, tipo = "erro") {
@@ -170,6 +146,7 @@ botaoRecuperar.addEventListener("click", async function () {
       mensagem.className = tipo;
     }
 
+    // LOGIN
     form.addEventListener("submit", async function(event) {
       event.preventDefault();
 
@@ -193,9 +170,7 @@ botaoRecuperar.addEventListener("click", async function () {
           password: password
         });
 
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         if (!data.user) {
           throw new Error("O sistema não conseguiu confirmar seu usuário.");
@@ -217,6 +192,49 @@ botaoRecuperar.addEventListener("click", async function () {
 
         botao.disabled = false;
         botao.textContent = "Entrar no painel";
+      }
+    });
+
+    // RECUPERAÇÃO DE SENHA
+    botaoRecuperar.addEventListener("click", async function() {
+      const email = document.getElementById("email").value.trim();
+
+      if (!email) {
+        mostrarMensagem(
+          "Digite seu e-mail antes de solicitar a recuperação."
+        );
+        return;
+      }
+
+      if (!client) {
+        mostrarMensagem("Não foi possível conectar ao sistema.");
+        return;
+      }
+
+      botaoRecuperar.disabled = true;
+      botaoRecuperar.textContent = "Enviando...";
+
+      try {
+        const { error } = await client.auth.resetPasswordForEmail(email, {
+          redirectTo: "https://larywithy.github.io/Harmonize/redefinir-senha.html"
+        });
+
+        if (error) throw error;
+
+        mostrarMensagem(
+          "Se o e-mail estiver cadastrado, você receberá um link para redefinir sua senha. Confira sua caixa de entrada e o spam.",
+          "sucesso"
+        );
+
+      } catch (erro) {
+        console.error("Erro na recuperação:", erro);
+        mostrarMensagem(
+          "Não foi possível enviar o e-mail. Tente novamente."
+        );
+
+      } finally {
+        botaoRecuperar.disabled = false;
+        botaoRecuperar.textContent = "Esqueci minha senha";
       }
     });
   </script>
