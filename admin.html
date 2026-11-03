@@ -26,7 +26,6 @@
       padding: 20px 6%;
       background: #173D2B;
       color: white;
-      gap: 15px;
     }
 
     header strong {
@@ -53,7 +52,7 @@
       margin: 38px auto;
     }
 
-    h1, h2 {
+    h1, h2, h3 {
       font-family: "Playfair Display", serif;
     }
 
@@ -134,37 +133,19 @@
       background: #e8f1e8;
     }
 
-    .botao-perigo {
-      background: #fce8e6;
-      color: #b42318;
-    }
-
-    .receita {
+    .receita, .restaurante {
       padding: 20px 0;
       border-bottom: 1px solid #e4e8e2;
     }
 
-    .receita:last-child {
-      border-bottom: 0;
-    }
-
-    .receita h3 {
+    .receita h3, .restaurante h3 {
       margin: 0 0 8px;
       font-size: 19px;
     }
 
-    .receita p {
+    .receita p, .restaurante p {
       color: #637267;
       line-height: 1.5;
-    }
-
-    .status-receita {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      background: #e8f1e8;
-      font-size: 12px;
-      font-weight: 700;
     }
 
     .mensagem {
@@ -177,9 +158,7 @@
     .mensagem.erro { color: #b42318; }
     .mensagem.sucesso { color: #176b39; }
 
-    .filtros {
-      margin: 15px 0;
-    }
+    .filtros { margin: 15px 0; }
 
     .aviso {
       padding: 13px;
@@ -190,7 +169,68 @@
       line-height: 1.5;
     }
 
+    .campos-sensoriais {
+      margin-top: 24px;
+      padding: 20px;
+      background: #f8faf6;
+      border-radius: 12px;
+    }
+
+    .grupo-sensorial {
+      margin: 18px 0;
+      padding: 14px;
+      border: 1px solid #d5ddd5;
+      border-radius: 10px;
+    }
+
+    .grupo-sensorial legend {
+      font-weight: 700;
+    }
+
+    .opcao-sensorial,
+    .campo-verificacao {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0;
+      font-weight: 400;
+    }
+
+    .opcao-sensorial input,
+    .campo-verificacao input {
+      width: auto;
+    }
+
+    .campo-sensorial { margin-top: 15px; }
+
+    .painel-verificacao {
+      margin-top: 18px;
+      padding: 16px;
+      background: #f8faf6;
+      border-radius: 12px;
+    }
+
     .oculto { display: none; }
+
+    .subtitulo {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid #e4e8e2;
+    }
+
+    .secao-pratos {
+      margin-top: 25px;
+      padding: 20px;
+      background: #f8faf6;
+      border-radius: 12px;
+    }
+
+    .prato-item {
+      padding: 13px 0;
+      border-bottom: 1px solid #e4e8e2;
+    }
+
+    .prato-item:last-child { border-bottom: 0; }
 
     @media (max-width: 650px) {
       header { padding: 16px 5%; }
@@ -211,22 +251,19 @@
 
   <main>
     <h1>Painel administrativo</h1>
-    <p class="status">Gerenciamento interno de receitas e equipe.</p>
+    <p class="status">Gerenciamento interno de receitas e restaurantes.</p>
 
     <section class="painel">
       <h2 id="boasVindas">Verificando acesso...</h2>
       <p id="papel" class="etiqueta"></p>
-      <p id="mensagem" class="status">
-        Estamos verificando suas permissões.
-      </p>
+      <p id="mensagem" class="status">Estamos verificando suas permissões.</p>
       <p id="erro" class="mensagem"></p>
     </section>
 
+    <!-- CADASTRO DE RECEITAS -->
+
     <section id="areaCadastro" class="painel oculto">
       <h2 id="tituloFormulario">Cadastrar receita</h2>
-      <p class="status">
-        Preencha as informações da receita para adicioná-la ao sistema.
-      </p>
 
       <form id="formReceita">
         <div class="grade">
@@ -239,14 +276,14 @@
           <div class="campo">
             <label for="categoria">Categoria *</label>
             <select id="categoria" required>
-  <option value="">Selecione</option>
-  <option value="entrada">Entrada</option>
-  <option value="principal">Prato principal</option>
-  <option value="sobremesa">Sobremesa</option>
-  <option value="petisco">Petisco</option>
-  <option value="lanche">Lanche</option>
-  <option value="bebida">Bebida</option>
-  <option value="outro">Outro</option>
+              <option value="">Selecione</option>
+              <option value="entrada">Entrada</option>
+              <option value="principal">Prato principal</option>
+              <option value="sobremesa">Sobremesa</option>
+              <option value="petisco">Petisco</option>
+              <option value="lanche">Lanche</option>
+              <option value="bebida">Bebida</option>
+              <option value="outro">Outro</option>
             </select>
           </div>
 
@@ -272,37 +309,37 @@
 
           <div class="campo completo">
             <label for="ingredientes">Ingredientes *</label>
-            <textarea id="ingredientes" required placeholder="Digite um ingrediente por linha."></textarea>
+            <textarea id="ingredientes" required placeholder="Um ingrediente por linha."></textarea>
           </div>
 
           <div class="campo completo">
             <label for="preparo">Modo de preparo *</label>
-            <textarea id="preparo" required placeholder="Digite uma etapa por linha."></textarea>
+            <textarea id="preparo" required placeholder="Uma etapa por linha."></textarea>
           </div>
 
           <div class="campo completo">
             <label for="alergenicos">Alergênicos</label>
-            <input id="alergenicos" placeholder="Ex.: leite, ovos, amendoim. Separe por vírgulas.">
+            <input id="alergenicos" placeholder="Ex.: leite, ovos, amendoim.">
           </div>
 
           <div class="campo completo">
             <label for="restricoes">Características alimentares</label>
-            <input id="restricoes" placeholder="Ex.: vegetariana, vegana, sem glúten. Separe por vírgulas.">
+            <input id="restricoes" placeholder="Ex.: vegetariana, vegana, sem glúten.">
           </div>
 
           <div class="campo">
             <label for="carboidratos">Carboidratos por porção (g)</label>
-            <input id="carboidratos" type="number" min="0" step="0.01" placeholder="Somente valor verificado">
+            <input id="carboidratos" type="number" min="0" step="0.01">
           </div>
 
           <div class="campo">
             <label for="bebida">Harmonização com bebida</label>
-            <input id="bebida" placeholder="Ex.: cerveja, vinho...">
+            <input id="bebida">
           </div>
 
           <div class="campo completo">
             <label for="semAlcool">Harmonização sem álcool</label>
-            <input id="semAlcool" placeholder="Ex.: água com gás e limão">
+            <input id="semAlcool">
           </div>
 
           <div class="campo completo">
@@ -316,9 +353,9 @@
         </div>
 
         <p class="aviso">
-          Importante: informe alergênicos e características alimentares
-          somente após conferência. A ausência de um ingrediente na lista
-          não garante ausência de contaminação cruzada.
+          Informe alergênicos e características alimentares somente após
+          conferência. A ausência de um ingrediente na lista não garante
+          ausência de contaminação cruzada.
         </p>
 
         <div class="acoes">
@@ -331,6 +368,8 @@
         <p id="mensagemFormulario" class="mensagem"></p>
       </form>
     </section>
+
+    <!-- LISTA DE RECEITAS -->
 
     <section id="areaReceitas" class="painel oculto">
       <h2>Receitas cadastradas</h2>
@@ -354,6 +393,219 @@
       <p id="mensagemLista" class="mensagem"></p>
     </section>
 
+    <!-- GERENCIAMENTO DE RESTAURANTES -->
+
+    <section id="areaRestaurantes" class="painel oculto">
+      <h2>Restaurantes inclusivos</h2>
+
+      <p class="status">
+        Cadastre estabelecimentos, opções alimentares e informações
+        sobre os cuidados de preparo declarados por eles.
+      </p>
+
+      <form id="formRestaurante">
+
+        <h3>Dados do estabelecimento</h3>
+
+        <div class="grade">
+
+          <div class="campo completo">
+            <label for="nomeRestaurante">Nome do restaurante *</label>
+            <input id="nomeRestaurante" required maxlength="150">
+          </div>
+
+          <div class="campo completo">
+            <label for="descricaoRestaurante">Descrição</label>
+            <textarea id="descricaoRestaurante"></textarea>
+          </div>
+
+          <div class="campo completo">
+            <label for="enderecoRestaurante">Endereço</label>
+            <input id="enderecoRestaurante">
+          </div>
+
+          <div class="campo">
+            <label for="cidadeRestaurante">Cidade</label>
+            <input id="cidadeRestaurante">
+          </div>
+
+          <div class="campo">
+            <label for="estadoRestaurante">Estado</label>
+            <input id="estadoRestaurante" maxlength="2" placeholder="Ex.: SP">
+          </div>
+
+          <div class="campo">
+            <label for="cepRestaurante">CEP</label>
+            <input id="cepRestaurante">
+          </div>
+
+          <div class="campo">
+            <label for="telefoneRestaurante">Telefone</label>
+            <input id="telefoneRestaurante" type="tel">
+          </div>
+
+          <div class="campo completo">
+            <label for="siteRestaurante">Site</label>
+            <input id="siteRestaurante" type="url" placeholder="https://...">
+          </div>
+
+          <div class="campo completo">
+            <label for="imagemRestaurante">URL da imagem</label>
+            <input id="imagemRestaurante" type="url" placeholder="https://...">
+          </div>
+
+        </div>
+
+        <h3 class="subtitulo">Opções alimentares</h3>
+
+        <div class="campo completo">
+          <label for="opcoesRestaurante">Opções disponíveis</label>
+          <input id="opcoesRestaurante"
+            placeholder="Ex.: sem glúten, sem lactose, vegetariano, vegano. Separe por vírgulas.">
+        </div>
+
+        <div class="campo completo" style="margin-top:16px">
+          <label for="praticasRestaurante">Práticas de preparo informadas</label>
+          <textarea id="praticasRestaurante"
+            placeholder="Descreva os procedimentos informados pelo estabelecimento."></textarea>
+        </div>
+
+        <div class="campo completo" style="margin-top:16px">
+          <label for="contaminacaoRestaurante">Informações sobre contaminação cruzada</label>
+          <textarea id="contaminacaoRestaurante"
+            placeholder="Informe o que o estabelecimento declara sobre utensílios, superfícies e áreas de preparo."></textarea>
+        </div>
+
+        <h3 class="subtitulo">Verificação das informações</h3>
+
+        <div class="grade">
+
+          <div class="campo">
+            <label for="verificacaoRestaurante">Situação da verificação</label>
+            <select id="verificacaoRestaurante">
+              <option value="pending">Pendente</option>
+              <option value="verified">Informações verificadas</option>
+              <option value="not_verified">Não verificado</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="statusRestaurante">Situação do cadastro</label>
+            <select id="statusRestaurante">
+              <option value="draft">Rascunho</option>
+              <option value="published">Publicado</option>
+            </select>
+          </div>
+
+        </div>
+
+        <p class="aviso" style="margin-top:18px">
+          A indicação de uma opção alimentar não representa garantia de
+          segurança para pessoas com alergias, doença celíaca ou outras
+          condições. Sempre que possível, registre a fonte da informação,
+          a data da verificação e os procedimentos de prevenção de
+          contaminação cruzada.
+        </p>
+
+        <div class="acoes">
+          <button id="salvarRestaurante" type="submit">Salvar restaurante</button>
+          <button id="cancelarRestaurante" type="button" class="botao-secundario oculto">
+            Cancelar edição
+          </button>
+        </div>
+
+        <p id="mensagemRestaurante" class="mensagem"></p>
+      </form>
+
+      <h3 class="subtitulo">Estabelecimentos cadastrados</h3>
+
+      <div class="filtros">
+        <label for="filtroStatusRestaurante">Filtrar por situação</label>
+        <select id="filtroStatusRestaurante">
+          <option value="todas">Todos</option>
+          <option value="draft">Rascunhos</option>
+          <option value="published">Publicados</option>
+        </select>
+      </div>
+
+      <div id="listaRestaurantes">
+        <p class="status">Carregando restaurantes...</p>
+      </div>
+
+      <p id="mensagemListaRestaurantes" class="mensagem"></p>
+
+      <!-- CADASTRO DE PRATOS -->
+
+      <section id="areaPratos" class="secao-pratos oculto">
+        <h3>Pratos do estabelecimento</h3>
+
+        <p id="restauranteSelecionado" class="status"></p>
+
+        <form id="formPrato">
+
+          <div class="grade">
+
+            <div class="campo completo">
+              <label for="nomePrato">Nome do prato *</label>
+              <input id="nomePrato" required maxlength="150">
+            </div>
+
+            <div class="campo completo">
+              <label for="descricaoPrato">Descrição</label>
+              <textarea id="descricaoPrato"></textarea>
+            </div>
+
+            <div class="campo completo">
+              <label for="opcoesPrato">Opções alimentares</label>
+              <input id="opcoesPrato"
+                placeholder="Ex.: sem glúten, sem lactose, vegano. Separe por vírgulas.">
+            </div>
+
+            <div class="campo completo">
+              <label for="alergenicosPrato">Alergênicos informados</label>
+              <input id="alergenicosPrato"
+                placeholder="Ex.: leite, ovos, soja. Separe por vírgulas.">
+            </div>
+
+            <div class="campo completo">
+              <label for="contaminacaoPrato">Informações sobre contaminação cruzada</label>
+              <textarea id="contaminacaoPrato"></textarea>
+            </div>
+
+            <div class="campo completo">
+              <label for="fontePrato">Fonte da informação sobre o prato</label>
+              <input id="fontePrato" type="url" placeholder="https://...">
+            </div>
+
+            <div class="campo completo">
+              <label for="receitaPrato">Receita semelhante no Harmonize+</label>
+              <select id="receitaPrato">
+                <option value="">Nenhuma associação</option>
+              </select>
+            </div>
+
+          </div>
+
+          <p class="aviso" style="margin-top:16px">
+            A associação com uma receita indica semelhança culinária.
+            Não significa que o prato do restaurante tenha os mesmos
+            ingredientes ou condições de preparo da receita.
+          </p>
+
+          <div class="acoes">
+            <button id="salvarPrato" type="submit">Salvar prato</button>
+          </div>
+
+          <p id="mensagemPrato" class="mensagem"></p>
+        </form>
+
+        <h3 class="subtitulo">Pratos cadastrados</h3>
+
+        <div id="listaPratos">
+          <p class="status">Selecione um restaurante para visualizar os pratos.</p>
+        </div>
+      </section>
+    </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
