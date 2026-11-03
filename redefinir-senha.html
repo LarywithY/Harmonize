@@ -1,1 +1,203 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redefinir senha | Harmonize+</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #f5f3ef;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      padding: 35px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      text-align: center;
+      color: #496b58;
+      margin-bottom: 10px;
+    }
+
+    p {
+      text-align: center;
+      line-height: 1.5;
+      color: #666;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      margin-bottom: 7px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: #496b58;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #mensagem {
+      margin-top: 16px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .erro {
+      color: #b42318;
+    }
+
+    .sucesso {
+      color: #267344;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+    <h1>Harmonize+</h1>
+
+    <p>Cadastre uma nova senha para acessar o painel.</p>
+
+    <form id="formSenha">
+      <label for="senha">Nova senha</label>
+      <input
+        type="password"
+        id="senha"
+        minlength="8"
+        required
+        placeholder="Digite sua nova senha"
+      >
+
+      <label for="confirmarSenha">Confirme sua nova senha</label>
+      <input
+        type="password"
+        id="confirmarSenha"
+        minlength="8"
+        required
+        placeholder="Digite novamente"
+      >
+
+      <button type="submit" id="salvar">Salvar nova senha</button>
+    </form>
+
+    <div id="mensagem" aria-live="polite"></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+
+  <script>
+    const client = window.harmonizeSupabase;
+    const form = document.getElementById("formSenha");
+    const mensagem = document.getElementById("mensagem");
+    const botao = document.getElementById("salvar");
+
+    function mostrarMensagem(texto, tipo = "erro") {
+      mensagem.textContent = texto;
+      mensagem.className = tipo;
+    }
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const senha = document.getElementById("senha").value;
+      const confirmar = document.getElementById("confirmarSenha").value;
+
+      if (senha.length < 8) {
+        mostrarMensagem("A senha precisa ter pelo menos 8 caracteres.");
+        return;
+      }
+
+      if (senha !== confirmar) {
+        mostrarMensagem("As senhas não são iguais.");
+        return;
+      }
+
+      botao.disabled = true;
+      botao.textContent = "Salvando...";
+
+      try {
+        const { data: { session }, error: sessionError } =
+          await client.auth.getSession();
+
+        if (sessionError) throw sessionError;
+
+        if (!session) {
+          throw new Error(
+            "Link de recuperação inválido ou expirado. Solicite um novo link."
+          );
+        }
+
+        const { error } = await client.auth.updateUser({
+          password: senha
+        });
+
+        if (error) throw error;
+
+        mostrarMensagem(
+          "Senha alterada com sucesso! Você já pode entrar no painel.",
+          "sucesso"
+        );
+
+        form.reset();
+
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2500);
+
+      } catch (erro) {
+        console.error("Erro ao redefinir senha:", erro);
+        mostrarMensagem(
+          erro.message || "Não foi possível alterar sua senha."
+        );
+
+      } finally {
+        botao.disabled = false;
+        botao.textContent = "Salvar nova senha";
+      }
+    });
+  </script>
+
+</body>
+</html>
+
