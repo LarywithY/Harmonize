@@ -114,8 +114,8 @@
         required
       >
 
-      <button id="entrar" type="submit">
-        Entrar no painel
+      <button type="button" id="recuperarSenha">
+  Esqueci minha senha
       </button>
 
       <p id="mensagem" role="status" aria-live="polite"></p>
@@ -129,6 +129,40 @@
     const form = document.getElementById("formLogin");
     const mensagem = document.getElementById("mensagem");
     const botao = document.getElementById("entrar");
+    const botaoRecuperar = document.getElementById("recuperarSenha");
+
+botaoRecuperar.addEventListener("click", async function () {
+  const email = document.getElementById("email").value.trim();
+
+  if (!email) {
+    mostrarMensagem("Digite seu e-mail antes de solicitar a recuperação.");
+    return;
+  }
+
+  botaoRecuperar.disabled = true;
+  botaoRecuperar.textContent = "Enviando...";
+
+  try {
+    const { error } = await client.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://larywithy.github.io/Harmonize/redefinir-senha.html"
+    });
+
+    if (error) throw error;
+
+    mostrarMensagem(
+      "Se o e-mail estiver cadastrado, você receberá um link para redefinir sua senha. Confira sua caixa de entrada e o spam.",
+      "sucesso"
+    );
+
+  } catch (erro) {
+    console.error("Erro na recuperação:", erro);
+    mostrarMensagem("Não foi possível enviar o e-mail. Tente novamente.");
+
+  } finally {
+    botaoRecuperar.disabled = false;
+    botaoRecuperar.textContent = "Esqueci minha senha";
+  }
+});
     const client = window.harmonizeSupabase;
 
     function mostrarMensagem(texto, tipo = "erro") {
