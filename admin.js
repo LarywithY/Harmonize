@@ -1,3 +1,4 @@
+
 const client = window.harmonizeSupabase;
 
 const boasVindas = document.getElementById("boasVindas");
@@ -81,17 +82,13 @@ const camposVerificacao = [
 ];
 
 // ==========================================
-// NOVOS CAMPOS SENSORIAIS
+// CAMPOS SENSORIAIS
 // ==========================================
 
 const camposSensoriais = {
-
   sensory_profile: {
     titulo: "Perfil sensorial",
-
-    explicacao:
-      "Selecione os sabores predominantes da receita.",
-
+    explicacao: "Selecione os sabores predominantes da receita.",
     opcoes: [
       ["doce", "Doce"],
       ["salgado", "Salgado"],
@@ -104,10 +101,7 @@ const camposSensoriais = {
 
   texture: {
     titulo: "Textura",
-
-    explicacao:
-      "Selecione as texturas presentes na receita.",
-
+    explicacao: "Selecione as texturas presentes na receita.",
     opcoes: [
       ["cremosa", "Cremosa"],
       ["crocante", "Crocante"],
@@ -120,10 +114,7 @@ const camposSensoriais = {
 
   cooking_methods: {
     titulo: "Método de preparo",
-
-    explicacao:
-      "Informe como o prato é preparado.",
-
+    explicacao: "Informe como o prato é preparado.",
     opcoes: [
       ["frito_por_imersao", "Frito por imersão"],
       ["frito_na_frigideira", "Frito na frigideira"],
@@ -139,10 +130,7 @@ const camposSensoriais = {
 
   preparation_features: {
     titulo: "Características adicionais",
-
-    explicacao:
-      "Selecione os ingredientes e características importantes do preparo.",
-
+    explicacao: "Selecione os ingredientes e características importantes do preparo.",
     opcoes: [
       ["manteiga", "Manteiga"],
       ["azeite", "Azeite"],
@@ -157,7 +145,6 @@ const camposSensoriais = {
       ["empanamento", "Empanamento"]
     ]
   }
-
 };
 
 // ==========================================
@@ -165,15 +152,11 @@ const camposSensoriais = {
 // ==========================================
 
 function mostrarMensagem(elemento, texto, tipo = "") {
-
   elemento.textContent = texto;
-
   elemento.className = "mensagem " + tipo;
-
 }
 
 function criarElemento(tag, texto, classe) {
-
   const elemento = document.createElement(tag);
 
   if (texto !== undefined) {
@@ -185,31 +168,24 @@ function criarElemento(tag, texto, classe) {
   }
 
   return elemento;
-
 }
 
 function dividirTexto(texto) {
-
   return texto
     .split("\n")
     .map(item => item.trim())
     .filter(Boolean);
-
 }
 
 function dividirLista(texto) {
-
   return texto
     .split(",")
     .map(item => item.trim())
     .filter(Boolean);
-
 }
 
 function valor(id) {
-
   return document.getElementById(id).value.trim();
-
 }
 
 // ==========================================
@@ -217,9 +193,21 @@ function valor(id) {
 // ==========================================
 
 function criarCamposSensoriais() {
+  // Evita criar os campos mais de uma vez.
+  if (document.getElementById("secaoCamposSensoriais")) {
+    return;
+  }
+
+  const grade = formReceita.querySelector(".grade");
+
+  if (!grade) {
+    console.error("Não foi encontrada a área .grade no formulário.");
+    return;
+  }
 
   const secao = document.createElement("section");
 
+  secao.id = "secaoCamposSensoriais";
   secao.className = "campos-sensoriais";
 
   const titulo = criarElemento(
@@ -234,11 +222,8 @@ function criarCamposSensoriais() {
 
   secao.append(titulo, explicacao);
 
-  // Criar grupos de seleção
-
   Object.entries(camposSensoriais).forEach(
     ([campo, configuracao]) => {
-
       const grupo = document.createElement("fieldset");
 
       grupo.className = "grupo-sensorial";
@@ -255,8 +240,7 @@ function criarCamposSensoriais() {
 
       grupo.append(legenda, descricao);
 
-      configuracao.opcoes.forEach(([valor, texto]) => {
-
+      configuracao.opcoes.forEach(([valorOpcao, texto]) => {
         const label = document.createElement("label");
 
         label.className = "opcao-sensorial";
@@ -264,9 +248,7 @@ function criarCamposSensoriais() {
         const checkbox = document.createElement("input");
 
         checkbox.type = "checkbox";
-
-        checkbox.value = valor;
-
+        checkbox.value = valorOpcao;
         checkbox.dataset.campoSensorial = campo;
 
         label.append(
@@ -275,11 +257,9 @@ function criarCamposSensoriais() {
         );
 
         grupo.appendChild(label);
-
       });
 
       secao.appendChild(grupo);
-
     }
   );
 
@@ -299,7 +279,6 @@ function criarCamposSensoriais() {
   const seletor = document.createElement("select");
 
   seletor.id = "intensidadeSensorial";
-
   seletor.name = "intensity";
 
   const intensidades = [
@@ -309,16 +288,13 @@ function criarCamposSensoriais() {
     ["intensa", "Intensa"]
   ];
 
-  intensidades.forEach(([valor, texto]) => {
-
+  intensidades.forEach(([valorOpcao, texto]) => {
     const opcao = document.createElement("option");
 
-    opcao.value = valor;
-
+    opcao.value = valorOpcao;
     opcao.textContent = texto;
 
     seletor.appendChild(opcao);
-
   });
 
   grupoIntensidade.append(
@@ -328,7 +304,7 @@ function criarCamposSensoriais() {
 
   secao.appendChild(grupoIntensidade);
 
-  // Observações
+  // Observações sobre o preparo
 
   const grupoObservacoes = document.createElement("div");
 
@@ -344,9 +320,7 @@ function criarCamposSensoriais() {
   const observacoes = document.createElement("textarea");
 
   observacoes.id = "observacoesPreparo";
-
   observacoes.name = "preparation_notes";
-
   observacoes.rows = 3;
 
   observacoes.placeholder =
@@ -359,13 +333,11 @@ function criarCamposSensoriais() {
 
   secao.appendChild(grupoObservacoes);
 
-  // Inserir campos antes do botão salvar
+  // CORREÇÃO:
+  // Insere os campos sensoriais depois da grade
+  // e antes dos avisos e botões do formulário.
 
-  botaoSalvar.insertAdjacentElement(
-    "beforebegin",
-    secao
-  );
-
+  grade.insertAdjacentElement("afterend", secao);
 }
 
 // ==========================================
@@ -373,15 +345,11 @@ function criarCamposSensoriais() {
 // ==========================================
 
 function obterOpcoesSensoriais(campo) {
-
   return Array.from(
-
     formReceita.querySelectorAll(
       `[data-campo-sensorial="${campo}"]:checked`
     )
-
   ).map(item => item.value);
-
 }
 
 // ==========================================
@@ -389,7 +357,6 @@ function obterOpcoesSensoriais(campo) {
 // ==========================================
 
 function preencherOpcoesSensoriais(campo, valores) {
-
   const selecionados = Array.isArray(valores)
     ? valores
     : [];
@@ -397,11 +364,8 @@ function preencherOpcoesSensoriais(campo, valores) {
   formReceita.querySelectorAll(
     `[data-campo-sensorial="${campo}"]`
   ).forEach(item => {
-
     item.checked = selecionados.includes(item.value);
-
   });
-
 }
 
 // ==========================================
@@ -409,7 +373,6 @@ function preencherOpcoesSensoriais(campo, valores) {
 // ==========================================
 
 function limparFormulario() {
-
   formReceita.reset();
 
   receitaEditando = null;
@@ -422,7 +385,6 @@ function limparFormulario() {
   botaoCancelar.classList.add("oculto");
 
   mostrarMensagem(mensagemFormulario, "");
-
 }
 
 // ==========================================
@@ -430,7 +392,6 @@ function limparFormulario() {
 // ==========================================
 
 function preencherFormulario(receita) {
-
   receitaEditando = receita.id;
 
   document.getElementById("tituloFormulario").textContent =
@@ -457,12 +418,10 @@ function preencherFormulario(receita) {
   // Características sensoriais
 
   Object.keys(camposSensoriais).forEach(campo => {
-
     preencherOpcoesSensoriais(
       campo,
       receita[campo]
     );
-
   });
 
   document.getElementById("intensidadeSensorial").value =
@@ -526,7 +485,6 @@ function preencherFormulario(receita) {
   areaCadastro.scrollIntoView({
     behavior: "smooth"
   });
-
 }
 
 // ==========================================
@@ -534,21 +492,14 @@ function preencherFormulario(receita) {
 // ==========================================
 
 function montarDadosReceita() {
-
   const tempo = valor("tempo");
-
   const rendimento = valor("rendimento");
-
   const carboidratos = valor("carboidratos");
 
   return {
-
     name: valor("nome"),
-
     category: valor("categoria"),
-
     image_url: valor("imagem") || null,
-
     description: valor("descricao"),
 
     prep_minutes: tempo
@@ -585,15 +536,13 @@ function montarDadosReceita() {
     harmonization_non_alcoholic:
       valor("semAlcool") || null,
 
-    // NOVOS DADOS SENSORIAIS
+    // Dados sensoriais
 
     sensory_profile:
       obterOpcoesSensoriais("sensory_profile"),
 
     intensity:
-      document.getElementById(
-        "intensidadeSensorial"
-      ).value || null,
+      document.getElementById("intensidadeSensorial").value || null,
 
     texture:
       obterOpcoesSensoriais("texture"),
@@ -605,12 +554,8 @@ function montarDadosReceita() {
       obterOpcoesSensoriais("preparation_features"),
 
     preparation_notes:
-      document.getElementById(
-        "observacoesPreparo"
-      ).value.trim() || null
-
+      document.getElementById("observacoesPreparo").value.trim() || null
   };
-
 }
 
 // ==========================================
@@ -618,7 +563,6 @@ function montarDadosReceita() {
 // ==========================================
 
 function criarPainelVerificacao(receita) {
-
   const painel = criarElemento(
     "section",
     undefined,
@@ -651,7 +595,6 @@ function criarPainelVerificacao(receita) {
   const controles = {};
 
   camposVerificacao.forEach(campo => {
-
     const linha = criarElemento(
       "label",
       undefined,
@@ -661,9 +604,7 @@ function criarPainelVerificacao(receita) {
     const checkbox = document.createElement("input");
 
     checkbox.type = "checkbox";
-
-    checkbox.checked =
-      receita[campo.coluna] === true;
+    checkbox.checked = receita[campo.coluna] === true;
 
     linha.appendChild(checkbox);
 
@@ -674,7 +615,6 @@ function criarPainelVerificacao(receita) {
     controles[campo.coluna] = checkbox;
 
     painel.appendChild(linha);
-
   });
 
   const labelStatus = criarElemento(
@@ -689,16 +629,13 @@ function criarPainelVerificacao(receita) {
     ["em_verificacao", "Em verificação"],
     ["aprovada", "Verificação aprovada"],
     ["reprovada", "Verificação reprovada"]
-  ].forEach(([valor, texto]) => {
-
+  ].forEach(([valorOpcao, texto]) => {
     const opcao = document.createElement("option");
 
-    opcao.value = valor;
-
+    opcao.value = valorOpcao;
     opcao.textContent = texto;
 
     seletor.appendChild(opcao);
-
   });
 
   seletor.value = nomesVerificacao[statusAtual]
@@ -718,19 +655,14 @@ function criarPainelVerificacao(receita) {
   botao.type = "button";
 
   botao.addEventListener("click", async () => {
-
     const dados = {};
 
     camposVerificacao.forEach(campo => {
-
       dados[campo.coluna] =
         controles[campo.coluna].checked;
-
     });
 
     const statusEscolhido = seletor.value;
-
-    // Critérios obrigatórios para aprovação
 
     if (
       statusEscolhido === "aprovada" &&
@@ -740,7 +672,6 @@ function criarPainelVerificacao(receita) {
         !dados.cross_contamination_assessed
       )
     ) {
-
       mostrarMensagem(
         mensagemLista,
         "Para aprovar a verificação, confira ingredientes, alergênicos e contaminação cruzada.",
@@ -748,7 +679,6 @@ function criarPainelVerificacao(receita) {
       );
 
       return;
-
     }
 
     const confirmar = window.confirm(
@@ -758,39 +688,22 @@ function criarPainelVerificacao(receita) {
     if (!confirmar) return;
 
     botao.disabled = true;
-
     botao.textContent = "Salvando...";
 
     try {
-
       const {
         error: erroVerificacao
       } = await client.rpc(
         "update_recipe_verification",
         {
-
           p_recipe_id: receita.id,
-
           p_verification_status: statusEscolhido,
-
-          p_ingredients_verified:
-            dados.ingredients_verified,
-
-          p_allergens_verified:
-            dados.allergens_verified,
-
-          p_cross_contamination_assessed:
-            dados.cross_contamination_assessed,
-
-          p_gluten_free_verified:
-            dados.gluten_free_verified,
-
-          p_dairy_free_verified:
-            dados.dairy_free_verified,
-
-          p_allergies_verified:
-            dados.allergies_verified
-
+          p_ingredients_verified: dados.ingredients_verified,
+          p_allergens_verified: dados.allergens_verified,
+          p_cross_contamination_assessed: dados.cross_contamination_assessed,
+          p_gluten_free_verified: dados.gluten_free_verified,
+          p_dairy_free_verified: dados.dairy_free_verified,
+          p_allergies_verified: dados.allergies_verified
         }
       );
 
@@ -807,7 +720,6 @@ function criarPainelVerificacao(receita) {
       await carregarReceitas();
 
     } catch (problema) {
-
       console.error(
         "Erro ao salvar verificações:",
         problema
@@ -821,17 +733,13 @@ function criarPainelVerificacao(receita) {
       );
 
       botao.disabled = false;
-
       botao.textContent = "Salvar verificações";
-
     }
-
   });
 
   painel.appendChild(botao);
 
   return painel;
-
 }
 
 // ==========================================
@@ -839,7 +747,6 @@ function criarPainelVerificacao(receita) {
 // ==========================================
 
 async function carregarReceitas() {
-
   listaReceitas.replaceChildren(
     criarElemento(
       "p",
@@ -851,7 +758,6 @@ async function carregarReceitas() {
   mostrarMensagem(mensagemLista, "");
 
   try {
-
     const {
       data,
       error: erroBusca
@@ -871,14 +777,11 @@ async function carregarReceitas() {
     const filtro = filtroStatus.value;
 
     const receitas = (data || []).filter(receita =>
-
       filtro === "todas" ||
       receita.status === filtro
-
     );
 
     if (receitas.length === 0) {
-
       listaReceitas.appendChild(
         criarElemento(
           "p",
@@ -888,11 +791,9 @@ async function carregarReceitas() {
       );
 
       return;
-
     }
 
     receitas.forEach(receita => {
-
       const card = criarElemento(
         "article",
         undefined,
@@ -952,7 +853,6 @@ async function carregarReceitas() {
       // EDITAR
 
       if (podeEditar) {
-
         const editar = criarElemento(
           "button",
           "Editar",
@@ -962,19 +862,15 @@ async function carregarReceitas() {
         editar.type = "button";
 
         editar.addEventListener("click", () => {
-
           preencherFormulario(receita);
-
         });
 
         acoes.appendChild(editar);
-
       }
 
-      // APROVAR
+      // APROVAR E REJEITAR
 
       if (podeRevisar) {
-
         const aprovar = criarElemento(
           "button",
           "Aprovar"
@@ -983,15 +879,8 @@ async function carregarReceitas() {
         aprovar.type = "button";
 
         aprovar.addEventListener("click", () => {
-
-          revisarReceita(
-            receita.id,
-            "approved"
-          );
-
+          revisarReceita(receita.id, "approved");
         });
-
-        // REJEITAR
 
         const rejeitar = criarElemento(
           "button",
@@ -1002,25 +891,18 @@ async function carregarReceitas() {
         rejeitar.type = "button";
 
         rejeitar.addEventListener("click", () => {
-
-          revisarReceita(
-            receita.id,
-            "rejected"
-          );
-
+          revisarReceita(receita.id, "rejected");
         });
 
         acoes.append(
           aprovar,
           rejeitar
         );
-
       }
 
       // PUBLICAR
 
       if (podePublicar) {
-
         const publicar = criarElemento(
           "button",
           "Publicar"
@@ -1029,19 +911,14 @@ async function carregarReceitas() {
         publicar.type = "button";
 
         publicar.addEventListener("click", () => {
-
           publicarReceita(receita.id);
-
         });
 
         acoes.appendChild(publicar);
-
       }
 
       if (acoes.children.length > 0) {
-
         card.appendChild(acoes);
-
       }
 
       // VERIFICAÇÃO ALIMENTAR
@@ -1049,19 +926,15 @@ async function carregarReceitas() {
       if (
         ["admin", "reviewer"].includes(membroAtual.role)
       ) {
-
         card.appendChild(
           criarPainelVerificacao(receita)
         );
-
       }
 
       listaReceitas.appendChild(card);
-
     });
 
   } catch (problema) {
-
     console.error(
       "Erro ao carregar receitas:",
       problema
@@ -1075,9 +948,7 @@ async function carregarReceitas() {
         "mensagem erro"
       )
     );
-
   }
-
 }
 
 // ==========================================
@@ -1085,7 +956,6 @@ async function carregarReceitas() {
 // ==========================================
 
 async function salvarReceita(event) {
-
   event.preventDefault();
 
   if (!formReceita.reportValidity()) {
@@ -1095,11 +965,9 @@ async function salvarReceita(event) {
   const estavaEditando = Boolean(receitaEditando);
 
   botaoSalvar.disabled = true;
-
   botaoSalvar.textContent = "Salvando...";
 
   try {
-
     const dados = montarDadosReceita();
 
     const statusEscolhido = valor("statusReceita");
@@ -1107,66 +975,52 @@ async function salvarReceita(event) {
     // ATUALIZAR RECEITA
 
     if (estavaEditando) {
-
       const {
         error: erroAtualizacao
       } = await client
         .from("recipes")
         .update({
-
           ...dados,
-
           status: statusEscolhido
-
         })
         .eq("id", receitaEditando);
 
       if (erroAtualizacao) {
         throw erroAtualizacao;
       }
-
     }
 
     // CADASTRAR NOVA RECEITA
 
     else {
-
       const {
         error: erroInsercao
       } = await client
         .from("recipes")
         .insert({
-
           ...dados,
-
           status: statusEscolhido,
-
           created_by: usuarioAtual.id
-
         });
 
       if (erroInsercao) {
         throw erroInsercao;
       }
-
     }
 
     limparFormulario();
 
     mostrarMensagem(
       mensagemFormulario,
-
       estavaEditando
         ? "Receita atualizada com sucesso!"
         : "Receita cadastrada com sucesso!",
-
       "sucesso"
     );
 
     await carregarReceitas();
 
   } catch (problema) {
-
     console.error(
       "Erro ao salvar receita:",
       problema
@@ -1174,23 +1028,18 @@ async function salvarReceita(event) {
 
     mostrarMensagem(
       mensagemFormulario,
-
       problema.message ||
         "Não foi possível salvar a receita.",
-
       "erro"
     );
 
   } finally {
-
     botaoSalvar.disabled = false;
 
     botaoSalvar.textContent = receitaEditando
       ? "Atualizar receita"
       : "Salvar receita";
-
   }
-
 }
 
 // ==========================================
@@ -1198,7 +1047,6 @@ async function salvarReceita(event) {
 // ==========================================
 
 async function revisarReceita(id, decisao) {
-
   const confirmacao =
     decisao === "approved"
       ? "Deseja aprovar esta receita editorialmente?"
@@ -1209,17 +1057,13 @@ async function revisarReceita(id, decisao) {
   }
 
   try {
-
     const {
       error: erroRevisao
     } = await client.rpc(
       "review_recipe",
       {
-
         recipe_id: id,
-
         decision: decisao
-
       }
     );
 
@@ -1229,18 +1073,15 @@ async function revisarReceita(id, decisao) {
 
     mostrarMensagem(
       mensagemLista,
-
       decisao === "approved"
         ? "Receita aprovada editorialmente!"
         : "Receita rejeitada.",
-
       "sucesso"
     );
 
     await carregarReceitas();
 
   } catch (problema) {
-
     console.error(
       "Erro na revisão:",
       problema
@@ -1248,15 +1089,11 @@ async function revisarReceita(id, decisao) {
 
     mostrarMensagem(
       mensagemLista,
-
       problema.message ||
         "Não foi possível revisar a receita.",
-
       "erro"
     );
-
   }
-
 }
 
 // ==========================================
@@ -1264,7 +1101,6 @@ async function revisarReceita(id, decisao) {
 // ==========================================
 
 async function publicarReceita(id) {
-
   if (membroAtual.role !== "admin") {
     return;
   }
@@ -1278,7 +1114,6 @@ async function publicarReceita(id) {
   }
 
   try {
-
     const {
       error: erroPublicacao
     } = await client
@@ -1301,7 +1136,6 @@ async function publicarReceita(id) {
     await carregarReceitas();
 
   } catch (problema) {
-
     console.error(
       "Erro ao publicar:",
       problema
@@ -1309,15 +1143,11 @@ async function publicarReceita(id) {
 
     mostrarMensagem(
       mensagemLista,
-
       problema.message ||
         "Não foi possível publicar a receita.",
-
       "erro"
     );
-
   }
-
 }
 
 // ==========================================
@@ -1325,9 +1155,7 @@ async function publicarReceita(id) {
 // ==========================================
 
 async function iniciarPainel() {
-
   try {
-
     boasVindas.textContent =
       "Conectando ao sistema...";
 
@@ -1335,11 +1163,9 @@ async function iniciarPainel() {
       "Verificando seu acesso ao Harmonize+.";
 
     if (!client) {
-
       throw new Error(
         "A conexão com o Supabase não foi inicializada."
       );
-
     }
 
     // VERIFICAR LOGIN
@@ -1356,7 +1182,6 @@ async function iniciarPainel() {
     usuarioAtual = dadosLogin.user;
 
     if (!usuarioAtual) {
-
       boasVindas.textContent =
         "Você não está conectado";
 
@@ -1367,7 +1192,6 @@ async function iniciarPainel() {
         '<a href="login.html">Ir para o login</a>';
 
       return;
-
     }
 
     // VERIFICAR MEMBRO DA EQUIPE
@@ -1386,7 +1210,6 @@ async function iniciarPainel() {
     }
 
     if (!membro) {
-
       boasVindas.textContent =
         "Acesso não autorizado";
 
@@ -1394,7 +1217,6 @@ async function iniciarPainel() {
         "Seu usuário não foi encontrado na equipe do Harmonize+.";
 
       return;
-
     }
 
     membroAtual = membro;
@@ -1413,21 +1235,16 @@ async function iniciarPainel() {
     if (
       ["admin", "editor"].includes(membro.role)
     ) {
-
       areaCadastro.classList.remove("oculto");
-
     }
 
     if (membro.role === "reviewer") {
-
       filtroStatus.value = "review";
-
     }
 
     await carregarReceitas();
 
   } catch (problema) {
-
     console.error(
       "Erro ao iniciar painel:",
       problema
@@ -1439,9 +1256,7 @@ async function iniciarPainel() {
     mensagem.textContent =
       problema.message ||
         "Ocorreu um erro inesperado.";
-
   }
-
 }
 
 // ==========================================
@@ -1470,13 +1285,10 @@ filtroStatus.addEventListener(
 botaoSair.addEventListener(
   "click",
   async () => {
-
     botaoSair.disabled = true;
-
     botaoSair.textContent = "Saindo...";
 
     try {
-
       const {
         error: erroSaida
       } = await client.auth.signOut();
@@ -1488,7 +1300,6 @@ botaoSair.addEventListener(
       window.location.href = "login.html";
 
     } catch (problema) {
-
       console.error(
         "Erro ao sair:",
         problema
@@ -1498,11 +1309,8 @@ botaoSair.addEventListener(
         "Não foi possível encerrar a sessão. Tente novamente.";
 
       botaoSair.disabled = false;
-
       botaoSair.textContent = "Sair";
-
     }
-
   }
 );
 
@@ -1510,10 +1318,10 @@ botaoSair.addEventListener(
 // INICIALIZAÇÃO FINAL
 // ==========================================
 
-// Criar os novos campos no formulário
+// Criar os campos sensoriais no formulário.
 
 criarCamposSensoriais();
 
-// Iniciar painel administrativo
+// Iniciar painel administrativo.
 
 iniciarPainel();
