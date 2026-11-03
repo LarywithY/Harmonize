@@ -1,5 +1,7 @@
 
-/* HARMONIZE+ — BUSCA E FILTRO DE RECEITAS NO SUPABASE */
+/* =====================================================
+   HARMONIZE+ — RECEITAS E HARMONIZAÇÃO AUTOMÁTICA
+   ===================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -68,9 +70,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     ? "Preferências informadas: " + preferencias.join(", ")
     : "Nenhuma restrição ou preferência adicional informada.";
 
-  // ==========================================
-  // CONVERSÃO DOS DADOS DO SUPABASE
-  // ==========================================
+  // =====================================================
+  // CONVERSÃO DAS RECEITAS
+  // =====================================================
 
   function converterReceita(item) {
     return {
@@ -107,12 +109,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         ? Number(item.carbs_g)
         : null,
 
-      harmonizacao: {
-        bebida: item.harmonization_drink || "",
-        alternativaSemAlcool:
-          item.harmonization_non_alcoholic || ""
-      },
-
       verificacao: {
         status: item.verification_status,
         ingredientesConferidos: item.ingredients_verified === true,
@@ -126,9 +122,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
   }
 
-  // ==========================================
-  // CRITÉRIOS DE SEGURANÇA ALIMENTAR
-  // ==========================================
+  // =====================================================
+  // SEGURANÇA ALIMENTAR
+  // =====================================================
 
   function receitaAprovada(receita) {
     const v = receita.verificacao;
@@ -148,10 +144,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const possuiTag = tag =>
       tags.includes(normalizar(tag));
 
-    // Nenhuma receita sem verificação aprovada será recomendada.
     if (!receitaAprovada(receita)) return false;
 
-    // Categoria selecionada.
     if (receita.categoria !== categoria) return false;
 
     // DOENÇA CELÍACA
@@ -160,9 +154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         !v.semGlutenVerificado ||
         !v.contaminacaoCruzadaAvaliada ||
         !possuiTag("Doença celíaca")
-      ) {
-        return false;
-      }
+      ) return false;
     }
 
     // SENSIBILIDADE AO GLÚTEN
@@ -170,9 +162,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (
         !v.semGlutenVerificado ||
         !possuiTag("Sensibilidade ao glúten")
-      ) {
-        return false;
-      }
+      ) return false;
     }
 
     // INTOLERÂNCIA À LACTOSE
@@ -180,28 +170,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (
         !v.semLactoseVerificado ||
         !possuiTag("Intolerância à lactose")
-      ) {
-        return false;
-      }
+      ) return false;
     }
 
-    // ALIMENTAÇÃO VEGETARIANA
+    // VEGETARIANA
     if (
       temRestricao("Vegetariana") &&
       !possuiTag("Vegetariana")
-    ) {
-      return false;
-    }
+    ) return false;
 
-    // ALIMENTAÇÃO VEGANA
+    // VEGANA
     if (
       temRestricao("Vegana") &&
       !possuiTag("Vegana")
-    ) {
-      return false;
-    }
+    ) return false;
 
-    // OUTRAS NECESSIDADES
+    // OUTRA NECESSIDADE
     if (temRestricao("Outra necessidade")) {
       return false;
     }
@@ -214,9 +198,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         !v.alergenicosConferidos ||
         !v.contaminacaoCruzadaAvaliada ||
         !v.alergiasVerificadas
-      ) {
-        return false;
-      }
+      ) return false;
 
       const alergiasCadastradas =
         receita.alergenicos.map(normalizar);
@@ -245,17 +227,426 @@ document.addEventListener("DOMContentLoaded", async () => {
         typeof receita.carboidratosPorPorcao !== "number" ||
         !Number.isFinite(receita.carboidratosPorPorcao) ||
         receita.carboidratosPorPorcao < 0
-      ) {
-        return false;
-      }
+      ) return false;
     }
 
     return true;
   }
 
-  // ==========================================
-  // CRIAÇÃO DOS ELEMENTOS
-  // ==========================================
+  // =====================================================
+  // ANÁLISE AUTOMÁTICA DO PERFIL DA RECEITA
+  // =====================================================
+
+  function textoIngredientes(receita) {
+    return receita.ingredientes.map(item => {
+      if (typeof item === "string") return item;
+      return JSON.stringify(item);
+    }).join(" ");
+  }
+
+  function analisarReceita(receita) {
+    const nomeDescricao =
+      normalizar(receita.nome + " " + receita.descricao);
+
+    const ingredientes =
+      normalizar(textoIngredientes(receita));
+
+    const preparo = normalizar(
+      receita.preparo.join(" ")
+    );
+
+    const texto = [
+      nomeDescricao,
+      ingredientes,
+      preparo
+    ].join(" ");
+
+    const perfis = [];
+
+    const contem = palavras =>
+      palavras.some(palavra => texto.includes(palavra));
+
+    // DOCE
+    if (
+      receita.categoria === "sobremesa" ||
+      contem([
+        "acucar", "mel", "chocolate",
+        "brigadeiro", "doce de leite",
+        "leite condensado", "caramelo",
+        "geleia", "calda doce", "sobremesa",
+        "bolo", "pudim", "mousse"
+      ])
+    ) {
+      perfis.push("doce");
+    }
+
+    // PICANTE
+    if (contem([
+      "pimenta", "pimentao picante",
+      "chili", "jalapeno", "malagueta",
+      "dedo-de-moca", "dedo de moca",
+      "molho picante", "curry picante"
+    ])) {
+      perfis.push("picante");
+    }
+
+    // ÁCIDO / CÍTRICO
+    if (contem([
+      "limao", "vinagre", "maracuja",
+      "acerola", "laranja azeda",
+      "molho citrico", "suco citrico"
+    ])) {
+      perfis.push("acido");
+    }
+
+    // SALGADO
+    if (contem([
+      "sal", "queijo", "bacon",
+      "presunto", "azeitona", "shoyu",
+      "molho de soja", "parmesao",
+      "anchova", "calabresa"
+    ])) {
+      perfis.push("salgado");
+    }
+
+    // GORDUROSO
+    if (contem([
+      "frito", "fritura", "empanado",
+      "manteiga", "creme de leite",
+      "bacon", "queijo", "oleo",
+      "azeite", "cremoso"
+    ])) {
+      perfis.push("gorduroso");
+    }
+
+    // UMAMI
+    if (contem([
+      "cogumelo", "shoyu", "parmesao",
+      "tomate", "carne", "caldo de carne",
+      "molho de soja", "missô", "miso"
+    ])) {
+      perfis.push("umami");
+    }
+
+    // AMARGO
+    if (contem([
+      "cafe", "cacau amargo",
+      "chocolate amargo", "rucula",
+      "jilo", "endivia"
+    ])) {
+      perfis.push("amargo");
+    }
+
+    // PERFIL LEVE
+    if (
+      receita.categoria === "entrada" ||
+      receita.categoria === "lanche" ||
+      contem(["salada leve", "legumes cozidos"])
+    ) {
+      perfis.push("leve");
+    }
+
+    return [...new Set(perfis)];
+  }
+
+  // =====================================================
+  // CONVERSÃO DAS BEBIDAS
+  // =====================================================
+
+  function converterBebida(item) {
+    return {
+      id: item.id,
+      nome: item.name || "",
+      marca: item.brand || "",
+      categoria: normalizar(item.category || ""),
+      estilo: item.style || "",
+      aroma: item.aroma || "",
+      sabor: item.flavor || "",
+      corpo: item.body || "",
+      amargor: item.bitterness || "",
+      carbonatacao: item.carbonation || "",
+      descricao: item.description || "",
+      teorAlcoolico: item.alcohol_content,
+      alcoolica: item.is_alcoholic === true,
+      fonte: item.source_url || ""
+    };
+  }
+
+  // =====================================================
+  // IDENTIFICAÇÃO DAS CARACTERÍSTICAS OFICIAIS
+  // =====================================================
+
+  function analisarBebida(bebida) {
+    const texto = normalizar([
+      bebida.estilo,
+      bebida.aroma,
+      bebida.sabor,
+      bebida.corpo,
+      bebida.amargor,
+      bebida.carbonatacao,
+      bebida.descricao
+    ].join(" "));
+
+    const sinais = [];
+
+    const contem = palavras =>
+      palavras.some(palavra => texto.includes(palavra));
+
+    if (contem([
+      "amargor", "amargo", "amarga",
+      "ipa"
+    ]) || Boolean(bebida.amargor)) {
+      sinais.push("amargo");
+    }
+
+    if (contem([
+      "limao", "laranja", "citrico",
+      "citrica", "maracuja"
+    ])) {
+      sinais.push("citrico");
+    }
+
+    if (contem([
+      "refrescante", "refrescancia",
+      "leve", "lager", "pilsen",
+      "witbier"
+    ])) {
+      sinais.push("refrescante");
+    }
+
+    if (contem([
+      "doce", "dulcor", "adocicado",
+      "frutado", "frutada"
+    ])) {
+      sinais.push("doce");
+    }
+
+    if (contem([
+      "tostado", "torrado",
+      "cafe", "chocolate"
+    ])) {
+      sinais.push("tostado");
+    }
+
+    if (
+      bebida.carbonatacao ||
+      bebida.categoria === "refrigerante" ||
+      bebida.categoria === "agua"
+    ) {
+      sinais.push("carbonatado");
+    }
+
+    if (contem([
+      "malte", "cereal", "pao"
+    ])) {
+      sinais.push("maltado");
+    }
+
+    return [...new Set(sinais)];
+  }
+
+  // =====================================================
+  // MOTOR DE HARMONIZAÇÃO AUTOMÁTICA
+  // =====================================================
+
+  function pontuarHarmonizacao(perfisReceita, bebida) {
+    const sinaisBebida = analisarBebida(bebida);
+
+    let pontos = 0;
+    const motivos = [];
+
+    function adicionar(perfil, sinal, valor, motivo) {
+      if (
+        perfisReceita.includes(perfil) &&
+        sinaisBebida.includes(sinal)
+      ) {
+        pontos += valor;
+        motivos.push(motivo);
+      }
+    }
+
+    // DOCE
+    adicionar(
+      "doce",
+      "amargo",
+      4,
+      "O amargor documentado pode criar contraste com a doçura da receita."
+    );
+
+    adicionar(
+      "doce",
+      "tostado",
+      2,
+      "As notas tostadas podem complementar o perfil doce do prato."
+    );
+
+    // PICANTE
+    adicionar(
+      "picante",
+      "refrescante",
+      3,
+      "O perfil refrescante pode ajudar a equilibrar a sensação de picância."
+    );
+
+    adicionar(
+      "picante",
+      "citrico",
+      2,
+      "As notas cítricas podem trazer contraste à picância."
+    );
+
+    // ÁCIDO
+    adicionar(
+      "acido",
+      "refrescante",
+      2,
+      "O perfil refrescante pode acompanhar a acidez da receita."
+    );
+
+    adicionar(
+      "acido",
+      "maltado",
+      1,
+      "As notas de malte podem oferecer contraste à acidez."
+    );
+
+    // SALGADO
+    adicionar(
+      "salgado",
+      "refrescante",
+      2,
+      "O perfil refrescante pode acompanhar os sabores salgados."
+    );
+
+    adicionar(
+      "salgado",
+      "maltado",
+      2,
+      "As notas de malte podem complementar o perfil salgado."
+    );
+
+    // GORDUROSO
+    adicionar(
+      "gorduroso",
+      "carbonatado",
+      3,
+      "A carbonatação pode ajudar a limpar a sensação de gordura no paladar."
+    );
+
+    adicionar(
+      "gorduroso",
+      "citrico",
+      2,
+      "As notas cítricas podem criar contraste com a gordura."
+    );
+
+    adicionar(
+      "gorduroso",
+      "amargo",
+      1,
+      "O amargor pode criar contraste com a untuosidade."
+    );
+
+    // UMAMI
+    adicionar(
+      "umami",
+      "maltado",
+      2,
+      "As notas maltadas podem acompanhar a intensidade do umami."
+    );
+
+    adicionar(
+      "umami",
+      "refrescante",
+      1,
+      "O perfil refrescante pode equilibrar a intensidade do prato."
+    );
+
+    // AMARGO
+    adicionar(
+      "amargo",
+      "doce",
+      2,
+      "As notas frutadas ou adocicadas podem contrastar com o amargor."
+    );
+
+    // LEVE
+    adicionar(
+      "leve",
+      "refrescante",
+      2,
+      "O perfil leve e refrescante acompanha a delicadeza da receita."
+    );
+
+    // PICANTE + DOCE
+    if (
+      perfisReceita.includes("doce") &&
+      perfisReceita.includes("picante") &&
+      sinaisBebida.includes("refrescante") &&
+      sinaisBebida.includes("citrico")
+    ) {
+      pontos += 2;
+
+      motivos.push(
+        "A combinação de notas cítricas e perfil refrescante considera tanto a doçura quanto a picância do prato."
+      );
+    }
+
+    // PICANTE + GORDUROSO
+    if (
+      perfisReceita.includes("picante") &&
+      perfisReceita.includes("gorduroso") &&
+      sinaisBebida.includes("carbonatado")
+    ) {
+      pontos += 1;
+
+      motivos.push(
+        "A carbonatação pode contribuir para equilibrar a sensação de gordura e picância."
+      );
+    }
+
+    return {
+      pontos,
+      motivos: [...new Set(motivos)],
+      sinais: sinaisBebida
+    };
+  }
+
+  function selecionarMelhorBebida(perfis, bebidas, tipo) {
+    const candidatas = bebidas
+      .filter(bebida => {
+        if (tipo === "alcoolica") {
+          return bebida.alcoolica === true;
+        }
+
+        return (
+          bebida.alcoolica === false &&
+          (
+            bebida.teorAlcoolico === 0 ||
+            bebida.categoria !== "cerveja"
+          )
+        );
+      })
+      .map(bebida => ({
+        bebida,
+        resultado: pontuarHarmonizacao(perfis, bebida)
+      }))
+      .filter(item =>
+        item.resultado.pontos >= 2 &&
+        item.resultado.motivos.length > 0
+      )
+      .sort((a, b) =>
+        b.resultado.pontos - a.resultado.pontos
+      );
+
+    return candidatas.length > 0
+      ? candidatas[0]
+      : null;
+  }
+
+  // =====================================================
+  // ELEMENTOS VISUAIS
+  // =====================================================
 
   function criarElemento(tag, classe, texto) {
     const elemento = document.createElement(tag);
@@ -269,7 +660,187 @@ document.addEventListener("DOMContentLoaded", async () => {
     return elemento;
   }
 
-  function criarCartao(receita) {
+  function criarIndicacaoBebida(resultado, titulo) {
+    const bloco = criarElemento("div", "pairing-option");
+
+    bloco.appendChild(criarElemento(
+      "h4",
+      "",
+      titulo
+    ));
+
+    if (!resultado) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "",
+        "Ainda não temos informações oficiais suficientes no catálogo para indicar uma bebida compatível com segurança."
+      ));
+
+      return bloco;
+    }
+
+    const bebida = resultado.bebida;
+
+    bloco.appendChild(criarElemento(
+      "p",
+      "pairing-beverage-name",
+      bebida.nome
+    ));
+
+    bloco.appendChild(criarElemento(
+      "p",
+      "pairing-brand",
+      bebida.marca
+    ));
+
+    if (bebida.estilo) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "",
+        "Estilo: " + bebida.estilo
+      ));
+    }
+
+    if (bebida.aroma) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "",
+        "Aroma: " + bebida.aroma
+      ));
+    }
+
+    if (bebida.sabor) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "",
+        "Sabor: " + bebida.sabor
+      ));
+    }
+
+    if (bebida.corpo) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "",
+        "Corpo: " + bebida.corpo
+      ));
+    }
+
+    if (bebida.amargor) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "",
+        "Amargor: " + bebida.amargor
+      ));
+    }
+
+    if (bebida.carbonatacao) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "",
+        "Carbonatação: " + bebida.carbonatacao
+      ));
+    }
+
+    if (bebida.teorAlcoolico != null) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "",
+        "Teor alcoólico: " +
+        bebida.teorAlcoolico +
+        "%"
+      ));
+    }
+
+    bloco.appendChild(criarElemento(
+      "p",
+      "pairing-reason",
+      "Por que combina: " +
+      resultado.resultado.motivos.join(" ")
+    ));
+
+    if (bebida.fonte) {
+      const fonte = document.createElement("a");
+
+      fonte.href = bebida.fonte;
+      fonte.textContent = "Consultar fonte oficial";
+      fonte.target = "_blank";
+      fonte.rel = "noopener noreferrer";
+
+      bloco.appendChild(fonte);
+    }
+
+    if (bebida.alcoolica) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "recipe-meta",
+        "Bebida alcoólica: recomendada somente para maiores de 18 anos."
+      ));
+    }
+
+    return bloco;
+  }
+
+  function criarHarmonizacaoAutomatica(receita, bebidas) {
+    const secao = criarElemento(
+      "section",
+      "automatic-pairing"
+    );
+
+    secao.appendChild(criarElemento(
+      "h3",
+      "",
+      "Harmonização automática"
+    ));
+
+    const perfis = analisarReceita(receita);
+
+    if (perfis.length === 0) {
+      secao.appendChild(criarElemento(
+        "p",
+        "",
+        "Não identificamos características de sabor suficientes na descrição e nos ingredientes desta receita para sugerir uma harmonização confiável."
+      ));
+
+      return secao;
+    }
+
+    secao.appendChild(criarElemento(
+      "p",
+      "pairing-profile",
+      "Perfil identificado: " +
+      perfis.join(", ") + "."
+    ));
+
+    const alcoolica = selecionarMelhorBebida(
+      perfis,
+      bebidas,
+      "alcoolica"
+    );
+
+    const semAlcool = selecionarMelhorBebida(
+      perfis,
+      bebidas,
+      "sem_alcool"
+    );
+
+    secao.appendChild(criarIndicacaoBebida(
+      alcoolica,
+      "Sugestão alcoólica"
+    ));
+
+    secao.appendChild(criarIndicacaoBebida(
+      semAlcool,
+      "Alternativa sem álcool"
+    ));
+
+    return secao;
+  }
+
+  // =====================================================
+  // CARTÃO DA RECEITA
+  // =====================================================
+
+  function criarCartao(receita, bebidas) {
     const cartao = criarElemento("article", "recipe-card");
 
     if (receita.imagem) {
@@ -314,10 +885,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       " • " +
       (receita.rendimento || "Rendimento não informado")
     ));
-
-    // ========================================
-    // INFORMAÇÕES ALIMENTARES
-    // ========================================
 
     if (receita.alergenicos.length > 0) {
       conteudo.appendChild(criarElemento(
@@ -366,7 +933,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     receita.ingredientes.forEach(item => {
       ingredientes.appendChild(
-        criarElemento("li", "", item)
+        criarElemento(
+          "li",
+          "",
+          typeof item === "string"
+            ? item
+            : JSON.stringify(item)
+        )
       );
     });
 
@@ -398,37 +971,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       ));
     }
 
-    // HARMONIZAÇÃO
-    if (
-      receita.harmonizacao.bebida ||
-      receita.harmonizacao.alternativaSemAlcool
-    ) {
-      corpo.appendChild(criarElemento(
-        "h3",
-        "",
-        "Harmonização"
-      ));
-
-      if (receita.harmonizacao.bebida) {
-        corpo.appendChild(criarElemento(
-          "p",
-          "",
-          receita.harmonizacao.bebida
-        ));
-      }
-
-      if (receita.harmonizacao.alternativaSemAlcool) {
-        corpo.appendChild(criarElemento(
-          "p",
-          "",
-          "Alternativa sem álcool: " +
-          receita.harmonizacao.alternativaSemAlcool
-        ));
-      }
-    }
-
     detalhes.appendChild(corpo);
     conteudo.appendChild(detalhes);
+
+    // HARMONIZAÇÃO AUTOMÁTICA
+    conteudo.appendChild(
+      criarHarmonizacaoAutomatica(receita, bebidas)
+    );
 
     // AVISO DE SEGURANÇA
     conteudo.appendChild(criarElemento(
@@ -442,9 +991,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     return cartao;
   }
 
-  // ==========================================
+  // =====================================================
   // MENSAGENS
-  // ==========================================
+  // =====================================================
 
   function mostrarMensagem(titulo, mensagem) {
     vazio.hidden = false;
@@ -453,9 +1002,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     vazio.querySelector("p").textContent = mensagem;
   }
 
-  // ==========================================
-  // BUSCA NO SUPABASE
-  // ==========================================
+  // =====================================================
+  // CONSULTA AO SUPABASE
+  // =====================================================
 
   try {
     const client = window.harmonizeSupabase;
@@ -466,21 +1015,58 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     }
 
-    const { data, error } = await client
-      .from("recipes")
-      .select("*")
-      .eq("status", "published");
+    const [receitasResultado, bebidasResultado] =
+      await Promise.all([
+        client
+          .from("recipes")
+          .select("*")
+          .eq("status", "published"),
 
-    if (error) throw error;
+        client
+          .from("beverages")
+          .select(`
+            id,
+            name,
+            brand,
+            category,
+            style,
+            aroma,
+            flavor,
+            body,
+            bitterness,
+            carbonation,
+            description,
+            alcohol_content,
+            is_alcoholic,
+            source_url
+          `)
+          .eq("active", true)
+      ]);
 
-    const catalogo = (data || []).map(converterReceita);
+    if (receitasResultado.error) {
+      throw receitasResultado.error;
+    }
+
+    if (bebidasResultado.error) {
+      throw bebidasResultado.error;
+    }
+
+    const catalogo = (
+      receitasResultado.data || []
+    ).map(converterReceita);
+
+    const bebidas = (
+      bebidasResultado.data || []
+    ).map(converterBebida);
 
     const encontrados = catalogo
       .filter(compativel)
       .slice(0, 3);
 
     encontrados.forEach(receita => {
-      resultados.appendChild(criarCartao(receita));
+      resultados.appendChild(
+        criarCartao(receita, bebidas)
+      );
     });
 
     loading.hidden = true;
@@ -506,7 +1092,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
   } catch (erro) {
-    console.error("Erro ao buscar receitas:", erro);
+    console.error("Erro ao buscar receitas ou bebidas:", erro);
 
     loading.hidden = true;
 
