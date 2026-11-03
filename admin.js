@@ -1,4 +1,3 @@
-
 const client = window.harmonizeSupabase;
 
 const boasVindas = document.getElementById("boasVindas");
@@ -6,7 +5,6 @@ const papel = document.getElementById("papel");
 const mensagem = document.getElementById("mensagem");
 const erro = document.getElementById("erro");
 const botaoSair = document.getElementById("sair");
-
 const areaCadastro = document.getElementById("areaCadastro");
 const areaReceitas = document.getElementById("areaReceitas");
 const formReceita = document.getElementById("formReceita");
@@ -25,6 +23,10 @@ const botaoCancelar = document.getElementById("cancelarEdicao");
 let usuarioAtual = null;
 let membroAtual = null;
 let receitaEditando = null;
+
+// ==========================================
+// NOMES E IDENTIFICAÇÕES
+// ==========================================
 
 const nomesPapeis = {
   admin: "Administradora",
@@ -46,6 +48,10 @@ const nomesVerificacao = {
   aprovada: "Verificação aprovada",
   reprovada: "Verificação reprovada"
 };
+
+// ==========================================
+// CAMPOS DE VERIFICAÇÃO ALIMENTAR
+// ==========================================
 
 const camposVerificacao = [
   {
@@ -74,12 +80,100 @@ const camposVerificacao = [
   }
 ];
 
+// ==========================================
+// NOVOS CAMPOS SENSORIAIS
+// ==========================================
+
+const camposSensoriais = {
+
+  sensory_profile: {
+    titulo: "Perfil sensorial",
+
+    explicacao:
+      "Selecione os sabores predominantes da receita.",
+
+    opcoes: [
+      ["doce", "Doce"],
+      ["salgado", "Salgado"],
+      ["acido", "Ácido"],
+      ["amargo", "Amargo"],
+      ["picante", "Picante"],
+      ["umami", "Umami"]
+    ]
+  },
+
+  texture: {
+    titulo: "Textura",
+
+    explicacao:
+      "Selecione as texturas presentes na receita.",
+
+    opcoes: [
+      ["cremosa", "Cremosa"],
+      ["crocante", "Crocante"],
+      ["suculenta", "Suculenta"],
+      ["seca", "Seca"],
+      ["aveludada", "Aveludada"],
+      ["untuosa", "Untuosa"]
+    ]
+  },
+
+  cooking_methods: {
+    titulo: "Método de preparo",
+
+    explicacao:
+      "Informe como o prato é preparado.",
+
+    opcoes: [
+      ["frito_por_imersao", "Frito por imersão"],
+      ["frito_na_frigideira", "Frito na frigideira"],
+      ["grelhado", "Grelhado"],
+      ["assado", "Assado"],
+      ["cozido", "Cozido"],
+      ["refogado", "Refogado"],
+      ["cru", "Cru"],
+      ["defumado", "Defumado"],
+      ["tostado", "Tostado"]
+    ]
+  },
+
+  preparation_features: {
+    titulo: "Características adicionais",
+
+    explicacao:
+      "Selecione os ingredientes e características importantes do preparo.",
+
+    opcoes: [
+      ["manteiga", "Manteiga"],
+      ["azeite", "Azeite"],
+      ["oleo", "Óleo"],
+      ["queijo", "Queijo"],
+      ["creme_de_leite", "Creme de leite"],
+      ["molho", "Molho"],
+      ["reducao_de_molho", "Redução de molho"],
+      ["temperos_picantes", "Temperos picantes"],
+      ["ingredientes_citricos", "Ingredientes cítricos"],
+      ["cobertura", "Cobertura"],
+      ["empanamento", "Empanamento"]
+    ]
+  }
+
+};
+
+// ==========================================
+// FUNÇÕES AUXILIARES
+// ==========================================
+
 function mostrarMensagem(elemento, texto, tipo = "") {
+
   elemento.textContent = texto;
+
   elemento.className = "mensagem " + tipo;
+
 }
 
 function criarElemento(tag, texto, classe) {
+
   const elemento = document.createElement(tag);
 
   if (texto !== undefined) {
@@ -91,46 +185,260 @@ function criarElemento(tag, texto, classe) {
   }
 
   return elemento;
+
 }
 
 function dividirTexto(texto) {
+
   return texto
     .split("\n")
     .map(item => item.trim())
     .filter(Boolean);
+
 }
 
 function dividirLista(texto) {
+
   return texto
     .split(",")
     .map(item => item.trim())
     .filter(Boolean);
+
 }
 
 function valor(id) {
+
   return document.getElementById(id).value.trim();
+
 }
 
+// ==========================================
+// CRIAÇÃO DOS CAMPOS SENSORIAIS
+// ==========================================
+
+function criarCamposSensoriais() {
+
+  const secao = document.createElement("section");
+
+  secao.className = "campos-sensoriais";
+
+  const titulo = criarElemento(
+    "h3",
+    "Características sensoriais e preparo"
+  );
+
+  const explicacao = criarElemento(
+    "p",
+    "Informe as características da receita para melhorar as sugestões automáticas de harmonização."
+  );
+
+  secao.append(titulo, explicacao);
+
+  // Criar grupos de seleção
+
+  Object.entries(camposSensoriais).forEach(
+    ([campo, configuracao]) => {
+
+      const grupo = document.createElement("fieldset");
+
+      grupo.className = "grupo-sensorial";
+
+      const legenda = criarElemento(
+        "legend",
+        configuracao.titulo
+      );
+
+      const descricao = criarElemento(
+        "p",
+        configuracao.explicacao
+      );
+
+      grupo.append(legenda, descricao);
+
+      configuracao.opcoes.forEach(([valor, texto]) => {
+
+        const label = document.createElement("label");
+
+        label.className = "opcao-sensorial";
+
+        const checkbox = document.createElement("input");
+
+        checkbox.type = "checkbox";
+
+        checkbox.value = valor;
+
+        checkbox.dataset.campoSensorial = campo;
+
+        label.append(
+          checkbox,
+          document.createTextNode(" " + texto)
+        );
+
+        grupo.appendChild(label);
+
+      });
+
+      secao.appendChild(grupo);
+
+    }
+  );
+
+  // Intensidade
+
+  const grupoIntensidade = document.createElement("div");
+
+  grupoIntensidade.className = "campo-sensorial";
+
+  const labelIntensidade = criarElemento(
+    "label",
+    "Intensidade da receita"
+  );
+
+  labelIntensidade.htmlFor = "intensidadeSensorial";
+
+  const seletor = document.createElement("select");
+
+  seletor.id = "intensidadeSensorial";
+
+  seletor.name = "intensity";
+
+  const intensidades = [
+    ["", "Selecione a intensidade"],
+    ["leve", "Leve ou delicada"],
+    ["moderada", "Moderada"],
+    ["intensa", "Intensa"]
+  ];
+
+  intensidades.forEach(([valor, texto]) => {
+
+    const opcao = document.createElement("option");
+
+    opcao.value = valor;
+
+    opcao.textContent = texto;
+
+    seletor.appendChild(opcao);
+
+  });
+
+  grupoIntensidade.append(
+    labelIntensidade,
+    seletor
+  );
+
+  secao.appendChild(grupoIntensidade);
+
+  // Observações
+
+  const grupoObservacoes = document.createElement("div");
+
+  grupoObservacoes.className = "campo-sensorial";
+
+  const labelObservacoes = criarElemento(
+    "label",
+    "Observações sobre o preparo"
+  );
+
+  labelObservacoes.htmlFor = "observacoesPreparo";
+
+  const observacoes = document.createElement("textarea");
+
+  observacoes.id = "observacoesPreparo";
+
+  observacoes.name = "preparation_notes";
+
+  observacoes.rows = 3;
+
+  observacoes.placeholder =
+    "Ex.: o molho é reduzido até ficar mais concentrado; a carne é selada antes de assar.";
+
+  grupoObservacoes.append(
+    labelObservacoes,
+    observacoes
+  );
+
+  secao.appendChild(grupoObservacoes);
+
+  // Inserir campos antes do botão salvar
+
+  botaoSalvar.insertAdjacentElement(
+    "beforebegin",
+    secao
+  );
+
+}
+
+// ==========================================
+// CAPTURAR OPÇÕES SENSORIAIS
+// ==========================================
+
+function obterOpcoesSensoriais(campo) {
+
+  return Array.from(
+
+    formReceita.querySelectorAll(
+      `[data-campo-sensorial="${campo}"]:checked`
+    )
+
+  ).map(item => item.value);
+
+}
+
+// ==========================================
+// PREENCHER OPÇÕES SENSORIAIS
+// ==========================================
+
+function preencherOpcoesSensoriais(campo, valores) {
+
+  const selecionados = Array.isArray(valores)
+    ? valores
+    : [];
+
+  formReceita.querySelectorAll(
+    `[data-campo-sensorial="${campo}"]`
+  ).forEach(item => {
+
+    item.checked = selecionados.includes(item.value);
+
+  });
+
+}
+
+// ==========================================
+// LIMPAR FORMULÁRIO
+// ==========================================
+
 function limparFormulario() {
+
   formReceita.reset();
+
   receitaEditando = null;
 
   document.getElementById("tituloFormulario").textContent =
     "Cadastrar receita";
 
   botaoSalvar.textContent = "Salvar receita";
+
   botaoCancelar.classList.add("oculto");
 
   mostrarMensagem(mensagemFormulario, "");
+
 }
 
+// ==========================================
+// PREENCHER FORMULÁRIO PARA EDIÇÃO
+// ==========================================
+
 function preencherFormulario(receita) {
+
   receitaEditando = receita.id;
 
   document.getElementById("tituloFormulario").textContent =
     "Editar receita";
 
-  document.getElementById("nome").value = receita.name || "";
+  document.getElementById("nome").value =
+    receita.name || "";
+
   document.getElementById("categoria").value =
     receita.category || "";
 
@@ -146,28 +454,57 @@ function preencherFormulario(receita) {
   document.getElementById("descricao").value =
     receita.description || "";
 
+  // Características sensoriais
+
+  Object.keys(camposSensoriais).forEach(campo => {
+
+    preencherOpcoesSensoriais(
+      campo,
+      receita[campo]
+    );
+
+  });
+
+  document.getElementById("intensidadeSensorial").value =
+    receita.intensity || "";
+
+  document.getElementById("observacoesPreparo").value =
+    receita.preparation_notes || "";
+
+  // Ingredientes
+
   document.getElementById("ingredientes").value =
     Array.isArray(receita.ingredients)
       ? receita.ingredients.join("\n")
       : "";
+
+  // Modo de preparo
 
   document.getElementById("preparo").value =
     Array.isArray(receita.steps)
       ? receita.steps.join("\n")
       : "";
 
+  // Alergênicos
+
   document.getElementById("alergenicos").value =
     Array.isArray(receita.allergens)
       ? receita.allergens.join(", ")
       : "";
+
+  // Restrições alimentares
 
   document.getElementById("restricoes").value =
     Array.isArray(receita.dietary_tags)
       ? receita.dietary_tags.join(", ")
       : "";
 
+  // Carboidratos
+
   document.getElementById("carboidratos").value =
     receita.carbs_g ?? "";
+
+  // Harmonização
 
   document.getElementById("bebida").value =
     receita.harmonization_drink || "";
@@ -175,42 +512,105 @@ function preencherFormulario(receita) {
   document.getElementById("semAlcool").value =
     receita.harmonization_non_alcoholic || "";
 
+  // Status
+
   document.getElementById("statusReceita").value =
     ["draft", "review"].includes(receita.status)
       ? receita.status
       : "draft";
 
   botaoSalvar.textContent = "Atualizar receita";
+
   botaoCancelar.classList.remove("oculto");
 
-  areaCadastro.scrollIntoView({ behavior: "smooth" });
+  areaCadastro.scrollIntoView({
+    behavior: "smooth"
+  });
+
 }
 
+// ==========================================
+// MONTAR DADOS DA RECEITA
+// ==========================================
+
 function montarDadosReceita() {
+
   const tempo = valor("tempo");
+
   const rendimento = valor("rendimento");
+
   const carboidratos = valor("carboidratos");
 
   return {
+
     name: valor("nome"),
+
     category: valor("categoria"),
+
     image_url: valor("imagem") || null,
+
     description: valor("descricao"),
 
-    prep_minutes: tempo ? Number(tempo) : null,
-    servings: rendimento ? Number(rendimento) : null,
+    prep_minutes: tempo
+      ? Number(tempo)
+      : null,
 
-    ingredients: dividirTexto(valor("ingredientes")),
-    steps: dividirTexto(valor("preparo")),
+    servings: rendimento
+      ? Number(rendimento)
+      : null,
 
-    allergens: dividirLista(valor("alergenicos")),
-    dietary_tags: dividirLista(valor("restricoes")),
+    ingredients: dividirTexto(
+      valor("ingredientes")
+    ),
 
-    carbs_g: carboidratos ? Number(carboidratos) : null,
+    steps: dividirTexto(
+      valor("preparo")
+    ),
 
-    harmonization_drink: valor("bebida") || null,
-    harmonization_non_alcoholic: valor("semAlcool") || null
+    allergens: dividirLista(
+      valor("alergenicos")
+    ),
+
+    dietary_tags: dividirLista(
+      valor("restricoes")
+    ),
+
+    carbs_g: carboidratos
+      ? Number(carboidratos)
+      : null,
+
+    harmonization_drink:
+      valor("bebida") || null,
+
+    harmonization_non_alcoholic:
+      valor("semAlcool") || null,
+
+    // NOVOS DADOS SENSORIAIS
+
+    sensory_profile:
+      obterOpcoesSensoriais("sensory_profile"),
+
+    intensity:
+      document.getElementById(
+        "intensidadeSensorial"
+      ).value || null,
+
+    texture:
+      obterOpcoesSensoriais("texture"),
+
+    cooking_methods:
+      obterOpcoesSensoriais("cooking_methods"),
+
+    preparation_features:
+      obterOpcoesSensoriais("preparation_features"),
+
+    preparation_notes:
+      document.getElementById(
+        "observacoesPreparo"
+      ).value.trim() || null
+
   };
+
 }
 
 // ==========================================
@@ -218,6 +618,7 @@ function montarDadosReceita() {
 // ==========================================
 
 function criarPainelVerificacao(receita) {
+
   const painel = criarElemento(
     "section",
     undefined,
@@ -250,6 +651,7 @@ function criarPainelVerificacao(receita) {
   const controles = {};
 
   camposVerificacao.forEach(campo => {
+
     const linha = criarElemento(
       "label",
       undefined,
@@ -257,10 +659,14 @@ function criarPainelVerificacao(receita) {
     );
 
     const checkbox = document.createElement("input");
+
     checkbox.type = "checkbox";
-    checkbox.checked = receita[campo.coluna] === true;
+
+    checkbox.checked =
+      receita[campo.coluna] === true;
 
     linha.appendChild(checkbox);
+
     linha.appendChild(
       document.createTextNode(" " + campo.texto)
     );
@@ -268,6 +674,7 @@ function criarPainelVerificacao(receita) {
     controles[campo.coluna] = checkbox;
 
     painel.appendChild(linha);
+
   });
 
   const labelStatus = criarElemento(
@@ -283,10 +690,15 @@ function criarPainelVerificacao(receita) {
     ["aprovada", "Verificação aprovada"],
     ["reprovada", "Verificação reprovada"]
   ].forEach(([valor, texto]) => {
+
     const opcao = document.createElement("option");
+
     opcao.value = valor;
+
     opcao.textContent = texto;
+
     seletor.appendChild(opcao);
+
   });
 
   seletor.value = nomesVerificacao[statusAtual]
@@ -294,6 +706,7 @@ function criarPainelVerificacao(receita) {
     : "pendente";
 
   labelStatus.appendChild(seletor);
+
   painel.appendChild(labelStatus);
 
   const botao = criarElemento(
@@ -305,17 +718,20 @@ function criarPainelVerificacao(receita) {
   botao.type = "button";
 
   botao.addEventListener("click", async () => {
+
     const dados = {};
 
     camposVerificacao.forEach(campo => {
+
       dados[campo.coluna] =
         controles[campo.coluna].checked;
+
     });
 
     const statusEscolhido = seletor.value;
 
-    // Uma aprovação de segurança exige os três
-    // critérios básicos de conferência.
+    // Critérios obrigatórios para aprovação
+
     if (
       statusEscolhido === "aprovada" &&
       (
@@ -324,6 +740,7 @@ function criarPainelVerificacao(receita) {
         !dados.cross_contamination_assessed
       )
     ) {
+
       mostrarMensagem(
         mensagemLista,
         "Para aprovar a verificação, confira ingredientes, alergênicos e contaminação cruzada.",
@@ -331,6 +748,7 @@ function criarPainelVerificacao(receita) {
       );
 
       return;
+
     }
 
     const confirmar = window.confirm(
@@ -340,25 +758,45 @@ function criarPainelVerificacao(receita) {
     if (!confirmar) return;
 
     botao.disabled = true;
+
     botao.textContent = "Salvando...";
 
     try {
-      const { error: erroVerificacao } = await client.rpc(
+
+      const {
+        error: erroVerificacao
+      } = await client.rpc(
         "update_recipe_verification",
         {
+
           p_recipe_id: receita.id,
+
           p_verification_status: statusEscolhido,
-          p_ingredients_verified: dados.ingredients_verified,
-          p_allergens_verified: dados.allergens_verified,
+
+          p_ingredients_verified:
+            dados.ingredients_verified,
+
+          p_allergens_verified:
+            dados.allergens_verified,
+
           p_cross_contamination_assessed:
             dados.cross_contamination_assessed,
-          p_gluten_free_verified: dados.gluten_free_verified,
-          p_dairy_free_verified: dados.dairy_free_verified,
-          p_allergies_verified: dados.allergies_verified
+
+          p_gluten_free_verified:
+            dados.gluten_free_verified,
+
+          p_dairy_free_verified:
+            dados.dairy_free_verified,
+
+          p_allergies_verified:
+            dados.allergies_verified
+
         }
       );
 
-      if (erroVerificacao) throw erroVerificacao;
+      if (erroVerificacao) {
+        throw erroVerificacao;
+      }
 
       mostrarMensagem(
         mensagemLista,
@@ -369,6 +807,7 @@ function criarPainelVerificacao(receita) {
       await carregarReceitas();
 
     } catch (problema) {
+
       console.error(
         "Erro ao salvar verificações:",
         problema
@@ -382,13 +821,17 @@ function criarPainelVerificacao(receita) {
       );
 
       botao.disabled = false;
+
       botao.textContent = "Salvar verificações";
+
     }
+
   });
 
   painel.appendChild(botao);
 
   return painel;
+
 }
 
 // ==========================================
@@ -396,29 +839,46 @@ function criarPainelVerificacao(receita) {
 // ==========================================
 
 async function carregarReceitas() {
+
   listaReceitas.replaceChildren(
-    criarElemento("p", "Carregando receitas...", "status")
+    criarElemento(
+      "p",
+      "Carregando receitas...",
+      "status"
+    )
   );
 
   mostrarMensagem(mensagemLista, "");
 
   try {
-    const { data, error: erroBusca } = await client
+
+    const {
+      data,
+      error: erroBusca
+    } = await client
       .from("recipes")
       .select("*")
-      .order("updated_at", { ascending: false });
+      .order("updated_at", {
+        ascending: false
+      });
 
-    if (erroBusca) throw erroBusca;
+    if (erroBusca) {
+      throw erroBusca;
+    }
 
     listaReceitas.replaceChildren();
 
     const filtro = filtroStatus.value;
 
     const receitas = (data || []).filter(receita =>
-      filtro === "todas" || receita.status === filtro
+
+      filtro === "todas" ||
+      receita.status === filtro
+
     );
 
     if (receitas.length === 0) {
+
       listaReceitas.appendChild(
         criarElemento(
           "p",
@@ -428,12 +888,21 @@ async function carregarReceitas() {
       );
 
       return;
+
     }
 
     receitas.forEach(receita => {
-      const card = criarElemento("article", undefined, "receita");
 
-      const titulo = criarElemento("h3", receita.name);
+      const card = criarElemento(
+        "article",
+        undefined,
+        "receita"
+      );
+
+      const titulo = criarElemento(
+        "h3",
+        receita.name
+      );
 
       const descricao = criarElemento(
         "p",
@@ -442,7 +911,8 @@ async function carregarReceitas() {
 
       const categoria = criarElemento(
         "p",
-        "Categoria: " + (receita.category || "Não informada")
+        "Categoria: " +
+          (receita.category || "Não informada")
       );
 
       const status = criarElemento(
@@ -451,9 +921,18 @@ async function carregarReceitas() {
         "status-receita"
       );
 
-      card.append(titulo, descricao, categoria, status);
+      card.append(
+        titulo,
+        descricao,
+        categoria,
+        status
+      );
 
-      const acoes = criarElemento("div", undefined, "acoes");
+      const acoes = criarElemento(
+        "div",
+        undefined,
+        "acoes"
+      );
 
       const podeEditar =
         membroAtual.role === "admin" ||
@@ -470,7 +949,10 @@ async function carregarReceitas() {
         membroAtual.role === "admin" &&
         receita.status === "approved";
 
+      // EDITAR
+
       if (podeEditar) {
+
         const editar = criarElemento(
           "button",
           "Editar",
@@ -478,19 +960,38 @@ async function carregarReceitas() {
         );
 
         editar.type = "button";
-        editar.addEventListener("click", () =>
-          preencherFormulario(receita)
-        );
+
+        editar.addEventListener("click", () => {
+
+          preencherFormulario(receita);
+
+        });
 
         acoes.appendChild(editar);
+
       }
 
+      // APROVAR
+
       if (podeRevisar) {
-        const aprovar = criarElemento("button", "Aprovar");
-        aprovar.type = "button";
-        aprovar.addEventListener("click", () =>
-          revisarReceita(receita.id, "approved")
+
+        const aprovar = criarElemento(
+          "button",
+          "Aprovar"
         );
+
+        aprovar.type = "button";
+
+        aprovar.addEventListener("click", () => {
+
+          revisarReceita(
+            receita.id,
+            "approved"
+          );
+
+        });
+
+        // REJEITAR
 
         const rejeitar = criarElemento(
           "button",
@@ -499,122 +1000,197 @@ async function carregarReceitas() {
         );
 
         rejeitar.type = "button";
-        rejeitar.addEventListener("click", () =>
-          revisarReceita(receita.id, "rejected")
+
+        rejeitar.addEventListener("click", () => {
+
+          revisarReceita(
+            receita.id,
+            "rejected"
+          );
+
+        });
+
+        acoes.append(
+          aprovar,
+          rejeitar
         );
 
-        acoes.append(aprovar, rejeitar);
       }
 
-      if (podePublicar) {
-        const publicar = criarElemento("button", "Publicar");
+      // PUBLICAR
 
-        publicar.type = "button";
-        publicar.addEventListener("click", () =>
-          publicarReceita(receita.id)
+      if (podePublicar) {
+
+        const publicar = criarElemento(
+          "button",
+          "Publicar"
         );
 
+        publicar.type = "button";
+
+        publicar.addEventListener("click", () => {
+
+          publicarReceita(receita.id);
+
+        });
+
         acoes.appendChild(publicar);
+
       }
 
       if (acoes.children.length > 0) {
+
         card.appendChild(acoes);
+
       }
 
-      // Administradora e revisora podem conferir
-      // a segurança alimentar de qualquer receita.
+      // VERIFICAÇÃO ALIMENTAR
+
       if (
         ["admin", "reviewer"].includes(membroAtual.role)
       ) {
+
         card.appendChild(
           criarPainelVerificacao(receita)
         );
+
       }
 
       listaReceitas.appendChild(card);
+
     });
 
   } catch (problema) {
-    console.error("Erro ao carregar receitas:", problema);
+
+    console.error(
+      "Erro ao carregar receitas:",
+      problema
+    );
 
     listaReceitas.replaceChildren(
       criarElemento(
         "p",
-        problema.message || "Não foi possível carregar as receitas.",
+        problema.message ||
+          "Não foi possível carregar as receitas.",
         "mensagem erro"
       )
     );
+
   }
+
 }
 
 // ==========================================
-// CADASTRO E EDIÇÃO
+// CADASTRO E EDIÇÃO DE RECEITAS
 // ==========================================
 
 async function salvarReceita(event) {
+
   event.preventDefault();
 
-  if (!formReceita.reportValidity()) return;
+  if (!formReceita.reportValidity()) {
+    return;
+  }
 
   const estavaEditando = Boolean(receitaEditando);
 
   botaoSalvar.disabled = true;
+
   botaoSalvar.textContent = "Salvando...";
 
   try {
+
     const dados = montarDadosReceita();
+
     const statusEscolhido = valor("statusReceita");
 
+    // ATUALIZAR RECEITA
+
     if (estavaEditando) {
-      const { error: erroAtualizacao } = await client
+
+      const {
+        error: erroAtualizacao
+      } = await client
         .from("recipes")
         .update({
+
           ...dados,
+
           status: statusEscolhido
+
         })
         .eq("id", receitaEditando);
 
-      if (erroAtualizacao) throw erroAtualizacao;
+      if (erroAtualizacao) {
+        throw erroAtualizacao;
+      }
 
-    } else {
-      const { error: erroInsercao } = await client
+    }
+
+    // CADASTRAR NOVA RECEITA
+
+    else {
+
+      const {
+        error: erroInsercao
+      } = await client
         .from("recipes")
         .insert({
+
           ...dados,
+
           status: statusEscolhido,
+
           created_by: usuarioAtual.id
+
         });
 
-      if (erroInsercao) throw erroInsercao;
+      if (erroInsercao) {
+        throw erroInsercao;
+      }
+
     }
 
     limparFormulario();
 
     mostrarMensagem(
       mensagemFormulario,
+
       estavaEditando
         ? "Receita atualizada com sucesso!"
         : "Receita cadastrada com sucesso!",
+
       "sucesso"
     );
 
     await carregarReceitas();
 
   } catch (problema) {
-    console.error("Erro ao salvar receita:", problema);
+
+    console.error(
+      "Erro ao salvar receita:",
+      problema
+    );
 
     mostrarMensagem(
       mensagemFormulario,
-      problema.message || "Não foi possível salvar a receita.",
+
+      problema.message ||
+        "Não foi possível salvar a receita.",
+
       "erro"
     );
 
   } finally {
+
     botaoSalvar.disabled = false;
+
     botaoSalvar.textContent = receitaEditando
       ? "Atualizar receita"
       : "Salvar receita";
+
   }
+
 }
 
 // ==========================================
@@ -622,42 +1198,65 @@ async function salvarReceita(event) {
 // ==========================================
 
 async function revisarReceita(id, decisao) {
-  const confirmacao = decisao === "approved"
-    ? "Deseja aprovar esta receita editorialmente?"
-    : "Deseja rejeitar esta receita editorialmente?";
 
-  if (!window.confirm(confirmacao)) return;
+  const confirmacao =
+    decisao === "approved"
+      ? "Deseja aprovar esta receita editorialmente?"
+      : "Deseja rejeitar esta receita editorialmente?";
+
+  if (!window.confirm(confirmacao)) {
+    return;
+  }
 
   try {
-    const { error: erroRevisao } = await client.rpc(
+
+    const {
+      error: erroRevisao
+    } = await client.rpc(
       "review_recipe",
       {
+
         recipe_id: id,
+
         decision: decisao
+
       }
     );
 
-    if (erroRevisao) throw erroRevisao;
+    if (erroRevisao) {
+      throw erroRevisao;
+    }
 
     mostrarMensagem(
       mensagemLista,
+
       decisao === "approved"
         ? "Receita aprovada editorialmente!"
         : "Receita rejeitada.",
+
       "sucesso"
     );
 
     await carregarReceitas();
 
   } catch (problema) {
-    console.error("Erro na revisão:", problema);
+
+    console.error(
+      "Erro na revisão:",
+      problema
+    );
 
     mostrarMensagem(
       mensagemLista,
-      problema.message || "Não foi possível revisar a receita.",
+
+      problema.message ||
+        "Não foi possível revisar a receita.",
+
       "erro"
     );
+
   }
+
 }
 
 // ==========================================
@@ -665,19 +1264,33 @@ async function revisarReceita(id, decisao) {
 // ==========================================
 
 async function publicarReceita(id) {
-  if (membroAtual.role !== "admin") return;
 
-  if (!window.confirm("Deseja publicar esta receita no site?")) {
+  if (membroAtual.role !== "admin") {
+    return;
+  }
+
+  if (
+    !window.confirm(
+      "Deseja publicar esta receita no site?"
+    )
+  ) {
     return;
   }
 
   try {
-    const { error: erroPublicacao } = await client
+
+    const {
+      error: erroPublicacao
+    } = await client
       .from("recipes")
-      .update({ status: "published" })
+      .update({
+        status: "published"
+      })
       .eq("id", id);
 
-    if (erroPublicacao) throw erroPublicacao;
+    if (erroPublicacao) {
+      throw erroPublicacao;
+    }
 
     mostrarMensagem(
       mensagemLista,
@@ -688,14 +1301,23 @@ async function publicarReceita(id) {
     await carregarReceitas();
 
   } catch (problema) {
-    console.error("Erro ao publicar:", problema);
+
+    console.error(
+      "Erro ao publicar:",
+      problema
+    );
 
     mostrarMensagem(
       mensagemLista,
-      problema.message || "Não foi possível publicar a receita.",
+
+      problema.message ||
+        "Não foi possível publicar a receita.",
+
       "erro"
     );
+
   }
+
 }
 
 // ==========================================
@@ -703,108 +1325,195 @@ async function publicarReceita(id) {
 // ==========================================
 
 async function iniciarPainel() {
+
   try {
-    boasVindas.textContent = "Conectando ao sistema...";
-    mensagem.textContent = "Verificando seu acesso ao Harmonize+.";
+
+    boasVindas.textContent =
+      "Conectando ao sistema...";
+
+    mensagem.textContent =
+      "Verificando seu acesso ao Harmonize+.";
 
     if (!client) {
+
       throw new Error(
         "A conexão com o Supabase não foi inicializada."
       );
+
     }
 
-    const { data: dadosLogin, error: erroLogin } =
-      await client.auth.getUser();
+    // VERIFICAR LOGIN
 
-    if (erroLogin) throw erroLogin;
+    const {
+      data: dadosLogin,
+      error: erroLogin
+    } = await client.auth.getUser();
+
+    if (erroLogin) {
+      throw erroLogin;
+    }
 
     usuarioAtual = dadosLogin.user;
 
     if (!usuarioAtual) {
-      boasVindas.textContent = "Você não está conectado";
+
+      boasVindas.textContent =
+        "Você não está conectado";
+
       mensagem.textContent =
         "Entre com seu e-mail e senha para acessar.";
 
-      erro.innerHTML = '<a href="login.html">Ir para o login</a>';
+      erro.innerHTML =
+        '<a href="login.html">Ir para o login</a>';
+
       return;
+
     }
 
-    const { data: membro, error: erroMembro } = await client
+    // VERIFICAR MEMBRO DA EQUIPE
+
+    const {
+      data: membro,
+      error: erroMembro
+    } = await client
       .from("team_members")
       .select("display_name, role")
       .eq("user_id", usuarioAtual.id)
       .maybeSingle();
 
-    if (erroMembro) throw erroMembro;
+    if (erroMembro) {
+      throw erroMembro;
+    }
 
     if (!membro) {
-      boasVindas.textContent = "Acesso não autorizado";
+
+      boasVindas.textContent =
+        "Acesso não autorizado";
+
       mensagem.textContent =
         "Seu usuário não foi encontrado na equipe do Harmonize+.";
+
       return;
+
     }
 
     membroAtual = membro;
 
-    boasVindas.textContent = `Olá, ${membro.display_name}!`;
-    papel.textContent = nomesPapeis[membro.role] || membro.role;
+    boasVindas.textContent =
+      `Olá, ${membro.display_name}!`;
+
+    papel.textContent =
+      nomesPapeis[membro.role] || membro.role;
 
     mensagem.textContent =
       "Seu acesso foi confirmado. Bem-vindo ao painel administrativo.";
 
     areaReceitas.classList.remove("oculto");
 
-    if (["admin", "editor"].includes(membro.role)) {
+    if (
+      ["admin", "editor"].includes(membro.role)
+    ) {
+
       areaCadastro.classList.remove("oculto");
+
     }
 
     if (membro.role === "reviewer") {
+
       filtroStatus.value = "review";
+
     }
 
     await carregarReceitas();
 
   } catch (problema) {
-    console.error("Erro ao iniciar painel:", problema);
+
+    console.error(
+      "Erro ao iniciar painel:",
+      problema
+    );
 
     boasVindas.textContent =
       "Não foi possível carregar o painel";
 
     mensagem.textContent =
-      problema.message || "Ocorreu um erro inesperado.";
+      problema.message ||
+        "Ocorreu um erro inesperado.";
+
   }
+
 }
 
 // ==========================================
 // EVENTOS
 // ==========================================
 
-formReceita.addEventListener("submit", salvarReceita);
+formReceita.addEventListener(
+  "submit",
+  salvarReceita
+);
 
-botaoCancelar.addEventListener("click", limparFormulario);
+botaoCancelar.addEventListener(
+  "click",
+  limparFormulario
+);
 
-filtroStatus.addEventListener("change", carregarReceitas);
+filtroStatus.addEventListener(
+  "change",
+  carregarReceitas
+);
 
-botaoSair.addEventListener("click", async () => {
-  botaoSair.disabled = true;
-  botaoSair.textContent = "Saindo...";
+// ==========================================
+// SAIR DO SISTEMA
+// ==========================================
 
-  try {
-    const { error: erroSaida } = await client.auth.signOut();
+botaoSair.addEventListener(
+  "click",
+  async () => {
 
-    if (erroSaida) throw erroSaida;
+    botaoSair.disabled = true;
 
-    window.location.href = "login.html";
+    botaoSair.textContent = "Saindo...";
 
-  } catch (problema) {
-    console.error("Erro ao sair:", problema);
+    try {
 
-    erro.textContent =
-      "Não foi possível encerrar a sessão. Tente novamente.";
+      const {
+        error: erroSaida
+      } = await client.auth.signOut();
 
-    botaoSair.disabled = false;
-    botaoSair.textContent = "Sair";
+      if (erroSaida) {
+        throw erroSaida;
+      }
+
+      window.location.href = "login.html";
+
+    } catch (problema) {
+
+      console.error(
+        "Erro ao sair:",
+        problema
+      );
+
+      erro.textContent =
+        "Não foi possível encerrar a sessão. Tente novamente.";
+
+      botaoSair.disabled = false;
+
+      botaoSair.textContent = "Sair";
+
+    }
+
   }
-});
+);
+
+// ==========================================
+// INICIALIZAÇÃO FINAL
+// ==========================================
+
+// Criar os novos campos no formulário
+
+criarCamposSensoriais();
+
+// Iniciar painel administrativo
 
 iniciarPainel();
