@@ -46,6 +46,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       .trim();
   }
 
+  // Identifica palavras completas para reduzir falsos positivos.
+  // Exemplo: "sal" não será identificado dentro de "salada".
+  function contemPalavras(texto, palavras) {
+    const conteudo = normalizar(texto);
+
+    return palavras.some(palavra => {
+      const termo = normalizar(palavra)
+        .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+        .replace(/\s+/g, "\\s+");
+
+      const expressao = new RegExp(
+        "(^|[^a-z0-9])" + termo + "($|[^a-z0-9])"
+      );
+
+      return expressao.test(conteudo);
+    });
+  }
+
   function temRestricao(nome) {
     return restricoes.some(item =>
       normalizar(item) === normalizar(nome)
@@ -244,6 +262,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }).join(" ");
   }
 
+  function textoPreparo(receita) {
+    return receita.preparo.map(etapa => {
+      if (typeof etapa === "string") return etapa;
+      return JSON.stringify(etapa);
+    }).join(" ");
+  }
+
   function analisarReceita(receita) {
     const nomeDescricao =
       normalizar(receita.nome + " " + receita.descricao);
@@ -251,9 +276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const ingredientes =
       normalizar(textoIngredientes(receita));
 
-    const preparo = normalizar(
-      receita.preparo.join(" ")
-    );
+    const preparo = normalizar(textoPreparo(receita));
 
     const texto = [
       nomeDescricao,
@@ -264,7 +287,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const perfis = [];
 
     const contem = palavras =>
-      palavras.some(palavra => texto.includes(palavra));
+      contemPalavras(texto, palavras);
 
     // DOCE
     if (
@@ -323,7 +346,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (contem([
       "cogumelo", "shoyu", "parmesao",
       "tomate", "carne", "caldo de carne",
-      "molho de soja", "missô", "miso"
+      "molho de soja", "miso"
     ])) {
       perfis.push("umami");
     }
@@ -373,12 +396,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // =====================================================
-  // IDENTIFICAÇÃO DAS CARACTERÍSTICAS OFICIAIS
+  // ANÁLISE DAS CARACTERÍSTICAS OFICIAIS DA BEBIDA
   // =====================================================
 
   function analisarBebida(bebida) {
+    // A análise considera somente informações descritivas
+    // cadastradas no catálogo.
+    //
+    // O estilo da bebida não é usado para presumir aroma,
+    // amargor, refrescância ou sabor.
+    //
+    // Exemplo: nem toda IPA será automaticamente marcada
+    // como amarga sem uma descrição oficial que confirme isso.
+
     const texto = normalizar([
-      bebida.estilo,
       bebida.aroma,
       bebida.sabor,
       bebida.corpo,
@@ -389,55 +420,65 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const sinais = [];
 
-    const contem = palavras =>
-      palavras.some(palavra => texto.includes(palavra));
-
-    if (contem([
-      "amargor", "amargo", "amarga",
-      "ipa"
-    ]) || Boolean(bebida.amargor)) {
+    // AMARGOR
+    // Não considera simplesmente qualquer campo preenchido.
+    // Valores como "baixo" ou "suave" não geram esse sinal.
+    if (
+      contemPalavras(texto, [
+        "amargor", "amargo", "amarga"
+      ]) &&
+      !contemPalavras(normalizar(bebida.amargor), [
+        "baixo", "baixa", "suave", "leve", "ausente"
+      ])
+    ) {
       sinais.push("amargo");
     }
 
-    if (contem([
+    // NOTAS CÍTRICAS
+    if (contemPalavras(texto, [
       "limao", "laranja", "citrico",
       "citrica", "maracuja"
     ])) {
       sinais.push("citrico");
     }
 
-    if (contem([
-      "refrescante", "refrescancia",
-      "leve", "lager", "pilsen",
-      "witbier"
+    // REFRESCÂNCIA
+    if (contemPalavras(texto, [
+      "refrescante", "refrescancia"
     ])) {
       sinais.push("refrescante");
     }
 
-    if (contem([
-      "doce", "dulcor", "adocicado",
-      "frutado", "frutada"
+    // DOÇURA
+    // "Frutado" sozinho não significa necessariamente doce.
+    if (contemPalavras(texto, [
+      "doce", "dulcor", "adocicado"
     ])) {
       sinais.push("doce");
     }
 
-    if (contem([
+    // NOTAS TOSTADAS
+    if (contemPalavras(texto, [
       "tostado", "torrado",
       "cafe", "chocolate"
     ])) {
       sinais.push("tostado");
     }
 
+    // CARBONATAÇÃO
+    // Só considera o sinal quando o campo específico
+    // de carbonatação estiver preenchido no catálogo.
     if (
-      bebida.carbonatacao ||
-      bebida.categoria === "refrigerante" ||
-      bebida.categoria === "agua"
+      bebida.carbonatacao &&
+      String(bebida.carbonatacao).trim() !== ""
     ) {
       sinais.push("carbonatado");
     }
 
-    if (contem([
-      "malte", "cereal", "pao"
+    // NOTAS DE MALTE
+    if (contemPalavras(texto, [
+      "malte", "maltado", "maltada",
+      "cereal", "pao"
     ])) {
       sinais.push("maltado");
     }
@@ -485,14 +526,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       "picante",
       "refrescante",
       3,
-      "O perfil refrescante pode ajudar a equilibrar a sensação de picância."
+      "O perfil refrescante documentado pode ajudar a equilibrar a sensação de picância."
     );
 
     adicionar(
       "picante",
       "citrico",
       2,
-      "As notas cítricas podem trazer contraste à picância."
+      "As notas cítricas documentadas podem trazer contraste à picância."
     );
 
     // ÁCIDO
@@ -500,14 +541,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       "acido",
       "refrescante",
       2,
-      "O perfil refrescante pode acompanhar a acidez da receita."
+      "O perfil refrescante documentado pode acompanhar a acidez da receita."
     );
 
     adicionar(
       "acido",
       "maltado",
       1,
-      "As notas de malte podem oferecer contraste à acidez."
+      "As notas de malte documentadas podem oferecer contraste à acidez."
     );
 
     // SALGADO
@@ -515,14 +556,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       "salgado",
       "refrescante",
       2,
-      "O perfil refrescante pode acompanhar os sabores salgados."
+      "O perfil refrescante documentado pode acompanhar os sabores salgados."
     );
 
     adicionar(
       "salgado",
       "maltado",
       2,
-      "As notas de malte podem complementar o perfil salgado."
+      "As notas de malte documentadas podem complementar o perfil salgado."
     );
 
     // GORDUROSO
@@ -530,21 +571,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       "gorduroso",
       "carbonatado",
       3,
-      "A carbonatação pode ajudar a limpar a sensação de gordura no paladar."
+      "A carbonatação informada pode ajudar a limpar a sensação de gordura no paladar."
     );
 
     adicionar(
       "gorduroso",
       "citrico",
       2,
-      "As notas cítricas podem criar contraste com a gordura."
+      "As notas cítricas documentadas podem criar contraste com a gordura."
     );
 
     adicionar(
       "gorduroso",
       "amargo",
       1,
-      "O amargor pode criar contraste com a untuosidade."
+      "O amargor documentado pode criar contraste com a untuosidade."
     );
 
     // UMAMI
@@ -552,14 +593,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       "umami",
       "maltado",
       2,
-      "As notas maltadas podem acompanhar a intensidade do umami."
+      "As notas maltadas documentadas podem acompanhar a intensidade do umami."
     );
 
     adicionar(
       "umami",
       "refrescante",
       1,
-      "O perfil refrescante pode equilibrar a intensidade do prato."
+      "O perfil refrescante documentado pode equilibrar a intensidade do prato."
     );
 
     // AMARGO
@@ -567,7 +608,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "amargo",
       "doce",
       2,
-      "As notas frutadas ou adocicadas podem contrastar com o amargor."
+      "As notas doces documentadas podem contrastar com o amargor da receita."
     );
 
     // LEVE
@@ -575,7 +616,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "leve",
       "refrescante",
       2,
-      "O perfil leve e refrescante acompanha a delicadeza da receita."
+      "O perfil leve e refrescante documentado pode acompanhar a delicadeza da receita."
     );
 
     // PICANTE + DOCE
@@ -601,7 +642,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       pontos += 1;
 
       motivos.push(
-        "A carbonatação pode contribuir para equilibrar a sensação de gordura e picância."
+        "A carbonatação documentada pode contribuir para equilibrar a sensação de gordura e picância."
       );
     }
 
@@ -612,6 +653,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
   }
 
+  // =====================================================
+  // SELEÇÃO DAS BEBIDAS
+  // =====================================================
+
   function selecionarMelhorBebida(perfis, bebidas, tipo) {
     const candidatas = bebidas
       .filter(bebida => {
@@ -619,13 +664,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           return bebida.alcoolica === true;
         }
 
-        return (
-          bebida.alcoolica === false &&
-          (
-            bebida.teorAlcoolico === 0 ||
-            bebida.categoria !== "cerveja"
-          )
-        );
+        // Para a alternativa sem álcool, exige que o
+        // cadastro indique explicitamente is_alcoholic=false.
+        return bebida.alcoolica === false;
       })
       .map(bebida => ({
         bebida,
@@ -687,11 +728,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       bebida.nome
     ));
 
-    bloco.appendChild(criarElemento(
-      "p",
-      "pairing-brand",
-      bebida.marca
-    ));
+    if (bebida.marca) {
+      bloco.appendChild(criarElemento(
+        "p",
+        "pairing-brand",
+        bebida.marca
+      ));
+    }
 
     if (bebida.estilo) {
       bloco.appendChild(criarElemento(
@@ -955,7 +998,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     receita.preparo.forEach(etapa => {
       preparo.appendChild(
-        criarElemento("li", "", etapa)
+        criarElemento(
+          "li",
+          "",
+          typeof etapa === "string"
+            ? etapa
+            : JSON.stringify(etapa)
+        )
       );
     });
 
@@ -1015,6 +1064,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     }
 
+    // As consultas são independentes:
+    // uma falha no catálogo de bebidas não impede
+    // a exibição das receitas.
+
     const [receitasResultado, bebidasResultado] =
       await Promise.all([
         client
@@ -1047,26 +1100,57 @@ document.addEventListener("DOMContentLoaded", async () => {
       throw receitasResultado.error;
     }
 
-    if (bebidasResultado.error) {
-      throw bebidasResultado.error;
-    }
-
     const catalogo = (
       receitasResultado.data || []
     ).map(converterReceita);
 
-    const bebidas = (
-      bebidasResultado.data || []
-    ).map(converterBebida);
+    let bebidas = [];
+    let erroCatalogoBebidas = false;
+
+    if (bebidasResultado.error) {
+      console.error(
+        "Erro ao consultar catálogo de bebidas:",
+        bebidasResultado.error
+      );
+
+      erroCatalogoBebidas = true;
+
+    } else {
+      bebidas = (
+        bebidasResultado.data || []
+      ).map(converterBebida);
+    }
 
     const encontrados = catalogo
       .filter(compativel)
       .slice(0, 3);
 
     encontrados.forEach(receita => {
-      resultados.appendChild(
-        criarCartao(receita, bebidas)
+      const cartao = criarCartao(
+        receita,
+        erroCatalogoBebidas ? [] : bebidas
       );
+
+      if (erroCatalogoBebidas) {
+        const aviso = criarElemento(
+          "p",
+          "",
+          "Não foi possível consultar o catálogo de bebidas neste momento. A harmonização automática está temporariamente indisponível."
+        );
+
+        const secao = cartao.querySelector(
+          ".automatic-pairing"
+        );
+
+        if (secao) {
+          secao.replaceChildren(
+            criarElemento("h3", "", "Harmonização automática"),
+            aviso
+          );
+        }
+      }
+
+      resultados.appendChild(cartao);
     });
 
     loading.hidden = true;
@@ -1092,7 +1176,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
   } catch (erro) {
-    console.error("Erro ao buscar receitas ou bebidas:", erro);
+    console.error("Erro ao buscar receitas:", erro);
 
     loading.hidden = true;
 
