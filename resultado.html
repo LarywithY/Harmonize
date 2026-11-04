@@ -13,10 +13,14 @@
 
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./style.css?v=21">
+  <!-- Atualização da versão do CSS -->
+  <link rel="stylesheet" href="./style.css?v=32">
 
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./supabase.js"></script>
+
+  <!-- Lógica dos resultados -->
   <script src="./resultado.js" defer></script>
 </head>
 
@@ -37,16 +41,19 @@
 
   <main class="page results-main">
 
-    <div class="editorial-decoration decoration-top" aria-hidden="true">
-      ✳
-    </div>
+    <div class="editorial-decoration decoration-top" aria-hidden="true">✳</div>
 
+    <!-- ABERTURA EDITORIAL -->
     <section class="results-intro">
+
       <span class="eyebrow">✳ SABORES PARA DESCOBRIR</span>
 
       <p class="editorial-number">01 — SUA EXPERIÊNCIA</p>
 
-      <h1>Uma combinação<br>feita para <em>você.</em></h1>
+      <h1>
+        Uma combinação<br>
+        feita para <em>você.</em>
+      </h1>
 
       <p id="summary" class="lead">
         Estamos preparando sua busca.
@@ -59,27 +66,46 @@
         <span>✳</span>
         <span></span>
       </div>
+
     </section>
 
+    <!-- CARREGAMENTO -->
     <div id="loading" class="notice" role="status">
       Procurando receitas compatíveis...
     </div>
 
-    <section id="recipe-results" class="recipes" aria-live="polite"></section>
-
-    <section id="empty" class="notice" hidden>
-      <h2>Não encontramos opções neste momento.</h2>
-      <p>
-        Ainda não temos receitas cadastradas e verificadas que correspondam
-        a todos os critérios selecionados. Você pode alterar suas preferências
-        ou voltar em outro momento.
-      </p>
-      <a class="button" href="./experiencia.html">Alterar preferências</a>
+    <!-- RESULTADOS -->
+    <section
+      id="recipe-results"
+      class="recipes"
+      aria-live="polite">
     </section>
 
+    <!-- RESULTADO VAZIO -->
+    <section id="empty" class="notice" hidden>
+
+      <h2>Não encontramos opções neste momento.</h2>
+
+      <p>
+        Ainda não temos receitas cadastradas e verificadas que correspondam
+        a todos os critérios selecionados. Você pode alterar suas
+        preferências ou voltar em outro momento.
+      </p>
+
+      <a class="button" href="./experiencia.html">
+        Alterar preferências
+      </a>
+
+    </section>
+
+    <!-- SEGURANÇA ALIMENTAR -->
     <section class="safety-editorial">
+
       <span class="eyebrow">ANTES DE EXPERIMENTAR</span>
-      <h2>O cuidado também faz parte da experiência.</h2>
+
+      <h2>
+        O cuidado também faz parte da experiência.
+      </h2>
 
       <p>
         As receitas exibidas dependem das informações de verificação
@@ -97,23 +123,29 @@
       </a>
 
       <span class="safety-decoration" aria-hidden="true">✳</span>
+
     </section>
 
+    <!-- VOLTAR -->
     <div class="results-return">
+
       <a class="button" href="./experiencia.html">
         Criar nova experiência →
       </a>
+
     </div>
 
   </main>
 
   <footer>
+
     <a class="brand" href="./index.html">
       <img src="./logo.svg" alt="">
       <span>Harmonize<span class="plus">+</span></span>
     </a>
 
     <span>Sabor, inclusão e harmonia.</span>
+
   </footer>
 
 </body>
