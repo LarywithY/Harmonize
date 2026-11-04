@@ -5,20 +5,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#173D2B">
+
   <title>Suas receitas | Harmonize+</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=20">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css?v=21">
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase.js"></script>
-<script src="./resultado.js"></script>
+  <script src="./supabase.js"></script>
+  <script src="./resultado.js" defer></script>
 </head>
-<body>
+
+<body class="results-page">
+
   <header class="site-header">
     <a class="brand" href="./index.html">
       <img src="./logo.svg" alt="">
       <span>Harmonize<span class="plus">+</span></span>
     </a>
+
     <nav>
       <a href="./sobre.html">Sobre</a>
       <a href="./seguranca.html">Segurança alimentar</a>
@@ -26,15 +35,36 @@
     </nav>
   </header>
 
-  <main class="page">
-    <div class="page-heading">
-      <span class="eyebrow">SABORES PARA DESCOBRIR</span>
-      <h1>Suas receitas</h1>
-      <p id="summary" class="lead">Estamos preparando sua busca.</p>
-      <p id="restrictions" class="restriction-summary"></p>
+  <main class="page results-main">
+
+    <div class="editorial-decoration decoration-top" aria-hidden="true">
+      ✳
     </div>
 
-    <div id="loading" class="notice" role="status">Procurando receitas compatíveis...</div>
+    <section class="results-intro">
+      <span class="eyebrow">✳ SABORES PARA DESCOBRIR</span>
+
+      <p class="editorial-number">01 — SUA EXPERIÊNCIA</p>
+
+      <h1>Uma combinação<br>feita para <em>você.</em></h1>
+
+      <p id="summary" class="lead">
+        Estamos preparando sua busca.
+      </p>
+
+      <p id="restrictions" class="restriction-summary"></p>
+
+      <div class="intro-ornament" aria-hidden="true">
+        <span></span>
+        <span>✳</span>
+        <span></span>
+      </div>
+    </section>
+
+    <div id="loading" class="notice" role="status">
+      Procurando receitas compatíveis...
+    </div>
+
     <section id="recipe-results" class="recipes" aria-live="polite"></section>
 
     <section id="empty" class="notice" hidden>
@@ -47,21 +77,34 @@
       <a class="button" href="./experiencia.html">Alterar preferências</a>
     </section>
 
-    <section class="notice">
-      <h2>Segurança alimentar</h2>
+    <section class="safety-editorial">
+      <span class="eyebrow">ANTES DE EXPERIMENTAR</span>
+      <h2>O cuidado também faz parte da experiência.</h2>
+
       <p>
         As receitas exibidas dependem das informações de verificação
         cadastradas pela equipe. Confira sempre os rótulos, ingredientes,
         fornecedores e condições reais de preparo.
       </p>
+
       <p>
         A compatibilidade apresentada não garante ausência de risco,
         especialmente em casos de alergias e doença celíaca.
       </p>
-      <a class="text-link" href="./seguranca.html">Leia nossas orientações de segurança →</a>
+
+      <a class="text-link" href="./seguranca.html">
+        Leia nossas orientações de segurança →
+      </a>
+
+      <span class="safety-decoration" aria-hidden="true">✳</span>
     </section>
 
-    <a class="button" href="./experiencia.html">Fazer nova busca →</a>
+    <div class="results-return">
+      <a class="button" href="./experiencia.html">
+        Criar nova experiência →
+      </a>
+    </div>
+
   </main>
 
   <footer>
@@ -69,7 +112,9 @@
       <img src="./logo.svg" alt="">
       <span>Harmonize<span class="plus">+</span></span>
     </a>
+
     <span>Sabor, inclusão e harmonia.</span>
   </footer>
+
 </body>
 </html>
