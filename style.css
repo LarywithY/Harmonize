@@ -3500,3 +3500,345 @@ html {
     transition-duration: .01ms !important;
   }
 }
+
+
+/* =====================================================
+   HARMONIZE+ — REFINAMENTO VISUAL DOS RESULTADOS
+   ===================================================== */
+
+/* ORGANIZAÇÃO EDITORIAL */
+.results-page .recipes {
+  display: grid;
+  grid-template-columns: minmax(0, 850px);
+  justify-content: center;
+  gap: 52px;
+  margin: 50px auto 75px;
+}
+
+.results-page .result-item {
+  width: 100%;
+  min-width: 0;
+  animation: resultReveal .8s cubic-bezier(.2,.7,.2,1) both;
+}
+
+.results-page .result-item:nth-child(2) {
+  animation-delay: .12s;
+}
+
+.results-page .result-item:nth-child(3) {
+  animation-delay: .24s;
+}
+
+/* ANIMAÇÃO DE ENTRADA */
+@keyframes resultReveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RECEITA — IDENTIDADE VERMELHA */
+.results-page .recipe-card {
+  border: 1px solid rgba(227,27,54,.25);
+  border-radius: 8px 8px 0 0;
+  background: #FFFDF9;
+  box-shadow: 0 15px 38px rgba(23,61,43,.09);
+  transition:
+    box-shadow .35s ease,
+    transform .35s ease;
+}
+
+.results-page .recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 42px rgba(23,61,43,.14);
+}
+
+.results-page .recipe-card::before {
+  padding: 15px 24px;
+  letter-spacing: 2.5px;
+}
+
+/* FOTOGRAFIA DA RECEITA */
+.results-page .recipe-card-image {
+  display: block;
+  width: calc(100% - 40px);
+  height: 320px;
+  margin: 20px;
+  object-fit: cover;
+  object-position: center;
+  background: #E9E1D6;
+  border: 6px solid #FFFFFF;
+  outline: 1px solid rgba(227,27,54,.25);
+  box-shadow: 0 8px 22px rgba(23,61,43,.08);
+}
+
+.results-page .recipe-card-content {
+  padding: 24px 30px 30px;
+}
+
+.results-page .recipe-category {
+  display: inline-block;
+  padding: 6px 10px;
+  background: #FBE9EA;
+  color: var(--vermelho);
+}
+
+.results-page .recipe-card h2 {
+  margin: 12px 0;
+  font-size: clamp(30px, 4vw, 39px);
+}
+
+.results-page .recipe-description {
+  max-width: 680px;
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.results-page .recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  padding: 14px 0;
+  border-top: 1px solid #F0DCDD;
+  border-bottom: 1px solid #F0DCDD;
+}
+
+/* HARMONIZAÇÃO — IDENTIDADE DOURADA */
+.results-page .automatic-pairing {
+  padding: 30px;
+  border: 1px solid rgba(255,176,0,.65);
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  background:
+    radial-gradient(
+      circle at 95% 5%,
+      rgba(255,176,0,.13),
+      transparent 190px
+    ),
+    #FFF9E9;
+}
+
+.results-page .pairing-heading {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #EADCB8;
+}
+
+.results-page .pairing-heading h3 {
+  font-size: 34px;
+}
+
+.results-page .pairing-option {
+  padding: 22px;
+  margin-top: 20px;
+  border: 1px solid #EADCB8;
+  border-radius: 7px;
+  background: #FFFEFA;
+  box-shadow: 0 7px 20px rgba(113,80,13,.05);
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+.results-page .pairing-option:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(113,80,13,.10);
+}
+
+/* ÁREA RESERVADA PARA FOTO DA BEBIDA */
+.results-page .pairing-product {
+  align-items: center;
+  gap: 22px;
+  min-height: 165px;
+}
+
+.results-page .pairing-product-image {
+  flex: 0 0 140px;
+  width: 140px;
+  height: 165px;
+  padding: 12px;
+  object-fit: contain;
+  background: #F8EBC8;
+  border: 1px solid #E7D4A5;
+  border-radius: 5px;
+}
+
+.results-page .pairing-beverage-name {
+  font-size: 27px;
+}
+
+.results-page .pairing-details {
+  gap: 12px 20px;
+  padding: 18px 0;
+}
+
+.results-page .pairing-detail {
+  font-size: 11px;
+}
+
+.results-page .pairing-reason {
+  padding: 16px 18px;
+  margin-top: 18px;
+  border-left-width: 4px;
+  background: #FFF4D9;
+  font-size: 12px;
+}
+
+/* RESTAURANTES — IDENTIDADE VERDE */
+.results-page .recommended-restaurants {
+  margin-top: 28px;
+  padding: 28px;
+  border: 1px solid rgba(23,61,43,.25);
+  border-radius: 8px;
+  background:
+    radial-gradient(
+      circle at 95% 10%,
+      rgba(23,61,43,.08),
+      transparent 180px
+    ),
+    #EDF3EB;
+}
+
+.results-page .recommended-restaurants h3 {
+  font-size: 34px;
+}
+
+.results-page .restaurant-card {
+  margin-top: 22px;
+  border: 1px solid #D4E0D2;
+  border-radius: 7px;
+  background: #FFFDF9;
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+.results-page .restaurant-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(23,61,43,.10);
+}
+
+/* FOTOGRAFIAS DOS RESTAURANTES */
+.results-page .restaurant-card-image {
+  display: block;
+  width: calc(100% - 32px);
+  height: 230px;
+  margin: 16px;
+  object-fit: cover;
+  object-position: center;
+  background: #DCE6D9;
+  border: 5px solid #FFFFFF;
+  outline: 1px solid #C5D5C2;
+}
+
+.results-page .restaurant-card-content {
+  padding: 12px 24px 25px;
+}
+
+/* DETALHES EDITORIAIS */
+.results-page .recipe-details {
+  padding: 18px 0 0;
+}
+
+.results-page .recipe-details summary {
+  padding: 12px 15px;
+  border: 1px solid rgba(227,27,54,.2);
+  background: #FBEDEF;
+  transition: background .25s ease;
+}
+
+.results-page .recipe-details summary:hover {
+  background: #F6DDE0;
+}
+
+.results-page .safety-editorial {
+  border-radius: 7px;
+  box-shadow: 0 12px 30px rgba(23,61,43,.05);
+}
+
+/* TRANSIÇÕES E ACESSIBILIDADE */
+.results-page a,
+.results-page button,
+.results-page summary {
+  transition:
+    color .25s ease,
+    background-color .25s ease,
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .results-page .result-item {
+    animation: none !important;
+  }
+
+  .results-page .recipe-card,
+  .results-page .pairing-option,
+  .results-page .restaurant-card {
+    transition: none !important;
+  }
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 760px) {
+  .results-page .recipes {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 38px;
+    margin-top: 30px;
+  }
+
+  .results-page .recipe-card-image {
+    height: 250px;
+    margin: 14px;
+    width: calc(100% - 28px);
+  }
+
+  .results-page .recipe-card-content {
+    padding: 20px;
+  }
+
+  .results-page .automatic-pairing {
+    padding: 23px 18px;
+  }
+
+  .results-page .pairing-product {
+    gap: 14px;
+    min-height: 135px;
+  }
+
+  .results-page .pairing-product-image {
+    flex-basis: 112px;
+    width: 112px;
+    height: 140px;
+  }
+
+  .results-page .recommended-restaurants {
+    padding: 22px 17px;
+  }
+
+  .results-page .restaurant-card-image {
+    height: 200px;
+    margin: 12px;
+    width: calc(100% - 24px);
+  }
+}
+
+@media (max-width: 380px) {
+  .results-page .pairing-product {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .results-page .pairing-product-image {
+    width: 100%;
+    height: 180px;
+  }
+
+  .results-page .recipe-card-image {
+    height: 210px;
+  }
+}
