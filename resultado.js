@@ -1,6 +1,6 @@
 
 /* =====================================================
-   HARMONIZE+ — RECEITAS E HARMONIZAÇÃO AUTOMÁTICA
+   HARMONIZE+ — RECEITAS, HARMONIZAÇÃO E RESTAURANTES
    ===================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function converterReceita(item) {
     return {
+      id: item.id,
       nome: item.name || "",
       categoria: normalizar(item.category),
       imagem: item.image_url || "",
@@ -600,8 +601,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       : null;
   }
 
-  // Identifica água comum ou com gás no catálogo.
-  // Não escolhe água proteica como fallback automático.
   function selecionarAguaPortfolio(bebidas) {
     const aguas = bebidas.filter(bebida => {
       if (bebida.alcoolica !== false) return false;
@@ -632,8 +631,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!aguas.length) return null;
 
-    // Dá preferência à água sem gás quando o catálogo
-    // não oferece uma indicação culinária específica.
     const semGas = aguas.find(bebida => {
       const texto = normalizar(
         bebida.nome + " " + bebida.descricao
@@ -926,7 +923,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       ? selecionarAguaPortfolio(bebidas)
       : null;
 
-    // Apresenta a sugestão com melhor pontuação como destaque.
     let principal = null;
     let tituloPrincipal = "Sugestão em destaque";
 
@@ -936,10 +932,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         semAlcool.resultado.pontos
       ) {
         principal = alcoolica;
-        tituloPrincipal = "Sugestão em destaque";
       } else {
         principal = semAlcool;
-        tituloPrincipal = "Sugestão em destaque";
       }
     } else if (alcoolica) {
       principal = alcoolica;
@@ -954,7 +948,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         { destaque: true }
       ));
 
-      // Mantém a outra categoria como opção complementar.
       if (principal === alcoolica) {
         secao.appendChild(criarIndicacaoBebida(
           semAlcool,
@@ -999,6 +992,187 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       ));
     }
+
+    return secao;
+  }
+
+  // =====================================================
+  // RESTAURANTES RECOMENDADOS
+  // =====================================================
+
+  function criarSecaoRestaurantes(receita, relacoes) {
+    const secao = criarElemento(
+      "section",
+      "recommended-restaurants"
+    );
+
+    secao.setAttribute(
+      "aria-label",
+      "Restaurantes relacionados a esta receita"
+    );
+
+    secao.appendChild(criarElemento(
+      "span",
+      "pairing-eyebrow",
+      "HARMONIZE+ INDICA"
+    ));
+
+    secao.appendChild(criarElemento(
+      "h3",
+      "",
+      "Onde experimentar?"
+    ));
+
+    secao.appendChild(criarElemento(
+      "p",
+      "pairing-intro",
+      "Confira restaurantes que oferecem pratos relacionados a esta receita."
+    ));
+
+    const pratos = relacoes.filter(relacao => {
+      const prato = relacao.restaurant_dishes;
+      const restaurante = prato && prato.restaurants;
+
+      return (
+        relacao.recipe_id === receita.id &&
+        prato &&
+        restaurante &&
+        restaurante.status === "published"
+      );
+    });
+
+    if (!pratos.length) {
+      secao.appendChild(criarElemento(
+        "p",
+        "pairing-unavailable",
+        "Ainda não encontramos restaurantes publicados relacionados a esta receita."
+      ));
+
+      return secao;
+    }
+
+    const restaurantesExibidos = new Set();
+
+    pratos.forEach(relacao => {
+      const prato = relacao.restaurant_dishes;
+      const restaurante = prato.restaurants;
+
+      if (restaurantesExibidos.has(restaurante.id)) {
+        return;
+      }
+
+      restaurantesExibidos.add(restaurante.id);
+
+      const cartao = criarElemento(
+        "article",
+        "restaurant-card"
+      );
+
+      if (restaurante.image_url) {
+        const imagem = document.createElement("img");
+
+        imagem.src = restaurante.image_url;
+        imagem.alt = "Imagem de " + restaurante.name;
+        imagem.loading = "lazy";
+        imagem.className = "restaurant-card-image";
+
+        imagem.onerror = () => imagem.remove();
+
+        cartao.appendChild(imagem);
+      }
+
+      const conteudo = criarElemento(
+        "div",
+        "restaurant-card-content"
+      );
+
+      conteudo.appendChild(criarElemento(
+        "h4",
+        "",
+        restaurante.name || "Restaurante"
+      ));
+
+      conteudo.appendChild(criarElemento(
+        "p",
+        "restaurant-dish-name",
+        "Prato relacionado: " + (prato.name || "Não informado")
+      ));
+
+      if (prato.description) {
+        conteudo.appendChild(criarElemento(
+          "p",
+          "",
+          prato.description
+        ));
+      }
+
+      const endereco = [
+        restaurante.address,
+        restaurante.city,
+        restaurante.state
+      ].filter(Boolean).join(", ");
+
+      if (endereco) {
+        conteudo.appendChild(criarElemento(
+          "p",
+          "restaurant-card-detail",
+          "Endereço: " + endereco
+        ));
+      }
+
+      if (restaurante.phone) {
+        conteudo.appendChild(criarElemento(
+          "p",
+          "restaurant-card-detail",
+          "Telefone: " + restaurante.phone
+        ));
+      }
+
+      if (restaurante.website) {
+        const site = document.createElement("a");
+
+        let urlSite = restaurante.website;
+
+        if (!/^https?:\/\//i.test(urlSite)) {
+          urlSite = "https://" + urlSite;
+        }
+
+        site.href = urlSite;
+        site.textContent = "Visitar site do restaurante";
+        site.target = "_blank";
+        site.rel = "noopener noreferrer";
+
+        conteudo.appendChild(site);
+      }
+
+      const verificacao = restaurante.verification_status;
+
+      let textoVerificacao =
+        "Informações de verificação pendentes.";
+
+      if (verificacao === "verified") {
+        textoVerificacao =
+          "Informações do estabelecimento verificadas.";
+      } else if (verificacao === "not_verified") {
+        textoVerificacao =
+          "Informações do estabelecimento ainda não verificadas.";
+      }
+
+      conteudo.appendChild(criarElemento(
+        "p",
+        "restaurant-verification",
+        textoVerificacao
+      ));
+
+      conteudo.appendChild(criarElemento(
+        "p",
+        "restaurant-safety-notice",
+        "A indicação deste restaurante não garante ausência de alérgenos ou contaminação cruzada. Confirme os ingredientes e as condições de preparo diretamente com o estabelecimento antes de consumir."
+      ));
+
+      cartao.appendChild(conteudo);
+      secao.appendChild(cartao);
+    });
 
     return secao;
   }
@@ -1151,7 +1325,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     detalhes.appendChild(corpo);
     conteudo.appendChild(detalhes);
 
-    // AVISO DE SEGURANÇA
     conteudo.appendChild(criarElemento(
       "p",
       "recipe-meta",
@@ -1160,9 +1333,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     cartao.appendChild(conteudo);
 
-    // A harmonização fica fora do cartão da receita,
-    // formando um segundo cartão visual conectado a ele.
     conjunto.appendChild(cartao);
+
     conjunto.appendChild(
       criarHarmonizacaoAutomatica(receita, bebidas)
     );
@@ -1251,6 +1423,59 @@ document.addEventListener("DOMContentLoaded", async () => {
       .filter(compativel)
       .slice(0, 3);
 
+    // =====================================================
+    // BUSCA DOS RESTAURANTES RELACIONADOS
+    // =====================================================
+
+    let relacoesRestaurantes = [];
+    let erroRestaurantes = false;
+
+    if (encontrados.length > 0) {
+      const idsReceitas = encontrados.map(
+        receita => receita.id
+      );
+
+      const resultadoRestaurantes = await client
+        .from("restaurant_dish_recipes")
+        .select(`
+          recipe_id,
+          restaurant_dishes!inner (
+            id,
+            name,
+            description,
+            restaurants!inner (
+              id,
+              name,
+              address,
+              city,
+              state,
+              phone,
+              website,
+              image_url,
+              verification_status,
+              status
+            )
+          )
+        `)
+        .in("recipe_id", idsReceitas);
+
+      if (resultadoRestaurantes.error) {
+        console.error(
+          "Erro ao consultar restaurantes relacionados:",
+          resultadoRestaurantes.error
+        );
+
+        erroRestaurantes = true;
+      } else {
+        relacoesRestaurantes =
+          resultadoRestaurantes.data || [];
+      }
+    }
+
+    // =====================================================
+    // EXIBIÇÃO DOS RESULTADOS
+    // =====================================================
+
     encontrados.forEach(receita => {
       const conjunto = criarCartao(
         receita,
@@ -1276,6 +1501,35 @@ document.addEventListener("DOMContentLoaded", async () => {
             )
           );
         }
+      }
+
+      // Adiciona a recomendação de restaurantes.
+      if (erroRestaurantes) {
+        const secaoErro = criarElemento(
+          "section",
+          "recommended-restaurants"
+        );
+
+        secaoErro.appendChild(criarElemento(
+          "h3",
+          "",
+          "Restaurantes recomendados"
+        ));
+
+        secaoErro.appendChild(criarElemento(
+          "p",
+          "pairing-unavailable",
+          "Não foi possível consultar os restaurantes neste momento. Tente novamente mais tarde."
+        ));
+
+        conjunto.appendChild(secaoErro);
+      } else {
+        conjunto.appendChild(
+          criarSecaoRestaurantes(
+            receita,
+            relacoesRestaurantes
+          )
+        );
       }
 
       resultados.appendChild(conjunto);
