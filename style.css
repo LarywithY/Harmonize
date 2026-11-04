@@ -2697,3 +2697,459 @@ body.results-page {
     transform: none;
   }
 }
+
+
+/* =========================================================
+   HARMONIZE+ — ABERTURA DE MARCA
+   ========================================================= */
+
+.home-splash {
+  min-height: 100svh;
+  width: 100%;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: #173D2B;
+  color: #F5F1E8;
+  padding: 70px 25px 95px;
+}
+
+.splash-content {
+  position: relative;
+  z-index: 3;
+  width: min(100%, 760px);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.splash-logo {
+  width: 75px;
+  height: 75px;
+  object-fit: contain;
+  margin-bottom: 25px;
+  filter: brightness(0) saturate(100%) invert(76%) sepia(83%) saturate(1200%) hue-rotate(350deg) brightness(103%);
+}
+
+.splash-overline {
+  color: #FFB000;
+  font-family: "Montserrat", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  line-height: 1.8;
+}
+
+.splash-content h1 {
+  color: #F5F1E8;
+  font-family: "DM Serif Display", Georgia, serif;
+  font-size: clamp(65px, 11vw, 112px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -2px;
+  margin: 18px 0 12px;
+  padding: 0 5px 8px;
+  overflow: visible;
+}
+
+.splash-content h1 span {
+  color: #FFB000;
+}
+
+.splash-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: min(250px, 65%);
+  margin: 12px 0 28px;
+}
+
+.splash-divider span {
+  height: 1px;
+  flex: 1;
+  background: rgba(255, 176, 0, .65);
+}
+
+.splash-divider i {
+  color: #FFB000;
+  font-size: 19px;
+  font-style: normal;
+}
+
+.splash-content > p {
+  color: #F5F1E8;
+  font-family: "DM Serif Display", Georgia, serif;
+  font-size: clamp(29px, 5vw, 43px);
+  line-height: 1.35;
+  font-weight: 400;
+  margin: 0;
+  padding: 0 8px;
+}
+
+.splash-content > p em {
+  color: #FFB000;
+  font-weight: 400;
+}
+
+.splash-caption {
+  display: block;
+  margin-top: 33px;
+  color: rgba(245, 241, 232, .65);
+  font-family: "Montserrat", sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.8;
+}
+
+/* CÍRCULOS E ELEMENTOS DECORATIVOS */
+
+.splash-orbit {
+  position: absolute;
+  z-index: 1;
+  border: 1px solid rgba(255, 176, 0, .22);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.splash-orbit-one {
+  width: min(85vw, 700px);
+  aspect-ratio: 1;
+}
+
+.splash-orbit-two {
+  width: min(68vw, 560px);
+  aspect-ratio: 1;
+  border-color: rgba(255, 176, 0, .32);
+}
+
+.splash-orbit-three {
+  width: min(51vw, 420px);
+  aspect-ratio: 1;
+  border-color: rgba(245, 241, 232, .16);
+}
+
+.splash-star,
+.splash-cross {
+  position: absolute;
+  z-index: 2;
+  color: #FFB000;
+  pointer-events: none;
+}
+
+.splash-star-one {
+  top: 15%;
+  left: 17%;
+  font-size: 38px;
+}
+
+.splash-star-two {
+  top: 25%;
+  right: 19%;
+  font-size: 32px;
+}
+
+.splash-star-three {
+  bottom: 17%;
+  right: 15%;
+  font-size: 43px;
+}
+
+.splash-cross {
+  bottom: 20%;
+  left: 19%;
+  font-size: 35px;
+  font-weight: 400;
+}
+
+.splash-scroll {
+  position: absolute;
+  z-index: 4;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  color: rgba(245, 241, 232, .75);
+  font-family: "Montserrat", sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.splash-scroll i {
+  color: #FFB000;
+  font-size: 19px;
+  font-style: normal;
+  transition: transform .2s ease;
+}
+
+.splash-scroll:hover i {
+  transform: translateY(5px);
+}
+
+.splash-side-label {
+  position: absolute;
+  z-index: 2;
+  bottom: 35px;
+  color: rgba(245, 241, 232, .4);
+  font-family: "Montserrat", sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.splash-side-left {
+  left: 5%;
+}
+
+.splash-side-right {
+  right: 5%;
+}
+
+/* =========================================================
+   CORREÇÕES DE RESPONSIVIDADE E SOBREPOSIÇÃO
+   ========================================================= */
+
+.home-page {
+  overflow-x: clip;
+}
+
+.home-page main,
+.home-page section,
+.home-page article,
+.home-page a {
+  min-width: 0;
+}
+
+.home-page h1,
+.home-page h2,
+.home-page h3,
+.home-page p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.home-page h1,
+.home-page h2,
+.home-page h3 {
+  max-width: 100%;
+  text-wrap: balance;
+}
+
+.home-page p {
+  text-wrap: pretty;
+}
+
+.home-hero h1,
+.home-intro-title h2,
+.home-experience-heading h2,
+.home-inclusion h2,
+.home-final h2,
+.home-feature-bottom h3 {
+  overflow: visible;
+  padding-bottom: .12em;
+}
+
+.home-hero-content,
+.home-intro-title,
+.home-intro-copy,
+.home-feature-bottom,
+.home-inclusion-content {
+  min-width: 0;
+}
+
+.home-feature-grid > *,
+.home-intro-grid > * {
+  min-width: 0;
+}
+
+.home-feature-illustration {
+  width: 100%;
+  max-width: 100%;
+}
+
+.home-art-label {
+  max-width: 90%;
+  padding: 0 8px;
+}
+
+.home-art-label strong {
+  overflow-wrap: normal;
+}
+
+.home-nav {
+  flex-wrap: wrap;
+}
+
+.home-nav a {
+  line-height: 1.6;
+}
+
+.home-feature-link {
+  gap: 10px;
+  line-height: 1.6;
+}
+
+.home-footer-nav {
+  row-gap: 12px;
+}
+
+@media (max-width: 650px) {
+  .home-splash {
+    min-height: 100svh;
+    padding: 65px 20px 95px;
+  }
+
+  .splash-logo {
+    width: 62px;
+    height: 62px;
+    margin-bottom: 23px;
+  }
+
+  .splash-overline {
+    font-size: 8px;
+    letter-spacing: 2.5px;
+  }
+
+  .splash-content h1 {
+    font-size: clamp(54px, 13vw, 75px);
+    letter-spacing: -1px;
+    line-height: 1.2;
+    margin-top: 20px;
+  }
+
+  .splash-content > p {
+    font-size: clamp(27px, 7vw, 36px);
+    line-height: 1.4;
+  }
+
+  .splash-caption {
+    font-size: 7px;
+    letter-spacing: 2px;
+  }
+
+  .splash-orbit-one {
+    width: 125vw;
+  }
+
+  .splash-orbit-two {
+    width: 100vw;
+  }
+
+  .splash-orbit-three {
+    width: 75vw;
+  }
+
+  .splash-star-one {
+    top: 14%;
+    left: 8%;
+    font-size: 27px;
+  }
+
+  .splash-star-two {
+    top: 23%;
+    right: 8%;
+    font-size: 25px;
+  }
+
+  .splash-star-three {
+    bottom: 17%;
+    right: 9%;
+    font-size: 30px;
+  }
+
+  .splash-cross {
+    bottom: 21%;
+    left: 9%;
+    font-size: 27px;
+  }
+
+  .splash-side-label {
+    display: none;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(40px, 10.5vw, 61px);
+    line-height: 1.14;
+  }
+
+  .home-intro-title h2 {
+    font-size: clamp(39px, 10vw, 49px);
+    line-height: 1.16;
+  }
+
+  .home-experience-heading h2 {
+    font-size: clamp(34px, 9vw, 44px);
+    line-height: 1.18;
+  }
+
+  .home-feature-bottom h3 {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  .home-inclusion h2 {
+    font-size: clamp(39px, 10vw, 49px);
+    line-height: 1.16;
+  }
+
+  .home-final h2 {
+    font-size: clamp(40px, 10vw, 51px);
+    line-height: 1.16;
+  }
+
+  .home-nav {
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .home-nav a {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .home-nav {
+    gap: 9px;
+  }
+
+  .home-nav a {
+    font-size: 7px;
+  }
+
+  .home-nav .home-nav-cta {
+    padding: 10px 8px;
+  }
+
+  .home-hero h1 {
+    font-size: 39px;
+  }
+
+  .home-hero-actions .home-primary-button {
+    width: 100%;
+    gap: 12px;
+    padding: 0 12px;
+    font-size: 9px;
+  }
+
+  .home-experience-heading {
+    flex-direction: column;
+  }
+
+  .home-experience-number {
+    align-self: flex-end;
+  }
+
+  .home-inclusion-stamp {
+    max-width: 100%;
+  }
+}
