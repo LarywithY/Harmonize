@@ -3403,3 +3403,100 @@ body.results-page {
     display: none;
   }
 }
+
+/* ==========================================
+   HARMONIZE+ — ANIMAÇÕES E TRANSIÇÕES
+   ========================================== */
+
+/* Abertura */
+.home-splash {
+  animation: splashEntrada 1.2s ease both;
+}
+
+@keyframes splashEntrada {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Elementos decorativos da abertura */
+.home-splash .logo,
+.home-splash svg {
+  animation: logoEntrada 1.2s ease both;
+}
+
+@keyframes logoEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Elementos gráficos do destaque */
+.home-hero-art {
+  animation: arteEntrada 1.3s ease .2s both;
+}
+
+@keyframes arteEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Cartões */
+.home-feature {
+  transition:
+    transform .45s ease,
+    box-shadow .45s ease;
+}
+
+.home-feature:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 18px 40px rgba(23, 61, 43, .13);
+}
+
+/* Botões e links */
+.home-header a,
+.home-final a,
+.home-inclusion a {
+  transition:
+    color .3s ease,
+    background-color .3s ease,
+    transform .3s ease,
+    opacity .3s ease;
+}
+
+.home-header a:hover,
+.home-final a:hover,
+.home-inclusion a:hover {
+  transform: translateY(-2px);
+}
+
+/* Rolagem suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Acessibilidade: respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
