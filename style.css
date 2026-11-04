@@ -927,3 +927,550 @@ summary:focus-visible {
     animation: none;
   }
 }
+
+
+/* =====================================================
+   HARMONIZE+ — IDENTIDADE EDITORIAL DOS RESULTADOS
+   ===================================================== */
+
+:root {
+  --fonte-titulo: "DM Serif Display", serif;
+  --fonte-texto: "Montserrat", sans-serif;
+}
+
+/* TIPOGRAFIA */
+
+body.results-page {
+  font-family: var(--fonte-texto);
+  background:
+    radial-gradient(circle at 8% 12%, rgba(255,176,0,.09), transparent 19rem),
+    var(--creme);
+  color: var(--texto);
+}
+
+.results-page h1,
+.results-page h2,
+.results-page h3,
+.results-page h4 {
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  letter-spacing: -.4px;
+}
+
+.results-page p,
+.results-page a,
+.results-page span,
+.results-page button {
+  font-family: var(--fonte-texto);
+}
+
+/* CABEÇALHO */
+
+.results-page .site-header {
+  border-bottom: 3px solid var(--dourado);
+  padding-left: 7%;
+  padding-right: 7%;
+}
+
+.results-page .brand {
+  font-family: var(--fonte-titulo);
+  font-size: 25px;
+  letter-spacing: .3px;
+}
+
+/* ABERTURA EDITORIAL */
+
+.results-main {
+  position: relative;
+  width: min(1200px, 100%);
+  padding-top: 65px;
+  padding-bottom: 90px;
+}
+
+.results-intro {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto 65px;
+  padding: 55px 35px 40px;
+  text-align: center;
+  border-bottom: 1px solid var(--borda);
+}
+
+.results-intro .eyebrow {
+  color: var(--vermelho);
+  font-size: 10px;
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+
+.editorial-number {
+  margin: 22px 0 12px;
+  color: var(--verde);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+.results-intro h1 {
+  color: var(--verde);
+  font-size: clamp(52px, 9vw, 88px);
+  line-height: .98;
+  margin: 12px 0 25px;
+}
+
+.results-intro h1 em {
+  color: var(--vermelho);
+  font-weight: 400;
+}
+
+.results-intro .lead {
+  margin: 0 auto 12px;
+  font-size: 14px;
+  max-width: 620px;
+}
+
+.restriction-summary {
+  color: var(--cinza);
+  font-size: 11px;
+  max-width: 650px;
+  margin: 10px auto;
+}
+
+.intro-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+  color: var(--dourado);
+  font-size: 25px;
+}
+
+.intro-ornament span:first-child,
+.intro-ornament span:last-child {
+  width: 65px;
+  height: 1px;
+  background: var(--dourado);
+}
+
+.editorial-decoration {
+  position: absolute;
+  color: var(--vermelho);
+  font-size: 65px;
+  opacity: .7;
+  pointer-events: none;
+}
+
+.decoration-top {
+  top: 35px;
+  right: 8%;
+  transform: rotate(15deg);
+}
+
+/* ORGANIZAÇÃO DOS RESULTADOS */
+
+.results-page .recipes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 42px 28px;
+  margin: 45px 0 65px;
+}
+
+.results-page .result-item {
+  min-width: 0;
+  overflow: visible;
+}
+
+/* CARTÃO DA RECEITA — VERMELHO */
+
+.results-page .recipe-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(227,27,54,.28);
+  border-radius: 4px 4px 0 0;
+  background: #FFFDF9;
+  box-shadow: 0 12px 30px rgba(23,61,43,.08);
+}
+
+.results-page .recipe-card::before {
+  content: "01 / RECEITA";
+  display: block;
+  padding: 13px 19px;
+  background: var(--vermelho);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.results-page .recipe-card-image {
+  display: block;
+  width: calc(100% - 28px);
+  height: 250px;
+  margin: 14px;
+  object-fit: cover;
+  background: #E9E1D6;
+  border: 5px solid white;
+  outline: 1px solid rgba(227,27,54,.25);
+}
+
+.results-page .recipe-card-content {
+  padding: 20px 24px 25px;
+}
+
+.results-page .recipe-category {
+  color: var(--vermelho);
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-weight: 800;
+}
+
+.results-page .recipe-card h2 {
+  font-size: 32px;
+  line-height: 1.08;
+  margin: 7px 0 12px;
+}
+
+.results-page .recipe-description {
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.results-page .recipe-meta {
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.results-page .recipe-details {
+  border-top: 1px solid rgba(227,27,54,.2);
+}
+
+.results-page .recipe-details summary {
+  font-size: 12px;
+}
+
+.results-page .recipe-full-details h3 {
+  font-size: 23px;
+}
+
+/* CARTÃO DA HARMONIZAÇÃO — DOURADO */
+
+.results-page .automatic-pairing {
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+  border: 1px solid rgba(255,176,0,.65);
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+  background: #FFF9E9;
+  box-shadow: 0 12px 25px rgba(23,61,43,.06);
+}
+
+.results-page .automatic-pairing::before {
+  width: 5px;
+  background: var(--dourado);
+}
+
+.results-page .pairing-heading h3 {
+  font-size: 30px;
+}
+
+.results-page .pairing-eyebrow {
+  color: #9B6500;
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-weight: 800;
+}
+
+.results-page .pairing-intro {
+  font-size: 11px;
+}
+
+.results-page .pairing-profile {
+  background: #F8EBC8;
+  color: #71500D;
+  font-size: 10px;
+}
+
+/* ESPAÇO EXCLUSIVO DA FOTO DA CERVEJA */
+
+.results-page .pairing-option {
+  padding: 17px;
+  border: 1px solid #EADCB8;
+  border-radius: 4px;
+  background: #FFFEFA;
+}
+
+.results-page .pairing-option-title {
+  color: #8B610D;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.results-page .pairing-product {
+  align-items: center;
+  gap: 15px;
+}
+
+.results-page .pairing-product-image {
+  flex: 0 0 112px;
+  width: 112px;
+  height: 140px;
+  padding: 8px;
+  object-fit: contain;
+  background: #F8EBC8;
+  border: 1px solid #E7D4A5;
+  border-radius: 3px;
+}
+
+.results-page .pairing-beverage-name {
+  font-family: var(--fonte-titulo);
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.results-page .pairing-brand {
+  color: var(--vermelho);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.results-page .pairing-style {
+  font-size: 10px;
+}
+
+.results-page .pairing-reason {
+  background: #FFF7E4;
+  font-size: 11px;
+}
+
+.results-page .pairing-details {
+  border-color: #EFE4CC;
+}
+
+.results-page .pairing-detail {
+  font-size: 10px;
+}
+
+/* CARTÃO DO RESTAURANTE — VERDE */
+
+.results-page .recommended-restaurants {
+  position: relative;
+  overflow: hidden;
+  margin-top: 18px;
+  padding: 22px;
+  border: 1px solid rgba(23,61,43,.25);
+  border-radius: 4px;
+  background: #EDF3EB;
+  box-shadow: 0 10px 24px rgba(23,61,43,.06);
+}
+
+.results-page .recommended-restaurants::before {
+  content: "03 / EXPERIÊNCIA";
+  display: block;
+  margin: -22px -22px 19px;
+  padding: 13px 20px;
+  background: var(--verde);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.results-page .recommended-restaurants h3 {
+  color: var(--verde);
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.results-page .restaurant-card {
+  overflow: hidden;
+  margin-top: 18px;
+  background: #FFFDF9;
+  border: 1px solid #D4E0D2;
+  border-radius: 4px;
+}
+
+.results-page .restaurant-card-image {
+  display: block;
+  width: calc(100% - 24px);
+  height: 190px;
+  margin: 12px;
+  object-fit: cover;
+  background: #DCE6D9;
+  border: 4px solid white;
+  outline: 1px solid #C5D5C2;
+}
+
+.results-page .restaurant-card-content {
+  padding: 8px 19px 20px;
+}
+
+.results-page .restaurant-card h4 {
+  color: var(--verde);
+  font-size: 27px;
+  margin-bottom: 8px;
+}
+
+.results-page .restaurant-dish-name {
+  color: var(--vermelho);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.results-page .restaurant-card-detail {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--cinza);
+}
+
+.results-page .restaurant-card-content a {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--verde);
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration-color: var(--dourado);
+  text-underline-offset: 4px;
+}
+
+.results-page .restaurant-verification {
+  margin-top: 15px;
+  padding: 9px 11px;
+  background: #E5EEE2;
+  color: var(--verde);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.results-page .restaurant-safety-notice {
+  margin-top: 10px;
+  color: #765B35;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+/* SEGURANÇA ALIMENTAR */
+
+.safety-editorial {
+  position: relative;
+  overflow: hidden;
+  padding: 38px;
+  margin: 65px 0 35px;
+  border: 1px solid var(--dourado);
+  background: #FFF9E9;
+}
+
+.safety-editorial h2 {
+  max-width: 600px;
+  margin: 8px 0 17px;
+  color: var(--verde);
+  font-size: clamp(30px, 5vw, 44px);
+  line-height: 1.1;
+}
+
+.safety-editorial p {
+  max-width: 700px;
+  margin-bottom: 12px;
+  color: var(--cinza);
+  font-size: 12px;
+}
+
+.safety-editorial .eyebrow {
+  color: var(--vermelho);
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.safety-decoration {
+  position: absolute;
+  right: 25px;
+  bottom: 5px;
+  color: var(--dourado);
+  font-size: 100px;
+  opacity: .5;
+}
+
+.results-return {
+  text-align: center;
+  margin-top: 35px;
+}
+
+/* MENSAGENS */
+
+.results-page .notice {
+  border-radius: 4px;
+  box-shadow: var(--sombra);
+}
+
+/* RODAPÉ */
+
+.results-page footer {
+  border-top: 4px solid var(--dourado);
+}
+
+.results-page footer .brand {
+  font-family: var(--fonte-titulo);
+  font-size: 23px;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 760px) {
+  .results-page .recipes {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .results-intro {
+    padding: 35px 12px;
+    margin-bottom: 35px;
+  }
+
+  .results-intro h1 {
+    font-size: clamp(48px, 13vw, 68px);
+  }
+
+  .decoration-top {
+    top: 8px;
+    right: 4%;
+    font-size: 42px;
+  }
+
+  .results-page .recipe-card-image {
+    height: 230px;
+  }
+
+  .results-page .pairing-product-image {
+    flex-basis: 100px;
+    width: 100px;
+    height: 125px;
+  }
+
+  .safety-editorial {
+    padding: 27px 22px;
+  }
+
+  .safety-decoration {
+    right: 8px;
+    font-size: 65px;
+  }
+}
+
+@media (max-width: 380px) {
+  .results-page .pairing-product {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .results-page .pairing-product-image {
+    width: 100%;
+    height: 150px;
+  }
+
+  .results-page .recipe-card h2 {
+    font-size: 27px;
+  }
+}
