@@ -3842,3 +3842,52 @@ html {
     height: 210px;
   }
 }
+
+
+/* TESTE VISUAL — HARMONIZE+ */
+body.results-page .recipes {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 50px !important;
+}
+
+body.results-page .recipe-card-image {
+  width: calc(100% - 40px) !important;
+  height: 320px !important;
+  margin: 20px !important;
+  object-fit: cover !important;
+  border: 6px solid white !important;
+}
+
+body.results-page .recipe-card {
+  background: #fff8f5 !important;
+  border: 2px solid #E31B36 !important;
+}
+
+body.results-page .automatic-pairing {
+  background: #FFF6DF !important;
+  border: 2px solid #FFB000 !important;
+  padding: 30px !important;
+}
+
+body.results-page .pairing-product-image {
+  width: 140px !important;
+  height: 165px !important;
+  object-fit: contain !important;
+  background: #F8EBC8 !important;
+  padding: 10px !important;
+}
+
+body.results-page .restaurant-card-image {
+  width: calc(100% - 32px) !important;
+  height: 230px !important;
+  margin: 16px !important;
+  object-fit: cover !important;
+  border: 5px solid white !important;
+}
+
+body.results-page .recommended-restaurants {
+  background: #EDF3EB !important;
+  border: 2px solid #173D2B !important;
+  padding: 28px !important;
+}
